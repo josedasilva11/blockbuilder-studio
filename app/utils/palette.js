@@ -1,17 +1,18 @@
-// Tinkercad-inspired colour palette. Indices cycle as new shapes are added.
+// BlockBuilder Studio palette — distinct from Autodesk Tinkercad. Cooler, more
+// saturated tones suited to a dark-theme UI. New shapes cycle through these.
 
 export const PALETTE = [
-  0xd9a574, // warm tan (Tinkercad default)
-  0xd95252, // red
-  0xf5a623, // orange
-  0xf5d83e, // yellow
-  0x7cb959, // green
-  0x529bdb, // blue
-  0xa674da, // purple
-  0xed9fc1, // pink
+  0xc4f04f, // signature lime
+  0xff6e6e, // coral red
+  0xffae34, // amber
+  0xffd84a, // honey yellow
+  0x44c1a4, // teal
+  0x4a8df0, // azure blue
+  0xb478f0, // lavender
+  0xff8fb1, // peach pink
 ];
 
-export const HOLE_COLOR = 0xff6262;
+export const HOLE_COLOR = 0xff5566;
 
 let _paletteIndex = 0;
 export function nextPaletteColor() {

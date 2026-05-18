@@ -10,7 +10,7 @@ const GRID_HALF = 200;   // 200 mm half-extent
 
 export function initScene(canvas) {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xeef2f8);
+  scene.background = null; // transparent so the CSS gradient shows through
 
   const camera = new THREE.PerspectiveCamera(
     45,
@@ -22,16 +22,16 @@ export function initScene(canvas) {
   camera.position.set(120, -180, 130);
   camera.lookAt(0, 0, 20);
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // Lights
-  const amb = new THREE.AmbientLight(0xffffff, 0.55);
+  // Lights — cooler ambient + warm key so coloured shapes pop against dark bg.
+  const amb = new THREE.AmbientLight(0xb0b8c8, 0.55);
   scene.add(amb);
-  const key = new THREE.DirectionalLight(0xffffff, 1.0);
+  const key = new THREE.DirectionalLight(0xfff3d6, 1.05);
   key.position.set(80, -100, 200);
   key.castShadow = true;
   key.shadow.mapSize.width = 2048;
@@ -43,7 +43,7 @@ export function initScene(canvas) {
   key.shadow.camera.near = 1;
   key.shadow.camera.far = 600;
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0xb0c2e0, 0.35);
+  const fill = new THREE.DirectionalLight(0x6fa9c4, 0.32);
   fill.position.set(-100, 100, 50);
   scene.add(fill);
 
@@ -59,8 +59,8 @@ export function initScene(canvas) {
   ground.receiveShadow = true;
   scene.add(ground);
 
-  // Origin marker (small cross)
-  const originMat = new THREE.LineBasicMaterial({ color: 0xff8c1a });
+  // Origin marker (small cross) — lime matches brand accent.
+  const originMat = new THREE.LineBasicMaterial({ color: 0xc4f04f });
   const originGeo = new THREE.BufferGeometry().setFromPoints([
     new THREE.Vector3(-5, 0, 0.1), new THREE.Vector3(5, 0, 0.1),
     new THREE.Vector3(0, -5, 0.1), new THREE.Vector3(0, 5, 0.1),
@@ -109,15 +109,16 @@ export function initScene(canvas) {
 }
 
 function makeWorkplaneGrid() {
+  // Dark-theme grid: faint cool grey minor cells, slightly brighter major lines.
   const group = new THREE.Group();
   group.name = 'WorkplaneGrid';
-  const minor = new THREE.GridHelper(GRID_HALF * 2, GRID_HALF * 2 / 5, 0x6b88be, 0xb6c4dc);
-  minor.material.opacity = 0.32;
+  const minor = new THREE.GridHelper(GRID_HALF * 2, GRID_HALF * 2 / 5, 0x3a4252, 0x2c323e);
+  minor.material.opacity = 0.55;
   minor.material.transparent = true;
   minor.rotation.x = Math.PI / 2;
   group.add(minor);
-  const major = new THREE.GridHelper(GRID_HALF * 2, GRID_HALF * 2 / 25, 0x4a6eb0, 0x4a6eb0);
-  major.material.opacity = 0.55;
+  const major = new THREE.GridHelper(GRID_HALF * 2, GRID_HALF * 2 / 25, 0x55617a, 0x55617a);
+  major.material.opacity = 0.85;
   major.material.transparent = true;
   major.rotation.x = Math.PI / 2;
   group.add(major);

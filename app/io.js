@@ -26,7 +26,7 @@ export function exportSTL() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'tinkerdesk.stl';
+  a.download = 'blockbuilder.stl';
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -42,7 +42,7 @@ export function saveProject() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'tinkerdesk-project.json';
+  a.download = 'blockbuilder-project.json';
   a.click();
   URL.revokeObjectURL(url);
 }
