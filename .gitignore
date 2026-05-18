@@ -1,0 +1,5 @@
+node_modules
+dist/win-unpacked
+dist/.cache
+*.log
+.DS_Store

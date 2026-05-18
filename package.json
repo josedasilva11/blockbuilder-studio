@@ -1,0 +1,65 @@
+{
+  "name": "blockbuilder-studio",
+  "version": "0.4.0",
+  "description": "Offline 3D printing toolkit — sketch shapes, combine with booleans, export STL. No account, no cloud, no limits.",
+  "private": true,
+  "main": "electron/main.cjs",
+  "author": "BlockBuilder Studio",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "electron .",
+    "dist": "electron-builder",
+    "dist:portable": "electron-builder --win portable",
+    "dist:installer": "electron-builder --win nsis",
+    "dist:all": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^32.2.5",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "studio.blockbuilder.app",
+    "productName": "BlockBuilder Studio",
+    "files": [
+      "app/**/*",
+      "vendor/**/*",
+      "electron/**/*",
+      "index.html",
+      "styles.css",
+      "!**/.git/**",
+      "!**/_*",
+      "!**/.claude/**",
+      "!serve.py",
+      "!*.zip"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        { "target": "portable", "arch": ["x64"] },
+        { "target": "nsis",     "arch": ["x64"] }
+      ],
+      "artifactName": "${productName}-${version}-${arch}-${ext}.exe"
+    },
+    "portable": {
+      "artifactName": "BlockBuilderStudio-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "BlockBuilder Studio"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Graphics"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "category": "public.app-category.graphics-design"
+    }
+  }
+}
