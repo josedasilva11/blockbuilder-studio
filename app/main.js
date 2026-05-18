@@ -1,14 +1,17 @@
-// Entry point: wires together scene, sidebar, properties, gizmos, toolbar, IO.
+// Entry point: wires together every module + handles toolbar, keyboard, viewcube,
+// empty state, autosave restore.
 
 import { initScene, setView } from './scene.js';
 import { initSidebar } from './sidebar.js';
 import { initProperties } from './properties.js';
-import { initGizmos, applySnap, setMode } from './gizmos.js';
-import { installPickHandler, selectShape } from './selection.js';
+import { initGizmos, applySnap } from './gizmos.js';
+import { installPickHandler, selectShape, getMultiSelection } from './selection.js';
 import { state } from './state.js';
 import { groupShapes, ungroupShapes, bakeGroup } from './csg.js';
 import { exportSTL, saveProject, loadProject } from './io.js';
 import { TinkerShape } from './shape.js';
+import { initTooltip } from './tooltip.js';
+import { installAutoSaveLoop, loadFromStorage } from './autosave.js';
 
 function main() {
   const canvas = document.getElementById('viewport');
@@ -17,50 +20,35 @@ function main() {
   installPickHandler(canvas);
   initSidebar({ viewport: canvas });
   initProperties();
+  initTooltip();
   bindToolbar();
   bindKeyboard();
   bindViewcube();
-  showHud();
+  bindEmptyStateAndHud();
+
+  const restored = loadFromStorage();
+  if (restored > 0) console.info(`Restored ${restored} shape(s) from autosave.`);
+  installAutoSaveLoop();
 }
 
 function bindToolbar() {
   document.getElementById('toolbar').addEventListener('click', (ev) => {
-    const action = ev.target.dataset?.action;
-    if (!action) return;
+    const btn = ev.target.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
     switch (action) {
       case 'group': {
-        const sel = state.selectedId ? [state.selectedId] : [];
-        const all = [...state.shapes.values()].filter(s => s.mesh.visible);
-        // Group: if multiple shapes are present and one is selected, group all visible + the selected hole(s)
-        if (all.length < 2) return;
-        groupShapes(all.map(s => s.id));
+        const selection = getMultiSelection();
+        const ids = selection.length > 0
+          ? selection
+          : [...state.shapes.values()].filter(s => s.mesh.visible).map(s => s.id);
+        if (ids.length < 2) return;
+        groupShapes(ids);
         break;
       }
       case 'ungroup': {
         const host = state.shapes.get(state.selectedId);
         if (host && host.isGroup) ungroupShapes(host);
-        break;
-      }
-      case 'enter-group': {
-        const host = state.shapes.get(state.selectedId);
-        if (host && host.isGroup) {
-          for (const cid of host.csgChildren) {
-            const c = state.shapes.get(cid);
-            if (c) c.mesh.visible = true;
-          }
-          state.groupHostId = host.id;
-        }
-        break;
-      }
-      case 'exit-group': {
-        const host = state.shapes.get(state.groupHostId);
-        if (host) {
-          for (const cid of host.csgChildren) {
-            const c = state.shapes.get(cid);
-            if (c) c.mesh.visible = false;
-          }
-        }
-        state.groupHostId = null;
         break;
       }
       case 'bake': {
@@ -71,10 +59,6 @@ function bindToolbar() {
       case 'duplicate': duplicateSelected(); break;
       case 'delete': deleteSelected(); break;
       case 'align': alignSelectedCenters(); break;
-      case 'set-workplane': alert('Click any face after pressing Set Workplane (todo)'); break;
-      case 'reset-workplane':
-        state.workplane = { active: false, origin: [0, 0, 0], normal: [0, 0, 1] };
-        break;
       case 'save': saveProject(); break;
       case 'load': document.getElementById('load-file').click(); break;
       case 'export-stl': exportSTL(); break;
@@ -96,10 +80,15 @@ function bindToolbar() {
 function bindKeyboard() {
   window.addEventListener('keydown', (ev) => {
     if (ev.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(ev.target.tagName)) return;
-    if (ev.ctrlKey && (ev.key === 'd' || ev.key === 'D')) { ev.preventDefault(); duplicateSelected(); }
-    else if (ev.ctrlKey && (ev.key === 'g' || ev.key === 'G')) { ev.preventDefault(); document.querySelector('[data-action="group"]').click(); }
-    else if (ev.key === 'Delete' || ev.key === 'Backspace') { deleteSelected(); }
-    else if (ev.key === 'Escape') { selectShape(null); }
+    const k = ev.key;
+    if (ev.ctrlKey && (k === 'd' || k === 'D')) { ev.preventDefault(); duplicateSelected(); }
+    else if (ev.ctrlKey && (k === 'g' || k === 'G')) { ev.preventDefault(); document.querySelector('[data-action="group"]').click(); }
+    else if (k === 'Delete' || k === 'Backspace') { deleteSelected(); }
+    else if (k === 'Escape') { selectShape(null); }
+    else if (k === '1') { setView('front'); }
+    else if (k === '3') { setView('right'); }
+    else if (k === '7') { setView('top'); }
+    else if (k === '0') { setView('iso'); }
   });
 }
 
@@ -130,7 +119,6 @@ function deleteSelected() {
 }
 
 function alignSelectedCenters() {
-  // Naive: align all currently-visible shapes' XY centers to the average.
   const arr = [...state.shapes.values()].filter(s => s.mesh.visible);
   if (arr.length < 2) return;
   const cx = arr.reduce((s, x) => s + x.mesh.position.x, 0) / arr.length;
@@ -141,14 +129,21 @@ function alignSelectedCenters() {
   }
 }
 
-function showHud() {
+function bindEmptyStateAndHud() {
+  const empty = document.getElementById('empty-state');
   const hud = document.getElementById('hud');
   setInterval(() => {
     const n = state.shapes.size;
+    empty.classList.toggle('hide', n > 0);
+
     const selected = state.shapes.get(state.selectedId);
-    const sel = selected ? `${selected.kind} ${selected.id}` : 'none';
+    const sel = selected ? `${selected.kind.toLowerCase()}` : '—';
     const snap = state.snapStep > 0 ? `${state.snapStep} mm` : 'off';
-    hud.textContent = `Shapes: ${n}  ·  Selected: ${sel}  ·  Snap: ${snap}`;
+    hud.innerHTML = `
+      <span class="hud-key">shapes</span><span class="hud-val">${n}</span>
+      <span class="hud-key">selected</span><span class="hud-val accent">${sel}</span>
+      <span class="hud-key">snap</span><span class="hud-val">${snap}</span>
+    `;
   }, 200);
 }
 

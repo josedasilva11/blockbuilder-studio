@@ -35,18 +35,27 @@ export class TinkerShape {
 
   _makeMaterial() {
     if (this.isHole) {
-      return new THREE.MeshStandardMaterial({
+      return new THREE.MeshPhysicalMaterial({
         color: HOLE_COLOR,
         transparent: true,
-        opacity: 0.45,
-        roughness: 0.5,
+        opacity: 0.40,
+        roughness: 0.25,
+        transmission: 0.4,
+        thickness: 0.5,
+        ior: 1.3,
         depthWrite: false,
+        side: THREE.DoubleSide,
       });
     }
-    return new THREE.MeshStandardMaterial({
+    // Soft plastic look — slight clearcoat so colours pop without looking metallic.
+    return new THREE.MeshPhysicalMaterial({
       color: this.color,
-      roughness: 0.55,
+      roughness: 0.45,
       metalness: 0.0,
+      clearcoat: 0.25,
+      clearcoatRoughness: 0.55,
+      sheen: 0.05,
+      reflectivity: 0.4,
     });
   }
 
