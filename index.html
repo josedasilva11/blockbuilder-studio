@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TinkerDesk</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/",
+      "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.8.3/build/index.module.js",
+      "three-bvh-csg": "https://unpkg.com/three-bvh-csg@0.0.17/build/index.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">TinkerDesk</div>
+    <div class="toolbar" id="toolbar">
+      <button data-action="group" title="Group selected (Ctrl+G)">Group</button>
+      <button data-action="ungroup" title="Ungroup active">Ungroup</button>
+      <button data-action="enter-group" title="Enter group to edit children">Enter</button>
+      <button data-action="exit-group" title="Exit group edit">Exit</button>
+      <button data-action="bake" title="Bake CSG to mesh">Bake</button>
+      <span class="sep"></span>
+      <button data-action="align" title="Align selected (centers)">Align</button>
+      <button data-action="duplicate" title="Duplicate (Ctrl+D)">Duplicate</button>
+      <button data-action="delete" title="Delete (Del)">Delete</button>
+      <span class="sep"></span>
+      <button data-action="set-workplane" title="Click a face to set workplane">Workplane</button>
+      <button data-action="reset-workplane" title="Reset to world XY">Reset Plane</button>
+      <span class="sep"></span>
+      <label>Snap:
+        <select id="snap-step">
+          <option value="0">Off</option>
+          <option value="0.1">0.1 mm</option>
+          <option value="0.5">0.5 mm</option>
+          <option value="1" selected>1 mm</option>
+          <option value="5">5 mm</option>
+          <option value="10">10 mm</option>
+        </select>
+      </label>
+      <span class="sep"></span>
+      <button data-action="save" title="Save project (JSON)">Save</button>
+      <button data-action="load" title="Load project (JSON)">Load</button>
+      <button data-action="export-stl" title="Export STL">Export STL</button>
+      <input type="file" id="load-file" accept=".json,application/json" hidden />
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <h2>Shapes</h2>
+      <div class="shape-grid" id="shape-grid"></div>
+      <h2>Holes</h2>
+      <div class="shape-grid" id="hole-grid"></div>
+    </aside>
+
+    <section class="viewport-wrap">
+      <canvas id="viewport"></canvas>
+      <div class="viewcube" id="viewcube">
+        <button data-view="top">Top</button>
+        <button data-view="front">Front</button>
+        <button data-view="right">Right</button>
+        <button data-view="iso">Iso</button>
+      </div>
+      <div class="hud" id="hud"></div>
+    </section>
+
+    <aside class="properties" id="properties">
+      <h2>Properties</h2>
+      <div id="props-body">
+        <p class="hint">Drag a shape from the left, or click one in the viewport to edit it.</p>
+      </div>
+    </aside>
+  </main>
+
+  <div class="dropzone" id="dropzone-overlay" hidden>Drop here to add</div>
+
+  <script type="module" src="app/main.js"></script>
+</body>
+</html>
