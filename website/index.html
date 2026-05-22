@@ -913,6 +913,27 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 }
 .dl-card:hover .dl-arrow { background: var(--lime); border-color: var(--lime); color: #0a0c10; transform: translateY(3px); }
 
+/* "Coming soon" card — non-clickable, dimmer, no hover lift */
+.dl-card.dl-soon {
+  opacity: 0.55;
+  cursor: default;
+  pointer-events: none;
+}
+.dl-card.dl-soon::after {
+  content: 'COMING SOON';
+  position: absolute;
+  top: -1px;
+  left: 22px;
+  background: var(--text-mid);
+  color: var(--bg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 0 0 4px 4px;
+}
+
 .dl-card-match {
   border-color: var(--lime-line);
   background: linear-gradient(135deg, rgba(196,240,79,0.07), rgba(196,240,79,0));
@@ -1869,7 +1890,7 @@ footer {
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Priority email support · 48h reply</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Lifetime updates through v1.0+</li>
         </ul>
-        <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Buy commercial licence — €12</a>
+        <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Buy commercial licence — €12</a>
       </div>
     </div>
   </div>
@@ -1897,43 +1918,42 @@ footer {
     </div>
 
     <div class="dl-row fade-up">
-      <a href="/download/windows" class="dl-card" data-os="win">
+      <a href="https://github.com/josedasilva11/blockbuilder-studio/releases/latest/download/BlockBuilderStudio-v0.5.0-portable-win-x64.zip" class="dl-card" data-os="win">
         <div class="dl-os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 L10.5 4.5 L10.5 11.5 L3 11.5 Z M11.5 4.4 L21 3 L21 11.5 L11.5 11.5 Z M3 12.5 L10.5 12.5 L10.5 19.5 L3 18.5 Z M11.5 12.5 L21 12.5 L21 21 L11.5 19.6 Z"/></svg>
           <span class="dl-os-name">Windows 10 · 11</span>
         </div>
-        <span class="dl-file">BlockBuilder-Setup.exe</span>
-        <span class="dl-meta">~82 MB · NSIS installer · Signed</span>
+        <span class="dl-file">BlockBuilderStudio-v0.5.0-portable.zip</span>
+        <span class="dl-meta">106 MB · Portable · Unzip and run</span>
         <div class="dl-arrow">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4 V18 M6 12 L12 18 L18 12"/></svg>
         </div>
       </a>
-      <a href="/download/macos" class="dl-card" data-os="mac">
+      <div class="dl-card dl-soon" data-os="mac" aria-disabled="true">
         <div class="dl-os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 17 C16 21 14 21 12 20 C10 21 8 21 6 17 C2 12 5 5 9 5 C11 4.5 12 5.5 12 5.5 C12 5.5 13 4.5 15 5 C16.5 5 18.5 5.7 19.5 7.5 C16 9.5 16.5 14 19 15 C18.6 16 18 17 18 17 Z M13 4 C13 2.5 14 1 16 1 C16 2.5 15 4 13 4 Z"/></svg>
           <span class="dl-os-name">macOS 12+</span>
         </div>
-        <span class="dl-file">BlockBuilder.dmg</span>
-        <span class="dl-meta">~94 MB · Universal · Notarised</span>
-        <div class="dl-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4 V18 M6 12 L12 18 L18 12"/></svg>
-        </div>
-      </a>
-      <a href="/download/linux" class="dl-card" data-os="linux">
+        <span class="dl-file">Coming soon</span>
+        <span class="dl-meta">Universal · Intel + Apple Silicon</span>
+        <div class="dl-arrow"></div>
+      </div>
+      <div class="dl-card dl-soon" data-os="linux" aria-disabled="true">
         <div class="dl-os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C9 2 8 5 8 7 C8 9 7 11 6 13 C4 16 3 19 5 21 L19 21 C21 19 20 16 18 13 C17 11 16 9 16 7 C16 5 15 2 12 2 Z"/></svg>
           <span class="dl-os-name">Linux x64</span>
         </div>
-        <span class="dl-file">BlockBuilder.AppImage</span>
-        <span class="dl-meta">~88 MB · Portable · No install</span>
-        <div class="dl-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4 V18 M6 12 L12 18 L18 12"/></svg>
-        </div>
-      </a>
+        <span class="dl-file">Coming soon</span>
+        <span class="dl-meta">AppImage · No install</span>
+        <div class="dl-arrow"></div>
+      </div>
     </div>
 
     <p class="dl-foot">
-      <span class="mono" style="color: var(--text-mid);">v0.5.0</span> · Released May 2026 · Signed for Windows · Notarised for macOS · <a href="/changelog">See changelog →</a>
+      <span class="mono" style="color: var(--text-mid);">v0.5.0</span> · Released May 2026 · Source on <a href="https://github.com/josedasilva11/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a> · <a href="/changelog">Changelog →</a>
+    </p>
+    <p class="dl-foot" style="font-size: 0.85em; color: var(--text-mid); margin-top: 0.75rem;">
+      Windows SmartScreen may show a warning on first launch (binary not yet code-signed). Click <strong>More info → Run anyway</strong>. <a href="https://github.com/josedasilva11/blockbuilder-studio#why-the-smartscreen-warning" target="_blank" rel="noopener">Why?</a>
     </p>
 
     <div class="sysreqs fade-up">
@@ -1992,7 +2012,7 @@ footer {
       <details>
         <summary>Can I use it commercially?</summary>
         <div class="answer">
-          <p>Yes, with a one-time €12 commercial licence at <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener">marjers.com/blockbuilder</a>. Covers selling prints, freelance work, paid classroom use, agency work — anything for-profit. Personal/hobby use stays free.</p>
+          <p>Yes, with a one-time €12 commercial licence — <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">buy here</a>. Covers selling prints, freelance work, paid classroom use, agency work — anything for-profit. Personal/hobby use stays free.</p>
         </div>
       </details>
       <details>
@@ -2090,7 +2110,7 @@ footer {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V14 M7 9 L12 14 L17 9 M4 19 H20"/></svg>
         Download BlockBuilder Studio
       </a>
-      <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener" class="btn btn-ghost btn-xl">Buy commercial licence · €12</a>
+      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener" class="btn btn-ghost btn-xl">Buy commercial licence · €12</a>
     </div>
     <p class="final-foot">Or <a href="https://marjers.com/support" target="_blank" rel="noopener">donate</a> if it saved you time. Free forever, powered by your support.</p>
   </div>
@@ -2131,14 +2151,14 @@ footer {
       <a href="#faq">FAQ</a>
       <a href="mailto:geral@marjers.com">Contact</a>
       <a href="https://marjers.com/support" target="_blank" rel="noopener">Donate</a>
-      <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener">Buy licence</a>
+      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">Buy licence</a>
     </div>
 
     <div class="footer-col">
       <h4>Maker</h4>
       <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>
       <a href="https://marjers.com/work" target="_blank" rel="noopener">Hire me</a>
-      <a href="https://github.com/marjers/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/josedasilva11/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 
@@ -2181,34 +2201,23 @@ footer {
   const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || matchMedia('(max-width: 600px)').matches;
   if (isMobile) document.documentElement.setAttribute('data-mobile', '1');
 
-  // Reorder download cards so visitor's OS is first + highlighted.
-  const row = document.querySelector('.dl-row');
-  if (row) {
-    const order = isWin ? ['win','mac','linux']
-                : isMac ? ['mac','win','linux']
-                :         ['linux','win','mac'];
-    const map = {};
-    for (const el of row.querySelectorAll('.dl-card')) map[el.dataset.os] = el;
-    row.innerHTML = '';
-    for (const os of order) if (map[os]) row.appendChild(map[os]);
-    if (map[order[0]]) map[order[0]].classList.add('dl-card-match');
-  }
+  // Highlight Windows card (only OS we ship for v0.5.0). Mac/Linux cards have
+  // .dl-soon and pointer-events:none so re-ordering doesn't help — just mark
+  // Windows as the recommended download.
+  const winCard = document.querySelector('.dl-card[data-os="win"]');
+  if (winCard) winCard.classList.add('dl-card-match');
 
-  // Hero CTA label.
+  // Hero CTA label. Until Mac/Linux builds ship, everyone sees "Windows" since
+  // that's the only thing they can actually download.
   const heroOs = document.getElementById('hero-os');
   const heroCta = document.getElementById('hero-cta');
   if (heroOs) {
-    heroOs.textContent = isWin   ? 'Windows'
-                       : isMac   ? 'macOS'
-                       : isLinux ? 'Linux'
-                       : 'your OS';
+    heroOs.textContent = isWin ? 'Windows'
+                       : (isMac || isLinux) ? 'Windows (Mac / Linux soon)'
+                       : 'Windows';
   }
   if (heroCta && !isMobile) {
-    const target = isWin ? '/download/windows'
-                 : isMac ? '/download/macos'
-                 : isLinux ? '/download/linux'
-                 : '#download';
-    heroCta.setAttribute('href', target);
+    heroCta.setAttribute('href', '#download');
   }
 
   // Fade-up on scroll.

@@ -2,6 +2,19 @@ name = "blockbuilder-license-issuer"
 main = "license-issuer.js"
 compatibility_date = "2026-01-01"
 
+# Route the worker via our own domain. The default *.workers.dev URL is
+# unreliable on fresh accounts (TLS cert not always provisioned), and using
+# api.blockbuilder.studio keeps everything inside one zone with a known-good
+# certificate.
+routes = [
+  { pattern = "api.blockbuilder.studio/*", zone_name = "blockbuilder.studio" }
+]
+
+# Enable Workers logs (real-time + dashboard persistence). Without this,
+# console.log output goes nowhere and `wrangler tail` shows no events.
+[observability]
+enabled = true
+
 # Secrets (set with `wrangler secret put NAME` — never commit values):
 #   BBS_PRIVATE_KEY              ECDSA P-256 private key PEM, used to sign licence keys
 #   LEMONSQUEEZY_SIGNING_SECRET  Shared secret from the LS webhook config (HMAC verification)

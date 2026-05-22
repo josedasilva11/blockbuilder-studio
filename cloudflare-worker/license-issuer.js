@@ -29,6 +29,18 @@ const dec = new TextDecoder();
 
 export default {
   async fetch(req, env) {
+    try {
+      return await handle(req, env);
+    } catch (err) {
+      // Stack only — never log the secret values themselves.
+      console.error('worker error: ' + (err?.name || 'Error') + ': ' +
+        (err?.message || err) + '\n' + (err?.stack || '(no stack)'));
+      return new Response('worker error', { status: 500 });
+    }
+  },
+};
+
+async function handle(req, env) {
     if (req.method !== 'POST') return new Response('OK', { status: 200 });
 
     const raw = await req.text();
@@ -87,12 +99,12 @@ export default {
       });
       if (!resp.ok) {
         const t = await resp.text();
-        return new Response('email failed: ' + t, { status: 500 });
+        console.error('resend rejected: status=' + resp.status + ' body=' + t.slice(0, 200));
+        return new Response('email failed', { status: 500 });
       }
     }
     return new Response('OK', { status: 200 });
-  },
-};
+}
 
 // ---------------------------------------------------------------------------
 // Helpers

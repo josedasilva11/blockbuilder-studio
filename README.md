@@ -42,11 +42,32 @@ work.
 ## Development
 
 ```bash
-git clone https://github.com/marjers/blockbuilder-studio
+git clone https://github.com/josedasilva11/blockbuilder-studio
 cd blockbuilder-studio
 npm install                # only Electron + electron-builder
 npm run dev                # opens the Electron app
 ```
+
+## Why the SmartScreen warning
+
+The v0.5.0 Windows portable build is **not code-signed**. On first launch
+Windows SmartScreen may show:
+
+> Windows protected your PC
+
+Click **More info → Run anyway**. The warning disappears for that machine
+after the first run.
+
+The binary is not signed yet because:
+
+- An EV code-signing cert is €300–500/year (Sectigo, DigiCert)
+- A standard cert is €120/year but still triggers SmartScreen until the
+  signature builds reputation across hundreds of installs
+- For a €12 product still finding its audience, that's not justified
+
+When BlockBuilder Studio crosses a few hundred paid users, signing becomes
+worth the cost and will land in a future release. For now: open, no install,
+no telemetry — inspect every file in the zip if you want to.
 
 The renderer is plain ES modules in `app/*.js` loaded via `index.html`. No
 bundler, no build step in dev — edit and reload.
