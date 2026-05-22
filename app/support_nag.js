@@ -31,7 +31,7 @@ const DAYS_GRACE       = 7;     // also delay first nag by N days from install
 
 // All "donate / support" actions consolidate on a single marjers.com page so
 // the in-app links never need to change when the user adds new platforms.
-const DONATE_URL  = 'https://blockbuilder.studio/#download';
+const DONATE_URL  = 'https://buymeacoffee.com/marjers';
 const LICENSE_URL = 'https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643';
 
 export function bumpLaunchCount() {
@@ -146,23 +146,22 @@ export function showNag() {
       </div>
       <h2>Enjoying BlockBuilder?</h2>
       <p class="support-lede">
-        It is and will stay free, with no accounts and no limits. Built solo by
-        <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>.
-        If it saves you time, a one-off donation or commercial licence keeps
-        the project going.
+        It is and will stay free, no accounts, no limits. Built by one person
+        on evenings and weekends. If it earns its place on your machine, here
+        are two ways to keep it alive.
       </p>
       <div class="support-actions">
-        <button class="support-btn primary" data-act="license">
-          <span class="support-btn-title">Buy commercial licence</span>
-          <span class="support-btn-sub">€12 one-time · unlocks for-profit use · silences this dialog forever</span>
-        </button>
         <button class="support-btn" data-act="donate">
-          <span class="support-btn-title">One-time donation</span>
-          <span class="support-btn-sub">Any amount via marjers.com/support</span>
+          <span class="support-btn-title">☕ Buy me a coffee</span>
+          <span class="support-btn-sub">€3, €5, €10 — any amount. One-off via Buy Me a Coffee. No account needed.</span>
+        </button>
+        <button class="support-btn primary" data-act="license">
+          <span class="support-btn-title">Buy commercial licence — €12</span>
+          <span class="support-btn-sub">Required if you sell prints / freelance / use for paid work. Lifetime, every machine. Silences this dialog.</span>
         </button>
         <button class="support-btn ghost" data-act="later">
           <span class="support-btn-title">Maybe later</span>
-          <span class="support-btn-sub">Continue without paying — the app stays fully functional</span>
+          <span class="support-btn-sub">Continue using BlockBuilder. Nothing locked. We'll ask again in a few launches.</span>
         </button>
       </div>
       <p class="support-foot">

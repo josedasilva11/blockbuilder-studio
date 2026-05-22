@@ -307,17 +307,17 @@ function bindSettingsPanel() {
       `;
     } else {
       licBox.innerHTML = `
-        <p class="license-sub">Free for personal use. Buy a one-time commercial licence to use exports in for-profit work and to silence the reminder dialog.</p>
+        <p class="license-sub">Free for personal use. Buy a one-time commercial licence if you use exports in for-profit work — or tip a coffee if it just earned its place on your machine.</p>
         <div class="license-actions">
           <button class="action-btn" data-act="buy">Buy licence (€12)</button>
           <button class="action-btn" data-act="activate">I have a key</button>
-          <button class="action-btn" data-act="donate">Donate</button>
+          <button class="action-btn" data-act="coffee">☕ Coffee</button>
         </div>
       `;
       licBox.querySelector('[data-act="buy"]').addEventListener('click',
         () => window.open('https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643', '_blank'));
-      licBox.querySelector('[data-act="donate"]').addEventListener('click',
-        () => window.open('https://blockbuilder.studio/#download', '_blank'));
+      licBox.querySelector('[data-act="coffee"]').addEventListener('click',
+        () => window.open('https://buymeacoffee.com/marjers', '_blank'));
       licBox.querySelector('[data-act="activate"]').addEventListener('click',
         () => openLicenseDialog());
     }

@@ -96,8 +96,10 @@ export async function showWelcome({ onClose }) {
           · need custom 3D / web work? <a href="https://marjers.com" target="_blank" rel="noopener">marjers.com</a>
         </span>
         <span class="welcome-support-row">
-          BlockBuilder is free and stays free. If it helps,
-          <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">buy a commercial licence (€12)</a>.
+          BlockBuilder is free and stays free. If it earns its place,
+          <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">buy me a coffee ☕</a>
+          or
+          <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">grab a commercial licence (€12)</a>.
         </span>
       </div>
     </div>
