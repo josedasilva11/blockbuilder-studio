@@ -964,6 +964,151 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   border-radius: 0 0 4px 4px;
 }
 
+/* Download modal — pops up immediately on click of the Windows download card.
+   Reuses .postdl-step semantics but in a modal frame so users see the steps
+   while the .zip is downloading instead of scrolling for them. */
+.dl-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 8, 12, 0.78);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: dl-modal-in 0.18s ease-out;
+}
+.dl-modal[hidden] { display: none; }
+@keyframes dl-modal-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.dl-modal-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  max-width: 620px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 36px 36px 28px;
+  position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+.dl-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--text-mid);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: 0.15s;
+}
+.dl-modal-close:hover { background: var(--bg); color: var(--text); }
+.dl-modal-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(196,240,79,0.08);
+  border: 1px solid rgba(196,240,79,0.25);
+  border-radius: var(--r-md, 10px);
+  font-size: 14px;
+  color: var(--text);
+  margin: 0 0 26px;
+}
+.dl-modal-status code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.dl-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(196,240,79,0.25);
+  border-top-color: var(--lime);
+  border-radius: 50%;
+  animation: dl-spin 0.9s linear infinite;
+  flex: 0 0 18px;
+}
+@keyframes dl-spin {
+  to { transform: rotate(360deg); }
+}
+.dl-modal-card h2 {
+  font-size: 22px;
+  margin: 0 0 22px;
+  letter-spacing: -0.3px;
+  font-weight: 600;
+}
+.dl-modal-card h2 .serif {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  color: var(--lime);
+  font-weight: 400;
+}
+.dl-modal-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.dl-modal-steps li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.dl-modal-num {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: #0a0c10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+.dl-modal-steps li > div { flex: 1; }
+.dl-modal-steps strong { color: var(--text); font-size: 14.5px; }
+.dl-modal-steps code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text); }
+.dl-modal-steps p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-mid);
+}
+.dl-modal-foot {
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+  margin-top: 4px;
+}
+.dl-modal-restart {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  text-align: center;
+  margin: 0 0 16px;
+}
+.dl-modal-restart a { color: var(--lime); }
+.dl-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.dl-modal-actions .btn { padding: 10px 18px; font-size: 13.5px; }
+@media (max-width: 540px) {
+  .dl-modal-card { padding: 28px 22px 22px; }
+  .dl-modal-actions { flex-direction: column-reverse; }
+  .dl-modal-actions .btn { width: 100%; text-align: center; }
+}
+
 /* Post-download walkthrough — sits under sysreqs, explains the zip workflow */
 .postdl {
   margin: 60px auto 0;
@@ -2267,6 +2412,54 @@ footer {
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
+     Post-download modal — shown when user clicks the Windows download link.
+     Mirrors the inline #download walkthrough but appears immediately so they
+     don't have to scroll past sysreqs to find the steps.
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="dl-modal" id="dl-modal" hidden aria-modal="true" role="dialog">
+  <div class="dl-modal-card">
+    <button class="dl-modal-close" id="dl-modal-close" aria-label="Close">×</button>
+    <div class="dl-modal-status">
+      <span class="dl-spinner"></span>
+      <span><strong>Download started.</strong> Saving <code>BlockBuilderStudio-v0.5.0-portable.zip</code> (106 MB) to your Downloads folder.</span>
+    </div>
+    <h2>Three steps while you wait <span class="serif">↓</span></h2>
+
+    <ol class="dl-modal-steps">
+      <li>
+        <span class="dl-modal-num">1</span>
+        <div>
+          <strong>Extract the .zip</strong>
+          <p>Right-click the file → <strong>Extract All…</strong>. Or use 7-Zip / WinRAR. Pick any folder (Desktop, Documents, anywhere).</p>
+        </div>
+      </li>
+      <li>
+        <span class="dl-modal-num">2</span>
+        <div>
+          <strong>Open the folder, double-click <code>BlockBuilder Studio.exe</code></strong>
+          <p>On first launch Windows SmartScreen may say <em>"Windows protected your PC"</em>. Click <strong>More info → Run anyway</strong>. The warning disappears after the first run.</p>
+        </div>
+      </li>
+      <li>
+        <span class="dl-modal-num">3</span>
+        <div>
+          <strong>That's it. No installer, no registry, no shortcuts.</strong>
+          <p>To uninstall: delete the folder. To update: download the next release and replace it. Want a desktop shortcut? Right-click the <code>.exe</code> → <em>Send to → Desktop</em>.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="dl-modal-foot">
+      <p class="dl-modal-restart">Download didn't start? <a href="https://github.com/josedasilva11/blockbuilder-studio/releases/latest/download/BlockBuilderStudio-v0.5.0-portable-win-x64.zip">Click here to retry.</a></p>
+      <div class="dl-modal-actions">
+        <a href="/activate" class="btn btn-ghost">Have a commercial licence? Activate →</a>
+        <button class="btn btn-primary" id="dl-modal-ok">Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
      Footer
      ════════════════════════════════════════════════════════════════════════ -->
 <footer>
@@ -2356,6 +2549,42 @@ footer {
   // Windows as the recommended download.
   const winCard = document.querySelector('.dl-card[data-os="win"]');
   if (winCard) winCard.classList.add('dl-card-match');
+
+  // Post-download modal: when the user clicks the Windows download card, let
+  // the browser start the download (we don't preventDefault), then immediately
+  // show the steps modal so they don't have to scroll past sysreqs to find
+  // "what now?".
+  const dlModal = document.getElementById('dl-modal');
+  const dlClose = document.getElementById('dl-modal-close');
+  const dlOk    = document.getElementById('dl-modal-ok');
+  function openDlModal() {
+    if (!dlModal) return;
+    dlModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDlModal() {
+    if (!dlModal) return;
+    dlModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+  if (winCard) {
+    winCard.addEventListener('click', (ev) => {
+      // Don't intercept if user is opening in new tab / saving target / etc.
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1) return;
+      // The link still navigates and starts the download — modal appears over it.
+      openDlModal();
+    });
+  }
+  if (dlClose) dlClose.addEventListener('click', closeDlModal);
+  if (dlOk)    dlOk.addEventListener('click', closeDlModal);
+  if (dlModal) {
+    dlModal.addEventListener('click', (ev) => {
+      if (ev.target === dlModal) closeDlModal();
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && !dlModal.hidden) closeDlModal();
+    });
+  }
 
   // Hero CTA label. Until Mac/Linux builds ship, everyone sees "Windows" since
   // that's the only thing they can actually download.
