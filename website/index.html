@@ -934,6 +934,79 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   border-radius: 0 0 4px 4px;
 }
 
+/* Post-download walkthrough — sits under sysreqs, explains the zip workflow */
+.postdl {
+  margin: 60px auto 0;
+  max-width: 920px;
+  padding: 36px 32px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+.postdl-title {
+  font-size: 22px;
+  margin: 0 0 24px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+.postdl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.postdl-step {
+  position: relative;
+  padding: 22px 20px 20px;
+  background: var(--bg);
+  border: 1px solid var(--border-soft, var(--border));
+  border-radius: var(--r-md, 10px);
+}
+.postdl-step h4 {
+  font-size: 15px;
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: var(--text);
+}
+.postdl-step p {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-mid);
+  margin: 0;
+}
+.postdl-step p code,
+.postdl-tip code {
+  background: var(--panel);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--text);
+}
+.postdl-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: #0a0c10;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.postdl-tip {
+  margin: 26px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
+}
+@media (max-width: 720px) {
+  .postdl-grid { grid-template-columns: 1fr; }
+  .postdl { padding: 28px 22px; }
+}
+
 .dl-card-match {
   border-color: var(--lime-line);
   background: linear-gradient(135deg, rgba(196,240,79,0.07), rgba(196,240,79,0));
@@ -1969,6 +2042,31 @@ footer {
         <strong>Linux</strong>
         <span>Ubuntu 22.04+ / Fedora 38+ / Arch / any distro with FUSE</span>
       </div>
+    </div>
+
+    <!-- Post-download walkthrough — how to actually open a portable .zip -->
+    <div class="postdl fade-up">
+      <h3 class="postdl-title">After the download — three steps</h3>
+      <div class="postdl-grid">
+        <div class="postdl-step">
+          <span class="postdl-num">1</span>
+          <h4>Extract the .zip</h4>
+          <p>Right-click <code>BlockBuilderStudio-v0.5.0-portable.zip</code> → <strong>Extract All…</strong> (or use 7-Zip). Pick any folder — Desktop, Documents, anywhere with write access.</p>
+        </div>
+        <div class="postdl-step">
+          <span class="postdl-num">2</span>
+          <h4>Run BlockBuilder Studio.exe</h4>
+          <p>Open the extracted <code>BlockBuilderStudio</code> folder. Double-click <strong>BlockBuilder Studio.exe</strong>. On first launch Windows SmartScreen may say <em>"Windows protected your PC"</em> — click <strong>More info → Run anyway</strong>.</p>
+        </div>
+        <div class="postdl-step">
+          <span class="postdl-num">3</span>
+          <h4>That's it — start modeling</h4>
+          <p>No installer. Nothing in <code>Program Files</code>, no registry keys, no shortcuts unless you make one. To uninstall: delete the folder. To update: download the next release and replace it.</p>
+        </div>
+      </div>
+      <p class="postdl-tip">
+        <strong>Want a desktop shortcut?</strong> Right-click <code>BlockBuilder Studio.exe</code> → <em>Send to → Desktop (create shortcut)</em>.
+      </p>
     </div>
   </div>
 </section>

@@ -97,9 +97,7 @@ export async function showWelcome({ onClose }) {
         </span>
         <span class="welcome-support-row">
           BlockBuilder is free and stays free. If it helps,
-          <a href="https://marjers.com/support" target="_blank" rel="noopener">donate</a>
-          or
-          <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener">buy a commercial licence (€12)</a>.
+          <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">buy a commercial licence (€12)</a>.
         </span>
       </div>
     </div>

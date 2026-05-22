@@ -23,7 +23,17 @@
 //
 // Key format
 // ----------
+// Preferred (issued by current worker):
+//   BBS2.<base64url(payload-json)>.<base64url(signature-DER)>
+//
+// Legacy (issued before v0.5.0 worker fix):
 //   BBS2-<base64url(payload-json)>-<base64url(signature-DER)>
+//
+// The legacy form used '-' as separator, but '-' is also a valid character in
+// the base64url alphabet (URL-safe replacement for '+'), so signatures could
+// contain literal '-' chars and break a naive split. The '.' form sidesteps
+// this because '.' is outside base64url. Verifier accepts both for backwards
+// compat with already-issued legacy keys.
 //
 // payload-json:
 //   { email, name, kind: "commercial", issued: ISO8601, v: 1 }
@@ -59,10 +69,26 @@ async function loadPublicKey() {
  * on any kind of failure (malformed, bad signature, expired, etc.).
  */
 export async function verifyLicenseKey(keyStr) {
-  if (typeof keyStr !== 'string' || !keyStr.startsWith('BBS2-')) return null;
-  const parts = keyStr.split('-');
-  if (parts.length !== 3) return null;
-  const [, payloadB64, sigB64] = parts;
+  if (typeof keyStr !== 'string') return null;
+  let payloadB64, sigB64;
+  if (keyStr.startsWith('BBS2.')) {
+    // Unambiguous: '.' is outside base64url alphabet so a plain split is safe.
+    const parts = keyStr.slice(5).split('.');
+    if (parts.length !== 2) return null;
+    [payloadB64, sigB64] = parts;
+  } else if (keyStr.startsWith('BBS2-')) {
+    // Legacy: '-' may appear inside the base64url-encoded signature, so a naive
+    // .split('-') gives 4+ parts. We assume the payload itself has no '-' (true
+    // for our small JSON payloads in practice) and treat everything after the
+    // first '-' that follows the prefix as the signature.
+    const rest = keyStr.slice(5);
+    const i = rest.indexOf('-');
+    if (i < 0) return null;
+    payloadB64 = rest.slice(0, i);
+    sigB64 = rest.slice(i + 1);
+  } else {
+    return null;
+  }
   let payloadBytes, sigBytes;
   try {
     payloadBytes = b64UrlToBytes(payloadB64);

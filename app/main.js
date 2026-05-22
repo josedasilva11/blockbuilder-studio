@@ -315,9 +315,9 @@ function bindSettingsPanel() {
         </div>
       `;
       licBox.querySelector('[data-act="buy"]').addEventListener('click',
-        () => window.open('https://marjers.com/blockbuilder', '_blank'));
+        () => window.open('https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643', '_blank'));
       licBox.querySelector('[data-act="donate"]').addEventListener('click',
-        () => window.open('https://marjers.com/support', '_blank'));
+        () => window.open('https://blockbuilder.studio/#download', '_blank'));
       licBox.querySelector('[data-act="activate"]').addEventListener('click',
         () => openLicenseDialog());
     }

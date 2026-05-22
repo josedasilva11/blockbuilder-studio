@@ -31,8 +31,8 @@ const DAYS_GRACE       = 7;     // also delay first nag by N days from install
 
 // All "donate / support" actions consolidate on a single marjers.com page so
 // the in-app links never need to change when the user adds new platforms.
-const DONATE_URL  = 'https://marjers.com/support';
-const LICENSE_URL = 'https://marjers.com/blockbuilder';
+const DONATE_URL  = 'https://blockbuilder.studio/#download';
+const LICENSE_URL = 'https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643';
 
 export function bumpLaunchCount() {
   const cur = parseInt(localStorage.getItem(KEY_COUNT) || '0', 10) + 1;
@@ -226,7 +226,7 @@ export function openLicenseDialog() {
         </button>
       </div>
       <p class="support-foot">
-        No key yet? <a href="${LICENSE_URL}" target="_blank" rel="noopener">Buy one at marjers.com/blockbuilder</a>
+        No key yet? <a href="${LICENSE_URL}" target="_blank" rel="noopener">Buy one at blockbuilder.studio</a>
       </p>
       <p class="lic-msg" hidden></p>
     </div>

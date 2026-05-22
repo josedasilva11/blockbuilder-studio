@@ -79,7 +79,11 @@ async function handle(req, env) {
     // Web Crypto returns r||s (64B). The desktop app's verifier accepts DER
     // signatures, so re-encode before emitting the key string.
     const sigDer = rawECDSAToDer(new Uint8Array(sigRaw));
-    const key = `BBS2-${b64url(payloadBytes)}-${b64url(sigDer)}`;
+    // Use '.' as separator: base64url-safe ('.' is NOT in the alphabet, unlike
+    // '-' which was used in v0.4 keys and could appear inside a signature,
+    // breaking naive .split('-') parsers. The desktop verifier still accepts
+    // legacy 'BBS2-...' for backwards compat.
+    const key = `BBS2.${b64url(payloadBytes)}.${b64url(sigDer)}`;
 
     // ----- Email it via Resend ---------------------------------------------
     if (env.RESEND_API_KEY) {
