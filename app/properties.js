@@ -1,4 +1,4 @@
-// Properties panel — renders editable fields for the currently selected shape.
+// Properties panel, renders editable fields for the currently selected shape.
 // Auto-polls the selected shape so values stay live while handles drag the mesh.
 
 import * as THREE from 'three';
@@ -26,16 +26,16 @@ const PARAM_LABELS = {
 // Hover-explanations for every editable parameter. Shown on the label so the
 // user knows what each number actually controls.
 const PARAM_TIPS = {
-  width:        'WIDTH — extent along the X axis (left ↔ right).',
-  depth:        'DEPTH — extent along the Y axis (back ↔ front).',
-  height:       'HEIGHT — extent along the Z axis (down ↔ up).',
-  radius:       'RADIUS — outer radius. For cylinder/cone/sphere this is the size; for star/polygon it is the outer reach.',
-  radius_top:   'TOP RADIUS — radius of the top face. Set to 0 for a pointed cone, > 0 for a truncated cone (frustum).',
-  inner_radius: 'INNER RADIUS — the hole in the middle. Used by Tube (pipe wall) and Star (valleys between points).',
-  minor_radius: 'TUBE RADIUS — thickness of the donut tube around the main ring.',
-  segments:     'SEGMENTS — how many slices around the curve. Higher = smoother but heavier. 32 is enough for most things, 64+ for very large or close-up shapes.',
-  minor_segments:'TUBE SEGMENTS — slices around the tube cross-section. 16 is the sweet spot.',
-  sides:        'SIDES — how many edges the polygon/star has. 3 = triangle, 5 = pentagon, 6 = hexagon, etc.',
+  width:        'WIDTH, extent along the X axis (left ↔ right).',
+  depth:        'DEPTH, extent along the Y axis (back ↔ front).',
+  height:       'HEIGHT, extent along the Z axis (down ↔ up).',
+  radius:       'RADIUS, outer radius. For cylinder/cone/sphere this is the size; for star/polygon it is the outer reach.',
+  radius_top:   'TOP RADIUS, radius of the top face. Set to 0 for a pointed cone, > 0 for a truncated cone (frustum).',
+  inner_radius: 'INNER RADIUS, the hole in the middle. Used by Tube (pipe wall) and Star (valleys between points).',
+  minor_radius: 'TUBE RADIUS, thickness of the donut tube around the main ring.',
+  segments:     'SEGMENTS, how many slices around the curve. Higher = smoother but heavier. 32 is enough for most things, 64+ for very large or close-up shapes.',
+  minor_segments:'TUBE SEGMENTS, slices around the tube cross-section. 16 is the sweet spot.',
+  sides:        'SIDES, how many edges the polygon/star has. 3 = triangle, 5 = pentagon, 6 = hexagon, etc.',
 };
 const PARAM_STEP = { segments: 1, minor_segments: 1, sides: 1 };
 
@@ -88,7 +88,7 @@ function refreshLiveValues() {
   if (op && document.activeElement !== op) {
     op.value = (s.mesh.material?.opacity ?? 1).toFixed(2);
   }
-  // Volume / area / triangles depend on scale and live geometry — refresh
+  // Volume / area / triangles depend on scale and live geometry, refresh
   // them in lockstep with the size inputs.
   updateMetrics(s);
 }
@@ -145,7 +145,7 @@ function render(shape) {
   }
   _body.appendChild(holeRow);
 
-  // Dimension / segment params (skip for IMPORT — geometry is fixed)
+  // Dimension / segment params (skip for IMPORT, geometry is fixed)
   if (def?.params) {
     for (const key of def.params) {
       const row = document.createElement('div');
@@ -172,7 +172,7 @@ function render(shape) {
       const sz = bb.getSize(new THREE.Vector3());
       const row = document.createElement('div');
       row.className = 'prop-row';
-      row.innerHTML = `<label class="tip" data-tip="SIZE — current bounding-box size of the imported mesh in ${state.unit}. Editing each field scales the mesh on that axis. X / Y / Z = width / depth / height.">Size (${state.unit})</label>
+      row.innerHTML = `<label class="tip" data-tip="SIZE, current bounding-box size of the imported mesh in ${state.unit}. Editing each field scales the mesh on that axis. X / Y / Z = width / depth / height.">Size (${state.unit})</label>
         <div style="display:flex;gap:4px;">
           <input type="number" step="0.1" data-axis="x" value="${sz.x.toFixed(2)}" title="X size (width)" />
           <input type="number" step="0.1" data-axis="y" value="${sz.y.toFixed(2)}" title="Y size (depth)" />
@@ -197,10 +197,10 @@ function render(shape) {
   // Position
   const posRow = document.createElement('div');
   posRow.className = 'prop-row';
-  posRow.innerHTML = `<label class="tip" data-tip="POSITION — world-space centre of the shape, in ${state.unit}. X = left/right, Y = back/front, Z = up/down (Z = 0 is the workplane).">Position (${state.unit})</label><div style="display:flex;gap:4px;">
-    <input type="number" step="0.1" data-axis="x" title="X — left/right position" />
-    <input type="number" step="0.1" data-axis="y" title="Y — back/front position" />
-    <input type="number" step="0.1" data-axis="z" title="Z — up/down position (0 = workplane)" />
+  posRow.innerHTML = `<label class="tip" data-tip="POSITION, world-space centre of the shape, in ${state.unit}. X = left/right, Y = back/front, Z = up/down (Z = 0 is the workplane).">Position (${state.unit})</label><div style="display:flex;gap:4px;">
+    <input type="number" step="0.1" data-axis="x" title="X, left/right position" />
+    <input type="number" step="0.1" data-axis="y" title="Y, back/front position" />
+    <input type="number" step="0.1" data-axis="z" title="Z, up/down position (0 = workplane)" />
   </div>`;
   _posInputs = [...posRow.querySelectorAll('input')];
   ['x', 'y', 'z'].forEach((ax, i) => {
@@ -215,7 +215,7 @@ function render(shape) {
   // Opacity slider
   const opRow = document.createElement('div');
   opRow.className = 'prop-row';
-  opRow.innerHTML = `<label for="prop-opacity" class="tip" data-tip="OPACITY — how see-through this shape is in the viewport (1 = solid, 0.1 = nearly invisible). Only affects display; exported STL/OBJ is unaffected. Useful for peeking at hidden geometry without hiding the shape outright.">Opacity</label>
+  opRow.innerHTML = `<label for="prop-opacity" class="tip" data-tip="OPACITY, how see-through this shape is in the viewport (1 = solid, 0.1 = nearly invisible). Only affects display; exported STL/OBJ is unaffected. Useful for peeking at hidden geometry without hiding the shape outright.">Opacity</label>
     <input id="prop-opacity" type="range" min="0.1" max="1" step="0.05" value="${(shape.mesh.material?.opacity ?? 1).toFixed(2)}" />`;
   const opInp = opRow.querySelector('input');
   opInp.addEventListener('input', () => {
@@ -237,7 +237,7 @@ function render(shape) {
     const cRow = document.createElement('div');
     cRow.className = 'prop-row colour-row';
     cRow.innerHTML = `
-      <label class="tip" data-tip="COLOUR — visual material colour of this shape. 8 quick-picks below; 'More colours' opens an extended palette; the picker / hex field accept any value. Hole shapes don't get a colour (always rendered red-translucent).">Colour</label>
+      <label class="tip" data-tip="COLOUR, visual material colour of this shape. 8 quick-picks below; 'More colours' opens an extended palette; the picker / hex field accept any value. Hole shapes don't get a colour (always rendered red-translucent).">Colour</label>
       <div class="color-grid"></div>
       <button class="colour-more" type="button">More colours…</button>
       <div class="color-grid color-grid-ext" hidden></div>
@@ -292,7 +292,7 @@ function render(shape) {
     _body.appendChild(cRow);
   }
 
-  // Repair button — only relevant for IMPORTed / baked geometry. Welds
+  // Repair button, only relevant for IMPORTed / baked geometry. Welds
   // duplicate verts, drops degenerate triangles, rebuilds normals + BVH.
   if (isImport) {
     const repairRow = document.createElement('div');
@@ -302,7 +302,7 @@ function render(shape) {
     _body.appendChild(repairRow);
   }
 
-  // Metrics — volume / surface area / triangle count. Always shown so the
+  // Metrics, volume / surface area / triangle count. Always shown so the
   // user can sanity-check geometry for print costs and complexity.
   const metricsRow = document.createElement('div');
   metricsRow.className = 'prop-row metrics-row';
@@ -319,14 +319,14 @@ function render(shape) {
   _body.appendChild(metricsRow);
   updateMetrics(shape);
 
-  // Quick actions — Lock + Reset transform + Delete in one row of compact
+  // Quick actions, Lock + Reset transform + Delete in one row of compact
   // buttons. Lock keeps the shape visible but skips it from picking; Reset
   // zeros rotation + scale (keeps position so the shape doesn't teleport).
   const actionRow = document.createElement('div');
   actionRow.className = 'prop-row action-row';
   actionRow.innerHTML = `
     <button class="action-btn ${shape.locked ? 'active' : ''}" data-act="lock"
-      data-tip="Lock — keep visible but block any selection or edit. Click again to unlock."
+      data-tip="Lock, keep visible but block any selection or edit. Click again to unlock."
       class="tip">${shape.locked ? '🔒 Locked' : '🔓 Lock'}</button>
     <button class="action-btn" data-act="reset"
       data-tip="Reset rotation + scale to identity (keeps position)" class="tip">Reset transform</button>

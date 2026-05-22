@@ -98,7 +98,7 @@ function main() {
   if (verEl) verEl.textContent = `v${APP_VERSION}`;
 
   // Verify the stored licence key against the embedded public key before we
-  // decide whether to show the nag dialog. Async — but we hold the welcome
+  // decide whether to show the nag dialog. Async, but we hold the welcome
   // modal until it completes so isLicensed() is correct downstream.
   revalidateLicense().then(() => {
     maybeShowUnitPicker(() => {
@@ -277,7 +277,7 @@ function bindSettingsPanel() {
   for (const btn of panel.querySelectorAll('.settings-quality-btn')) {
     btn.addEventListener('click', () => setSetting('quality', btn.dataset.quality));
   }
-  // Unit picker — opens the same first-run modal but on demand.
+  // Unit picker, opens the same first-run modal but on demand.
   const unitBtn = panel.querySelector('#settings-unit-change');
   const unitCur = panel.querySelector('#settings-unit-current');
   function refreshUnitLabel() { if (unitCur) unitCur.textContent = state.unit; }
@@ -286,7 +286,7 @@ function bindSettingsPanel() {
     showUnitPicker(() => { refreshUnitLabel(); toast.ok('Unit changed', { detail: `Now using ${state.unit}` }); });
   });
   // "Show welcome screen on launch" toggle (independent of the welcome
-  // modal's own checkbox — both write the same localStorage key).
+  // modal's own checkbox, both write the same localStorage key).
   const welcomeCb = panel.querySelector('#settings-show-welcome');
   if (welcomeCb) {
     welcomeCb.checked = localStorage.getItem('bb.skipWelcome') !== '1';
@@ -296,7 +296,7 @@ function bindSettingsPanel() {
     });
   }
 
-  // License & support block — different copy depending on activation state.
+  // License & support block, different copy depending on activation state.
   const licBox = panel.querySelector('#settings-license-box');
   function renderLicenseBox() {
     if (!licBox) return;
@@ -307,7 +307,7 @@ function bindSettingsPanel() {
       `;
     } else {
       licBox.innerHTML = `
-        <p class="license-sub">Free for personal use. Buy a one-time commercial licence if you use exports in for-profit work — or tip a coffee if it just earned its place on your machine.</p>
+        <p class="license-sub">Free for personal use. Buy a one-time commercial licence if you use exports in for-profit work, or tip a coffee if it just earned its place on your machine.</p>
         <div class="license-actions">
           <button class="action-btn" data-act="buy">Buy licence (€12)</button>
           <button class="action-btn" data-act="activate">I have a key</button>
@@ -315,7 +315,7 @@ function bindSettingsPanel() {
         </div>
       `;
       licBox.querySelector('[data-act="buy"]').addEventListener('click',
-        () => window.open('https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643', '_blank'));
+        () => window.open('https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643', '_blank'));
       licBox.querySelector('[data-act="coffee"]').addEventListener('click',
         () => window.open('https://buymeacoffee.com/marjers', '_blank'));
       licBox.querySelector('[data-act="activate"]').addEventListener('click',
@@ -480,9 +480,9 @@ function bindEmptyStateAndHud() {
     if (hudSig !== _lastHudSig) {
       _lastHudSig = hudSig;
       hud.innerHTML = `
-        <span class="hud-key tip" data-tip="SHAPES — total number of TinkerShapes currently in the scene (visible + hidden).">shapes</span><span class="hud-val">${n}</span>
-        <span class="hud-key tip" data-tip="SELECTED — what the next operation (delete, group, transform) will act on. Multi-select with Shift+click or marquee.">selected</span><span class="hud-val accent">${selLabel}</span>
-        <span class="hud-key tip" data-tip="SNAP — current snap step. Moves / resizes / spawns jump in increments of this value. Toolbar 'Snap' control changes it. Off = no snapping.">snap</span><span class="hud-val">${snap}</span>
+        <span class="hud-key tip" data-tip="SHAPES, total number of TinkerShapes currently in the scene (visible + hidden).">shapes</span><span class="hud-val">${n}</span>
+        <span class="hud-key tip" data-tip="SELECTED, what the next operation (delete, group, transform) will act on. Multi-select with Shift+click or marquee.">selected</span><span class="hud-val accent">${selLabel}</span>
+        <span class="hud-key tip" data-tip="SNAP, current snap step. Moves / resizes / spawns jump in increments of this value. Toolbar 'Snap' control changes it. Off = no snapping.">snap</span><span class="hud-val">${snap}</span>
       `;
     }
 

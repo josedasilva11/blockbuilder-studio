@@ -1,11 +1,11 @@
 // WinRAR-style support nag. The app is fully functional forever; this modal
 // pops up every 5 launches or every 7 days of active use to remind the user
 // they can donate or buy a commercial licence. Activated licences silence
-// the nag for good. No feature lockout, no time bombs — just a friendly
+// the nag for good. No feature lockout, no time bombs, just a friendly
 // reminder.
 //
 // Storage keys (localStorage):
-//   bb.launchCount    integer — how many times the app started
+//   bb.launchCount    integer, how many times the app started
 //   bb.firstLaunch    timestamp of the very first launch (for "days of use")
 //   bb.lastNag        timestamp of the last time the nag was shown
 //   bb.dismissCount   how many times the user picked "Maybe later"
@@ -32,7 +32,7 @@ const DAYS_GRACE       = 7;     // also delay first nag by N days from install
 // All "donate / support" actions consolidate on a single marjers.com page so
 // the in-app links never need to change when the user adds new platforms.
 const DONATE_URL  = 'https://buymeacoffee.com/marjers';
-const LICENSE_URL = 'https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643';
+const LICENSE_URL = 'https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643';
 
 export function bumpLaunchCount() {
   const cur = parseInt(localStorage.getItem(KEY_COUNT) || '0', 10) + 1;
@@ -70,7 +70,7 @@ export async function revalidateLicense() {
   const payload = await verifyLicenseKey(stored);
   if (!payload) {
     _licenseValid = false;
-    // Don't auto-clear stored data — keep it around so the user can paste it
+    // Don't auto-clear stored data, keep it around so the user can paste it
     // again into a future version if the public key changes.
     return false;
   }
@@ -153,10 +153,10 @@ export function showNag() {
       <div class="support-actions">
         <button class="support-btn" data-act="donate">
           <span class="support-btn-title">☕ Buy me a coffee</span>
-          <span class="support-btn-sub">€3, €5, €10 — any amount. One-off via Buy Me a Coffee. No account needed.</span>
+          <span class="support-btn-sub">€3, €5, €10, any amount. One-off via Buy Me a Coffee. No account needed.</span>
         </button>
         <button class="support-btn primary" data-act="license">
-          <span class="support-btn-title">Buy commercial licence — €12</span>
+          <span class="support-btn-title">Buy commercial licence, €12</span>
           <span class="support-btn-sub">Required if you sell prints / freelance / use for paid work. Lifetime, every machine. Silences this dialog.</span>
         </button>
         <button class="support-btn ghost" data-act="later">
@@ -248,7 +248,7 @@ export function openLicenseDialog() {
       msg.className = 'lic-msg';
       activateLicense(key, name).then(ok => {
         if (ok) {
-          msg.textContent = `Activated — thanks, ${getLicenseName()}. The reminder dialog is now silenced.`;
+          msg.textContent = `Activated, thanks, ${getLicenseName()}. The reminder dialog is now silenced.`;
           msg.className = 'lic-msg ok';
           setTimeout(close, 1800);
         } else {

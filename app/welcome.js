@@ -1,4 +1,4 @@
-// Startup modal — "New / Continue last / Open file / Recents". Replaces the
+// Startup modal, "New / Continue last / Open file / Recents". Replaces the
 // auto-restore behaviour so the user explicitly picks what to load on launch.
 
 import { state } from './state.js';
@@ -12,7 +12,7 @@ const SKIP_WELCOME_KEY = 'bb.skipWelcome';
 
 export async function showWelcome({ onClose }) {
   // Honour the "don't show on startup" preference. Continue last is the
-  // implicit behaviour when the user opted out — preserves their session.
+  // implicit behaviour when the user opted out, preserves their session.
   if (localStorage.getItem(SKIP_WELCOME_KEY) === '1') {
     await migrateLegacyAutosave();
     await loadAutosave();
@@ -89,7 +89,7 @@ export async function showWelcome({ onClose }) {
         <span>Tip: drag a shape from the left to begin.</span>
         <label class="welcome-skip">
           <input type="checkbox" id="welcome-skip-cb" />
-          <span>Don't show this on startup — just continue last project</span>
+          <span>Don't show this on startup, just continue last project</span>
         </label>
         <span class="welcome-author">
           Built by <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>
@@ -99,7 +99,7 @@ export async function showWelcome({ onClose }) {
           BlockBuilder is free and stays free. If it earns its place,
           <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">buy me a coffee ☕</a>
           or
-          <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">grab a commercial licence (€12)</a>.
+          <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643" target="_blank" rel="noopener">grab a commercial licence (€12)</a>.
         </span>
       </div>
     </div>
