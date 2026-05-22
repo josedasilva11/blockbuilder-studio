@@ -47,7 +47,7 @@ a:hover { text-decoration: underline; }
 
 .nav {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(14,17,23,0.85); backdrop-filter: blur(12px);
+  background: rgba(14, 17, 23, 0.85); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
 .nav-in {
@@ -555,7 +555,7 @@ footer {
 .release-banner-cta:hover { background: #1a1d24; }
 .nav { top: 38px; } /* push under the banner */
 
-/* ---------- Hero — new conversion-focused copy + bigger CTAs ---------- */
+/* ---------- Hero, new conversion-focused copy + bigger CTAs ---------- */
 .hero-eyebrow {
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -581,8 +581,8 @@ footer {
   gap: 2px;
   text-align: left;
 }
-.btn-xl.primary { box-shadow: 0 8px 30px rgba(196,240,79,0.30); }
-.btn-xl.primary:hover { box-shadow: 0 12px 40px rgba(196,240,79,0.45); transform: translateY(-1px); }
+.btn-xl.primary { box-shadow: 0 8px 30px rgba(196, 240, 79, 0.30); }
+.btn-xl.primary:hover { box-shadow: 0 12px 40px rgba(196, 240, 79, 0.45); transform: translateY(-1px); }
 .btn-xl.btn-secondary { background: transparent; }
 .btn-xl .btn-main {
   display: flex;
@@ -623,7 +623,7 @@ footer {
   letter-spacing: 0.6px;
 }
 
-/* Hero visual — placeholder for the demo video/gif */
+/* Hero visual, placeholder for the demo video/gif */
 .hero-visual-frame {
   aspect-ratio: 1.1 / 1;
   background: radial-gradient(ellipse at 50% 0%, #1f2532 0%, #0a0c11 100%);
@@ -715,11 +715,11 @@ footer {
 }
 .dl-btn:hover .dl-arrow { transform: translateY(3px); transition: 0.15s ease; }
 
-/* OS match — visitor's detected OS gets the lime spotlight */
+/* OS match, visitor's detected OS gets the lime spotlight */
 .dl-btn-match {
   border-color: var(--accent);
-  background: linear-gradient(135deg, rgba(196,240,79,0.08), rgba(196,240,79,0.02));
-  box-shadow: 0 6px 24px rgba(196,240,79,0.18);
+  background: linear-gradient(135deg, rgba(196, 240, 79, 0.08), rgba(196, 240, 79, 0.02));
+  box-shadow: 0 6px 24px rgba(196, 240, 79, 0.18);
   position: relative;
 }
 .dl-btn-match::before {
@@ -821,7 +821,7 @@ footer {
 .dl-soft-form input:focus,
 .mobile-email input:focus {
   outline: none; border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(196,240,79,0.15);
+  box-shadow: 0 0 0 2px rgba(196, 240, 79, 0.15);
 }
 .dl-soft-form button,
 .mobile-email button {
@@ -862,7 +862,7 @@ html[data-mobile] .download-row { opacity: 0.45; }
 .final-cta {
   text-align: center;
   padding: 80px 24px;
-  background: linear-gradient(135deg, rgba(196,240,79,0.07), rgba(196,240,79,0.02));
+  background: linear-gradient(135deg, rgba(196, 240, 79, 0.07), rgba(196, 240, 79, 0.02));
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -914,7 +914,7 @@ html[data-mobile] .download-row { opacity: 0.45; }
 <body>
 
 <!-- Sticky "release banner" at the very top. Highest-converting position on
-     the page — every visitor sees it, every scroll keeps it in view. The
+     the page, every visitor sees it, every scroll keeps it in view. The
      banner doubles as a constant download prompt without nagging. -->
 <div class="release-banner">
   <span class="release-banner-dot"></span>
@@ -1088,7 +1088,7 @@ html[data-mobile] .download-row { opacity: 0.45; }
       <div class="principle">
         <div class="principle-tick">✓</div>
         <h3>No upload limits</h3>
-        <p>Imports happen locally. Bring in a 500 MB STL with 5M triangles — your RAM is the only limit. Performance: BVH-accelerated picking handles it.</p>
+        <p>Imports happen locally. Bring in a 500 MB STL with 5M triangles, your RAM is the only limit. Performance: BVH-accelerated picking handles it.</p>
       </div>
       <div class="principle">
         <div class="principle-tick">✓</div>
@@ -1098,7 +1098,7 @@ html[data-mobile] .download-row { opacity: 0.45; }
       <div class="principle">
         <div class="principle-tick">✓</div>
         <h3>No tracking</h3>
-        <p>Zero telemetry, zero analytics, zero cookies. The app doesn't know you exist after install. The website doesn't either — no Google Analytics, no Meta pixel.</p>
+        <p>Zero telemetry, zero analytics, zero cookies. The app doesn't know you exist after install. The website doesn't either, no Google Analytics, no Meta pixel.</p>
       </div>
       <div class="principle">
         <div class="principle-tick">✓</div>
@@ -1217,7 +1217,7 @@ html[data-mobile] .download-row { opacity: 0.45; }
     <p class="section-sub">One click. No email, no signup, no waitlist. ~80 MB install, ready to model in 60 seconds.</p>
 
     <!-- Mobile-only notice. Visitors on phones/tablets can't run a desktop
-         Electron app — show them an explicit nudge to come back on desktop
+         Electron app, show them an explicit nudge to come back on desktop
          instead of letting them tap a broken download. -->
     <div class="mobile-notice" id="mobile-notice">
       <strong>You're on mobile.</strong> BlockBuilder is desktop-only.
@@ -1329,7 +1329,7 @@ BlockBuilder.AppImage    sha256: see /releases/latest</pre>
       </details>
       <details>
         <summary>Is this CAD?</summary>
-        <p>Not in the engineering sense. BlockBuilder is a <em>direct modelling</em> tool: you drag primitives, scale them, combine them with booleans. There's no parametric history, no constraints, no assemblies, no engineering drawings. It's optimised for the 80 % of 3D-printing work that doesn't need those features — brackets, organisers, replacement parts, props, jigs. For mechanical engineering with version-controlled geometry, use a parametric CAD package.</p>
+        <p>Not in the engineering sense. BlockBuilder is a <em>direct modelling</em> tool: you drag primitives, scale them, combine them with booleans. There's no parametric history, no constraints, no assemblies, no engineering drawings. It's optimised for the 80 % of 3D-printing work that doesn't need those features, brackets, organisers, replacement parts, props, jigs. For mechanical engineering with version-controlled geometry, use a parametric CAD package.</p>
       </details>
       <details>
         <summary>Can I import existing STL or OBJ files?</summary>
@@ -1370,7 +1370,7 @@ BlockBuilder.AppImage    sha256: see /releases/latest</pre>
         <a class="btn" href="https://marjers.com/support" target="_blank" rel="noopener">Buy me a coffee →</a>
       </div>
       <div class="support-card" style="border-color: var(--accent);">
-        <h3>Commercial licence — €12</h3>
+        <h3>Commercial licence, €12</h3>
         <p>For-profit use: print and sell, freelance, classroom. One-time fee, lifetime use, silences the in-app reminder.</p>
         <a class="btn primary" href="https://marjers.com/blockbuilder" target="_blank" rel="noopener">Buy licence</a>
       </div>
@@ -1463,7 +1463,7 @@ BlockBuilder.AppImage    sha256: see /releases/latest</pre>
         row apply.
      3. IntersectionObserver-driven fade-in animations on scroll. Subtle
         polish that signals "this site is alive".
-     Keep it small and inline — one fewer file the user has to fetch. -->
+     Keep it small and inline, one fewer file the user has to fetch. -->
 <script>
 (() => {
   const ua = navigator.userAgent || '';
@@ -1477,9 +1477,9 @@ BlockBuilder.AppImage    sha256: see /releases/latest</pre>
   // Reorder the download row so the visitor's platform is first.
   const row = document.querySelector('.download-row');
   if (row) {
-    const order = isWin ? ['win','mac','linux']
-                : isMac ? ['mac','win','linux']
-                :         ['linux','win','mac'];
+    const order = isWin ? ['win', 'mac', 'linux']
+                : isMac ? ['mac', 'win', 'linux']
+                :         ['linux', 'win', 'mac'];
     const map = {};
     for (const el of row.querySelectorAll('.dl-btn')) map[el.dataset.os] = el;
     row.innerHTML = '';

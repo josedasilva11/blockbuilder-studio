@@ -6,7 +6,7 @@
 <title>BlockBuilder Studio · Model in minutes. Print the same day.</title>
 <meta name="description" content="A drag-and-drop 3D editor that runs fully offline. Solid + hole CSG, STL/OBJ/STEP export, sketch tools. No accounts, no limits. Free for personal use. €12 lifetime commercial licence." />
 <link rel="canonical" href="https://blockbuilder.studio" />
-<meta property="og:title" content="BlockBuilder Studio — offline 3D editor by Marjers" />
+<meta property="og:title" content="BlockBuilder Studio, offline 3D editor by Marjers" />
 <meta property="og:description" content="Drag-and-drop desktop 3D editor. No accounts. No limits. €12 lifetime commercial licence." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://blockbuilder.studio" />
@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" />
 <style>
 /* =========================================================================
-   BlockBuilder Studio — landing
+   BlockBuilder Studio, landing
    by Marjers · designed for conversion, built for makers
    ========================================================================= */
 
@@ -45,7 +45,7 @@
   --lime-line:    rgba(196, 240, 79, 0.22);
 
   --warm:         #f0a624; /* secondary accent for danger / mobile notice */
-  --plum:         #b87df0; /* tertiary — used in voxel scene */
+  --plum:         #b87df0; /* tertiary, used in voxel scene */
 
   --r-sm: 6px;
   --r:    10px;
@@ -76,9 +76,9 @@ body::before {
   content: '';
   position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(196,240,79,0.06), transparent 60%),
-    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px) 0 0 / 48px 48px,
-    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px) 0 0 / 48px 48px;
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(196, 240, 79, 0.06), transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px) 0 0 / 48px 48px;
   pointer-events: none;
   z-index: 0;
 }
@@ -128,7 +128,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 }
 .banner-cta:hover { background: #1a1d24; }
 .banner .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #0a0c10; margin-right: 8px; vertical-align: 1px; animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
+@keyframes pulse { 0%, 100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
 
 /* === Nav ================================================================= */
 .nav {
@@ -192,9 +192,9 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
 .btn-primary {
   background: var(--lime); color: #0a0c10; border-color: var(--lime);
-  box-shadow: 0 4px 14px rgba(196,240,79,0.18);
+  box-shadow: 0 4px 14px rgba(196, 240, 79, 0.18);
 }
-.btn-primary:hover { background: #d5ff58; border-color: #d5ff58; box-shadow: 0 8px 24px rgba(196,240,79,0.35); transform: translateY(-1px); }
+.btn-primary:hover { background: #d5ff58; border-color: #d5ff58; box-shadow: 0 8px 24px rgba(196, 240, 79, 0.35); transform: translateY(-1px); }
 .btn-ghost { background: transparent; color: var(--text-mid); border-color: var(--border); }
 .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
 .btn-lg { padding: 14px 24px; font-size: 15px; border-radius: var(--r); }
@@ -289,7 +289,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   text-transform: uppercase;
 }
 
-/* Hero polaroid stack — three real screenshots arranged with depth. The
+/* Hero polaroid stack, three real screenshots arranged with depth. The
  * front (Porsche) is centred and largest, with the other two tucked
  * behind at slight rotations so the eye reads the stack as a curated
  * showcase rather than a flat grid. */
@@ -306,7 +306,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
   transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 .hero-card img {
@@ -323,7 +323,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   letter-spacing: 0.2px;
   background: var(--panel);
 }
-/* Back-left: Eiffel — narrow, slightly small, tilted left */
+/* Back-left: Eiffel, narrow, slightly small, tilted left */
 .hero-card-back-left {
   top: 2%; left: -2%;
   width: 58%;
@@ -331,7 +331,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   z-index: 1;
   filter: brightness(0.88) saturate(0.92);
 }
-/* Back-right: Hinge — slightly bigger, tilted right */
+/* Back-right: Hinge, slightly bigger, tilted right */
 .hero-card-back-right {
   top: 8%; right: -4%;
   width: 62%;
@@ -339,7 +339,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   z-index: 2;
   filter: brightness(0.92) saturate(0.94);
 }
-/* Front: Porsche — largest, slight tilt, lime-tinted glow */
+/* Front: Porsche, largest, slight tilt, lime-tinted glow */
 .hero-card-front {
   bottom: 4%; left: 50%;
   width: 78%;
@@ -347,9 +347,9 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   z-index: 3;
   border-color: var(--lime-line);
   box-shadow:
-    0 30px 80px rgba(0,0,0,0.55),
+    0 30px 80px rgba(0, 0, 0, 0.55),
     0 0 0 1px var(--lime-line),
-    0 0 60px rgba(196,240,79,0.12);
+    0 0 60px rgba(196, 240, 79, 0.12);
 }
 /* Subtle hover-spread: tilt outwards a bit when the hero comes into focus */
 .hero-stack:hover .hero-card-back-left  { transform: rotate(-8deg) translate(-12px, -6px); }
@@ -388,7 +388,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .shot:hover {
   border-color: var(--lime-line);
   transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
 }
 .shot img {
   display: block;
@@ -417,7 +417,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   width: 100%;
   height: 100%;
   position: relative;
-  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5));
 }
 .scene svg { width: 100%; height: 100%; }
 .scene-glow {
@@ -440,7 +440,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   font-family: 'JetBrains Mono', monospace;
   color: var(--text-mid);
   backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   animation: float-bob 6s ease-in-out infinite;
 }
 .float-chip .swatch { width: 8px; height: 8px; border-radius: 2px; }
@@ -599,11 +599,11 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   position: relative;
 }
 .feat-bool .blk.hole {
-  background: linear-gradient(135deg, rgba(255,95,109,0.18), rgba(255,95,109,0.05));
-  border-color: rgba(255,95,109,0.4);
+  background: linear-gradient(135deg, rgba(255, 95, 109, 0.18), rgba(255, 95, 109, 0.05));
+  border-color: rgba(255, 95, 109, 0.4);
 }
 .feat-bool .blk.result {
-  background: linear-gradient(135deg, var(--lime-soft), rgba(196,240,79,0.04));
+  background: linear-gradient(135deg, var(--lime-soft), rgba(196, 240, 79, 0.04));
   border-color: var(--lime-line);
   box-shadow: 0 0 20px var(--lime-soft);
 }
@@ -612,7 +612,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   position: absolute; inset: 22px;
   border-radius: 50%;
   background: var(--bg);
-  box-shadow: inset 0 4px 10px rgba(0,0,0,0.4);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* export formats */
@@ -666,7 +666,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   color: var(--lime);
   border: 1px solid var(--lime-line);
 }
-.tag.warm { background: rgba(240,166,36,0.10); color: var(--warm); border-color: rgba(240,166,36,0.3); }
+.tag.warm { background: rgba(240, 166, 36, 0.10); color: var(--warm); border-color: rgba(240, 166, 36, 0.3); }
 .tag.neutral { background: var(--panel-soft); color: var(--text-mid); border-color: var(--border); }
 
 /* === Workflow steps ====================================================== */
@@ -803,7 +803,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   .pricing-3col { grid-template-columns: 1fr !important; }
 }
 .price-coffee {
-  background: linear-gradient(135deg, rgba(196,240,79,0.06), rgba(196,240,79,0.02));
+  background: linear-gradient(135deg, rgba(196, 240, 79, 0.06), rgba(196, 240, 79, 0.02));
   border: 1px solid var(--border);
 }
 .btn-coffee {
@@ -844,7 +844,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   overflow: hidden;
 }
 .price-pro {
-  background: linear-gradient(180deg, rgba(196,240,79,0.08), rgba(196,240,79,0.02));
+  background: linear-gradient(180deg, rgba(196, 240, 79, 0.08), rgba(196, 240, 79, 0.02));
   border-color: var(--lime-line);
 }
 .price-pro::before {
@@ -920,7 +920,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .dl-card:hover {
   border-color: var(--lime);
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px rgba(196,240,79,0.10);
+  box-shadow: 0 16px 40px rgba(196, 240, 79, 0.10);
 }
 .dl-os {
   display: flex; align-items: center; gap: 10px;
@@ -943,7 +943,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 }
 .dl-card:hover .dl-arrow { background: var(--lime); border-color: var(--lime); color: #0a0c10; transform: translateY(3px); }
 
-/* "Coming soon" card — non-clickable, dimmer, no hover lift */
+/* "Coming soon" card, non-clickable, dimmer, no hover lift */
 .dl-card.dl-soon {
   opacity: 0.55;
   cursor: default;
@@ -964,7 +964,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   border-radius: 0 0 4px 4px;
 }
 
-/* Download modal — pops up immediately on click of the Windows download card.
+/* Download modal, pops up immediately on click of the Windows download card.
    Reuses .postdl-step semantics but in a modal frame so users see the steps
    while the .zip is downloading instead of scrolling for them. */
 .dl-modal {
@@ -994,7 +994,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   overflow-y: auto;
   padding: 36px 36px 28px;
   position: relative;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
 .dl-modal-close {
   position: absolute;
@@ -1017,8 +1017,8 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  background: rgba(196,240,79,0.08);
-  border: 1px solid rgba(196,240,79,0.25);
+  background: rgba(196, 240, 79, 0.08);
+  border: 1px solid rgba(196, 240, 79, 0.25);
   border-radius: var(--r-md, 10px);
   font-size: 14px;
   color: var(--text);
@@ -1027,7 +1027,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .dl-modal-status code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
 .dl-spinner {
   width: 18px; height: 18px;
-  border: 2px solid rgba(196,240,79,0.25);
+  border: 2px solid rgba(196, 240, 79, 0.25);
   border-top-color: var(--lime);
   border-radius: 50%;
   animation: dl-spin 0.9s linear infinite;
@@ -1109,7 +1109,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   .dl-modal-actions .btn { width: 100%; text-align: center; }
 }
 
-/* Post-download walkthrough — sits under sysreqs, explains the zip workflow */
+/* Post-download walkthrough, sits under sysreqs, explains the zip workflow */
 .postdl {
   margin: 60px auto 0;
   max-width: 920px;
@@ -1184,7 +1184,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 
 .dl-card-match {
   border-color: var(--lime-line);
-  background: linear-gradient(135deg, rgba(196,240,79,0.07), rgba(196,240,79,0));
+  background: linear-gradient(135deg, rgba(196, 240, 79, 0.07), rgba(196, 240, 79, 0));
 }
 .dl-card-match::after {
   content: 'DETECTED';
@@ -1242,7 +1242,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   margin: 0 auto 28px;
   padding: 18px 22px;
   background: var(--panel);
-  border: 1px solid rgba(240,166,36,0.3);
+  border: 1px solid rgba(240, 166, 36, 0.3);
   border-left: 3px solid var(--warm);
   border-radius: var(--r);
   font-size: 13.5px;
@@ -1297,7 +1297,7 @@ html[data-mobile] .dl-row { opacity: 0.5; pointer-events: none; }
   overflow: hidden;
   transition: 0.15s;
 }
-.faq-list details[open] { border-color: var(--lime-line); background: linear-gradient(180deg, rgba(196,240,79,0.04), transparent); }
+.faq-list details[open] { border-color: var(--lime-line); background: linear-gradient(180deg, rgba(196, 240, 79, 0.04), transparent); }
 .faq-list summary {
   cursor: pointer;
   padding: 18px 22px;
@@ -1381,14 +1381,14 @@ html[data-mobile] .dl-row { opacity: 0.5; pointer-events: none; }
   color: var(--lime);
   line-height: 1;
 }
-/* Photo variant of the maker mark — same round 76px frame, the image fills
+/* Photo variant of the maker mark, same round 76px frame, the image fills
    it and is cropped square via object-fit. */
 .maker-mark-photo {
   width: 96px; height: 96px;
   padding: 0;
   overflow: hidden;
   border: 2px solid var(--lime);
-  box-shadow: 0 8px 28px rgba(196,240,79,0.18);
+  box-shadow: 0 8px 28px rgba(196, 240, 79, 0.18);
 }
 .maker-mark-photo img {
   width: 100%;
@@ -1426,7 +1426,7 @@ html[data-mobile] .dl-row { opacity: 0.5; pointer-events: none; }
   text-align: center;
   padding: 120px 28px;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,240,79,0.12), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196, 240, 79, 0.12), transparent 70%),
     var(--bg);
   border-top: 1px solid var(--border-soft);
   position: relative;
@@ -1629,7 +1629,7 @@ footer {
 </nav>
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     Hero — headline + voxel scene
+     Hero, headline + voxel scene
      ════════════════════════════════════════════════════════════════════════ -->
 <header class="hero">
   <div class="hero-in">
@@ -1690,14 +1690,14 @@ footer {
       <!-- Real screenshots arranged as a layered "polaroid stack". Porsche
            is the front hero card; Eiffel + Hinge sit behind, slightly
            rotated, to add depth. Floating monospace chips overlay on top
-           label CSG operations. Pure static — no video, no autoplay. -->
+           label CSG operations. Pure static, no video, no autoplay. -->
       <div class="hero-stack">
         <figure class="hero-card hero-card-back-left">
-          <img src="screenshots/eiffel.jpg" alt="Eiffel Tower STL — 123k triangles, live volume metrics" loading="eager" decoding="async" />
+          <img src="screenshots/eiffel.jpg" alt="Eiffel Tower STL, 123k triangles, live volume metrics" loading="eager" decoding="async" />
           <figcaption>Eiffel · 123k tris</figcaption>
         </figure>
         <figure class="hero-card hero-card-back-right">
-          <img src="screenshots/hinge.jpg" alt="A modelled hinge — solids and holes grouped + baked" loading="eager" decoding="async" />
+          <img src="screenshots/hinge.jpg" alt="A modelled hinge, solids and holes grouped + baked" loading="eager" decoding="async" />
           <figcaption>Hinge · CSG group + bake</figcaption>
         </figure>
         <figure class="hero-card hero-card-front">
@@ -1744,13 +1744,13 @@ footer {
             <!-- BOTTOM block (large dark base) -->
             <g>
               <!-- top face (rhombus) -->
-              <polygon points="200,170 320,230 200,290 80,230" fill="url(#g-top)" stroke="#3a4156" stroke-width="1"/>
+              <polygon points="200, 170 320, 230 200, 290 80, 230" fill="url(#g-top)" stroke="#3a4156" stroke-width="1"/>
               <!-- left face -->
-              <polygon points="80,230 200,290 200,360 80,300" fill="url(#g-left)" stroke="#2a2f3e" stroke-width="1"/>
+              <polygon points="80, 230 200, 290 200, 360 80, 300" fill="url(#g-left)" stroke="#2a2f3e" stroke-width="1"/>
               <!-- right face -->
-              <polygon points="320,230 200,290 200,360 320,300" fill="url(#g-right)" stroke="#2a2f3e" stroke-width="1"/>
+              <polygon points="320, 230 200, 290 200, 360 320, 300" fill="url(#g-right)" stroke="#2a2f3e" stroke-width="1"/>
               <!-- top edge highlight -->
-              <polyline points="80,230 200,170 320,230" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+              <polyline points="80, 230 200, 170 320, 230" fill="none" stroke="rgba(255, 255, 255, 0.06)" stroke-width="2"/>
             </g>
 
             <!-- HOLE cylinder cutout - drawn as a darker indent on top face -->
@@ -1760,29 +1760,29 @@ footer {
             </g>
 
             <!-- TOP lime block (smaller, sitting on top) -->
-            <g transform="translate(0,-46)">
-              <polygon points="200,170 270,205 200,240 130,205" fill="url(#g-lime-top)" stroke="#5e7e10" stroke-width="1"/>
-              <polygon points="130,205 200,240 200,290 130,255" fill="url(#g-lime-left)" stroke="#5e7e10" stroke-width="1"/>
-              <polygon points="270,205 200,240 200,290 270,255" fill="url(#g-lime-right)" stroke="#5e7e10" stroke-width="1"/>
+            <g transform="translate(0, -46)">
+              <polygon points="200, 170 270, 205 200, 240 130, 205" fill="url(#g-lime-top)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="130, 205 200, 240 200, 290 130, 255" fill="url(#g-lime-left)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="270, 205 200, 240 200, 290 270, 255" fill="url(#g-lime-right)" stroke="#5e7e10" stroke-width="1"/>
               <!-- glow inset -->
-              <polyline points="130,205 200,170 270,205" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+              <polyline points="130, 205 200, 170 270, 205" fill="none" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5"/>
             </g>
 
             <!-- floating small voxels (left) -->
             <g opacity="0.85">
-              <polygon points="60,120 90,135 60,150 30,135" fill="url(#g-top)" stroke="#3a4156" stroke-width="1"/>
-              <polygon points="30,135 60,150 60,180 30,165" fill="url(#g-left)" stroke="#2a2f3e" stroke-width="1"/>
-              <polygon points="90,135 60,150 60,180 90,165" fill="url(#g-right)" stroke="#2a2f3e" stroke-width="1"/>
+              <polygon points="60, 120 90, 135 60, 150 30, 135" fill="url(#g-top)" stroke="#3a4156" stroke-width="1"/>
+              <polygon points="30, 135 60, 150 60, 180 30, 165" fill="url(#g-left)" stroke="#2a2f3e" stroke-width="1"/>
+              <polygon points="90, 135 60, 150 60, 180 90, 165" fill="url(#g-right)" stroke="#2a2f3e" stroke-width="1"/>
             </g>
 
             <!-- floating small voxels (right, lime) -->
             <g opacity="0.95">
-              <polygon points="340,80 370,95 340,110 310,95" fill="url(#g-lime-top)" stroke="#5e7e10" stroke-width="1"/>
-              <polygon points="310,95 340,110 340,140 310,125" fill="url(#g-lime-left)" stroke="#5e7e10" stroke-width="1"/>
-              <polygon points="370,95 340,110 340,140 370,125" fill="url(#g-lime-right)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="340, 80 370, 95 340, 110 310, 95" fill="url(#g-lime-top)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="310, 95 340, 110 340, 140 310, 125" fill="url(#g-lime-left)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="370, 95 340, 110 340, 140 370, 125" fill="url(#g-lime-right)" stroke="#5e7e10" stroke-width="1"/>
             </g>
 
-            <!-- vertex markers (lime dots — gives "sketch" feel) -->
+            <!-- vertex markers (lime dots, gives "sketch" feel) -->
             <circle cx="80" cy="230" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
             <circle cx="320" cy="230" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
             <circle cx="200" cy="170" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
@@ -1833,7 +1833,7 @@ footer {
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>Features</span>
       <h2>Everything you need to model<br>for the printer. <span class="serif">Nothing you don't.</span></h2>
-      <p>13 primitive shapes, full CSG (union + subtraction), STL/OBJ/STEP import-export, sketches, slicing, hollowing, arrays, ruler — all running locally on your machine.</p>
+      <p>13 primitive shapes, full CSG (union + subtraction), STL/OBJ/STEP import-export, sketches, slicing, hollowing, arrays, ruler, all running locally on your machine.</p>
     </div>
 
     <div class="bento">
@@ -1860,12 +1860,12 @@ footer {
         </div>
         <div class="feat-illust feat-shot feat-shot-export">
           <img src="screenshots/feature-export.jpg"
-               alt="Toolbar export buttons — Save, Upload, Import, STL, STEP, OBJ — with the OBJ tooltip showing its description."
+               alt="Toolbar export buttons, Save, Upload, Import, STL, STEP, OBJ, with the OBJ tooltip showing its description."
                loading="lazy" decoding="async" />
         </div>
         <div>
           <h3>STL · OBJ · STEP export</h3>
-          <p>Printer-ready binary STL, Wavefront OBJ, or AP203 faceted-brep STEP for CAD/CAM pipelines. Bring in any mesh as an editable shape — your imports become primitives.</p>
+          <p>Printer-ready binary STL, Wavefront OBJ, or AP203 faceted-brep STEP for CAD/CAM pipelines. Bring in any mesh as an editable shape, your imports become primitives.</p>
         </div>
       </div>
 
@@ -1918,7 +1918,7 @@ footer {
         </div>
         <div>
           <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Triangles</div>
-          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--lime);">2,164</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--lime);">2, 164</div>
         </div>
       </div>
     </div>
@@ -1926,7 +1926,7 @@ footer {
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     Real screenshots — show the actual app, not just SVG impressions
+     Real screenshots, show the actual app, not just SVG impressions
      ════════════════════════════════════════════════════════════════════════ -->
 <section class="section shots" id="shots">
   <div class="inner">
@@ -1938,13 +1938,13 @@ footer {
     <div class="shots-grid">
       <figure class="shot shot-wide fade-up">
         <img src="screenshots/porsche.jpg"
-             alt="BlockBuilder Studio editing a high-detail Porsche 911 STL import — fully orbital camera, smooth shading, viewport unchanged from a primitive."
+             alt="BlockBuilder Studio editing a high-detail Porsche 911 STL import, fully orbital camera, smooth shading, viewport unchanged from a primitive."
              loading="lazy" decoding="async" />
         <figcaption>Porsche 911 import · ~150k tris · orbited, no lag</figcaption>
       </figure>
       <figure class="shot fade-up">
         <img src="screenshots/mercedes.jpg"
-             alt="Mercedes-Benz SLS — lime-shaded STL import standing on the workplane."
+             alt="Mercedes-Benz SLS, lime-shaded STL import standing on the workplane."
              loading="lazy" decoding="async" />
         <figcaption>Mercedes-Benz SLS · imported STL</figcaption>
       </figure>
@@ -1983,7 +1983,7 @@ footer {
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     Workflow — 4 steps
+     Workflow, 4 steps
      ════════════════════════════════════════════════════════════════════════ -->
 <section class="section workflow" id="workflow">
   <div class="inner">
@@ -2019,7 +2019,7 @@ footer {
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     Principles — no fine print
+     Principles, no fine print
      ════════════════════════════════════════════════════════════════════════ -->
 <section class="section">
   <div class="inner">
@@ -2033,7 +2033,7 @@ footer {
       <div class="principle fade-up">
         <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
         <h3>Fully offline</h3>
-        <p>The app never makes a network request once installed. Plane, air-gapped workstation, café Wi-Fi outage — same behaviour.</p>
+        <p>The app never makes a network request once installed. Plane, air-gapped workstation, café Wi-Fi outage, same behaviour.</p>
       </div>
       <div class="principle fade-up">
         <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
@@ -2043,7 +2043,7 @@ footer {
       <div class="principle fade-up">
         <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
         <h3>No upload limits</h3>
-        <p>Imports happen locally. Bring in a 500 MB STL with 5M triangles — your RAM is the only limit. BVH-accelerated picking handles it.</p>
+        <p>Imports happen locally. Bring in a 500 MB STL with 5M triangles, your RAM is the only limit. BVH-accelerated picking handles it.</p>
       </div>
       <div class="principle fade-up">
         <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
@@ -2058,7 +2058,7 @@ footer {
       <div class="principle fade-up">
         <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
         <h3>No subscription</h3>
-        <p>Personal use is free forever. Commercial licence is <strong style="color:var(--text)">€12 once</strong>, lifetime — every future update included until v1.0+.</p>
+        <p>Personal use is free forever. Commercial licence is <strong style="color:var(--text)">€12 once</strong>, lifetime, every future update included until v1.0+.</p>
       </div>
     </div>
   </div>
@@ -2071,7 +2071,7 @@ footer {
   <div class="inner">
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>Use cases</span>
-      <h2>Built for the work,<br><span class="serif">not the workflow.</span></h2>
+      <h2>Built for the work, <br><span class="serif">not the workflow.</span></h2>
       <p>What people actually make with BlockBuilder.</p>
     </div>
 
@@ -2129,7 +2129,7 @@ footer {
           <span class="price-amount">0</span>
           <span class="price-unit">/ forever</span>
         </div>
-        <p class="price-sub">Hobby, learning, home prints, classroom — no account, no time limit, every feature.</p>
+        <p class="price-sub">Hobby, learning, home prints, classroom, no account, no time limit, every feature.</p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Every feature unlocked</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Unlimited STL · OBJ · STEP exports</li>
@@ -2146,12 +2146,12 @@ footer {
           <span class="price-amount">3+</span>
           <span class="price-unit">one-off · any amount</span>
         </div>
-        <p class="price-sub">For the personal users who want to chip in. No commercial rights — just a thank-you that keeps the project going.</p>
+        <p class="price-sub">For the personal users who want to chip in. No commercial rights, just a thank-you that keeps the project going.</p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Pick any amount you like (€3, €5, €10…)</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Funds new features and bug fixes</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>One-time, no subscription, no account</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Honest thanks — not licensing</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Honest thanks, not licensing</li>
         </ul>
         <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener" class="btn btn-coffee btn-lg">☕ Buy me a coffee</a>
       </div>
@@ -2165,13 +2165,13 @@ footer {
         </div>
         <p class="price-sub">If you sell prints, freelance, or use it for paid work. Also the highest tier of support.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Commercial-use rights</strong> — sell, freelance, agency</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Commercial-use rights</strong>, sell, freelance, agency</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Silences the in-app soft reminder</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Priority email support · 48h reply</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Every machine you own, lifetime updates</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Funds the next features</strong> — same as coffee, bigger pour</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Funds the next features</strong>, same as coffee, bigger pour</li>
         </ul>
-        <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Buy licence — €12</a>
+        <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Buy licence, €12</a>
       </div>
     </div>
 
@@ -2194,7 +2194,7 @@ footer {
 
     <div class="mobile-notice" id="mobile-notice">
       <strong>You're on a phone or tablet.</strong>
-      BlockBuilder is desktop-only — it needs a mouse and keyboard for the 3D viewport.
+      BlockBuilder is desktop-only, it needs a mouse and keyboard for the 3D viewport.
       Open this page on your computer to download, or send yourself a link:
       <form class="mobile-email-form" action="https://buttondown.email/api/emails/embed-subscribe/marjers" method="post" target="_blank">
         <input type="email" name="email" placeholder="you@example.com" required />
@@ -2256,23 +2256,23 @@ footer {
       </div>
     </div>
 
-    <!-- Post-download walkthrough — how to actually open a portable .zip -->
+    <!-- Post-download walkthrough, how to actually open a portable .zip -->
     <div class="postdl fade-up">
-      <h3 class="postdl-title">After the download — three steps</h3>
+      <h3 class="postdl-title">After the download, three steps</h3>
       <div class="postdl-grid">
         <div class="postdl-step">
           <span class="postdl-num">1</span>
           <h4>Extract the .zip</h4>
-          <p>Right-click <code>BlockBuilderStudio-v0.5.0-portable.zip</code> → <strong>Extract All…</strong> (or use 7-Zip). Pick any folder — Desktop, Documents, anywhere with write access.</p>
+          <p>Right-click <code>BlockBuilderStudio-v0.5.0-portable.zip</code> → <strong>Extract All…</strong> (or use 7-Zip). Pick any folder, Desktop, Documents, anywhere with write access.</p>
         </div>
         <div class="postdl-step">
           <span class="postdl-num">2</span>
           <h4>Run BlockBuilder Studio.exe</h4>
-          <p>Open the extracted <code>BlockBuilderStudio</code> folder. Double-click <strong>BlockBuilder Studio.exe</strong>. On first launch Windows SmartScreen may say <em>"Windows protected your PC"</em> — click <strong>More info → Run anyway</strong>.</p>
+          <p>Open the extracted <code>BlockBuilderStudio</code> folder. Double-click <strong>BlockBuilder Studio.exe</strong>. On first launch Windows SmartScreen may say <em>"Windows protected your PC"</em>, click <strong>More info → Run anyway</strong>.</p>
         </div>
         <div class="postdl-step">
           <span class="postdl-num">3</span>
-          <h4>That's it — start modeling</h4>
+          <h4>That's it, start modeling</h4>
           <p>No installer. Nothing in <code>Program Files</code>, no registry keys, no shortcuts unless you make one. To uninstall: delete the folder. To update: download the next release and replace it.</p>
         </div>
       </div>
@@ -2291,7 +2291,7 @@ footer {
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>FAQ</span>
       <h2>Questions, <span class="serif">answered honestly.</span></h2>
-      <p>If something here is unclear, email <a href="mailto:geral@marjers.com">geral@marjers.com</a> — replies usually within 48 hours.</p>
+      <p>If something here is unclear, email <a href="mailto:geral@marjers.com">geral@marjers.com</a>, replies usually within 48 hours.</p>
     </div>
 
     <div class="faq-list">
@@ -2322,13 +2322,13 @@ footer {
       <details>
         <summary>Can I use it commercially?</summary>
         <div class="answer">
-          <p>Yes, with a one-time €12 commercial licence — <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">buy here</a>. Covers selling prints, freelance work, paid classroom use, agency work — anything for-profit. Personal/hobby use stays free.</p>
+          <p>Yes, with a one-time €12 commercial licence, <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">buy here</a>. Covers selling prints, freelance work, paid classroom use, agency work, anything for-profit. Personal/hobby use stays free.</p>
         </div>
       </details>
       <details>
         <summary>Is this CAD?</summary>
         <div class="answer">
-          <p>Not in the engineering sense. BlockBuilder is a <em>direct modelling</em> tool: drag primitives, scale them, combine with booleans. No parametric history, no constraints, no assemblies, no engineering drawings. It's optimised for the 80% of 3D-printing work that doesn't need those features — brackets, organisers, replacement parts, props, jigs. For mechanical engineering with version-controlled geometry, use a parametric CAD package.</p>
+          <p>Not in the engineering sense. BlockBuilder is a <em>direct modelling</em> tool: drag primitives, scale them, combine with booleans. No parametric history, no constraints, no assemblies, no engineering drawings. It's optimised for the 80% of 3D-printing work that doesn't need those features, brackets, organisers, replacement parts, props, jigs. For mechanical engineering with version-controlled geometry, use a parametric CAD package.</p>
         </div>
       </details>
       <details>
@@ -2372,16 +2372,16 @@ footer {
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     Maker signature — Marjers
+     Maker signature, Marjers
      ════════════════════════════════════════════════════════════════════════ -->
 <section class="maker">
   <div class="maker-card fade-up">
     <div class="maker-mark maker-mark-photo">
-      <img src="/assets/jose-pedro.jpg" alt="José Pedro Silva — Marjers" loading="lazy" />
+      <img src="/assets/jose-pedro.jpg" alt="José Pedro Silva, Marjers" loading="lazy" />
     </div>
     <h2>From the workshop <span class="serif">of Marjers.</span></h2>
     <p>
-      BlockBuilder Studio is built and maintained by <strong style="color:var(--text)">Marjers</strong> — a small studio
+      BlockBuilder Studio is built and maintained by <strong style="color:var(--text)">Marjers</strong>, a small studio
       making honest desktop tools for makers. No VC, no growth team, no dark patterns.
       Software that does what it says, costs what it costs, and gets out of your way.
     </p>
@@ -2425,12 +2425,12 @@ footer {
       <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener" class="btn btn-coffee btn-xl">☕ Buy me a coffee</a>
       <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener" class="btn btn-ghost btn-xl">Commercial licence · €12</a>
     </div>
-    <p class="final-foot">Free forever for personal use. The coffee and the licence are how it stays alive — pick whichever fits.</p>
+    <p class="final-foot">Free forever for personal use. The coffee and the licence are how it stays alive, pick whichever fits.</p>
   </div>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     Post-download modal — shown when user clicks the Windows download link.
+     Post-download modal, shown when user clicks the Windows download link.
      Mirrors the inline #download walkthrough but appears immediately so they
      don't have to scroll past sysreqs to find the steps.
      ════════════════════════════════════════════════════════════════════════ -->
@@ -2512,7 +2512,7 @@ footer {
       <a href="#faq">FAQ</a>
       <a href="mailto:geral@marjers.com">Contact</a>
       <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">☕ Buy me a coffee</a>
-      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">Buy licence — €12</a>
+      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-1860-427e-bddb-0c01481c1643" target="_blank" rel="noopener">Buy licence, €12</a>
     </div>
 
     <div class="footer-col">
@@ -2563,7 +2563,7 @@ footer {
   if (isMobile) document.documentElement.setAttribute('data-mobile', '1');
 
   // Highlight Windows card (only OS we ship for v0.5.0). Mac/Linux cards have
-  // .dl-soon and pointer-events:none so re-ordering doesn't help — just mark
+  // .dl-soon and pointer-events:none so re-ordering doesn't help, just mark
   // Windows as the recommended download.
   const winCard = document.querySelector('.dl-card[data-os="win"]');
   if (winCard) winCard.classList.add('dl-card-match');
@@ -2589,7 +2589,7 @@ footer {
     winCard.addEventListener('click', (ev) => {
       // Don't intercept if user is opening in new tab / saving target / etc.
       if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1) return;
-      // The link still navigates and starts the download — modal appears over it.
+      // The link still navigates and starts the download, modal appears over it.
       openDlModal();
     });
   }
