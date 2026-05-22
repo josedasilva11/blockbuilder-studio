@@ -1,0 +1,139 @@
+<!doctype html>
+<!--
+  Host at: https://marjers.com/support
+  Purpose: donation hub for BlockBuilder Studio (and any future Marjers tools).
+           Linked from the in-app nag dialog, the landing page footer, and the
+           STL/OBJ export comments. Single page that aggregates whatever
+           donation channels you want to offer.
+
+  To go live: replace each .donate-card href with your real account URLs.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Support BlockBuilder Studio · Marjers</title>
+<meta name="description" content="Donate to keep BlockBuilder Studio (and other Marjers tools) free, offline, and accountless." />
+<link rel="canonical" href="https://marjers.com/support" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+<style>
+  :root { --bg:#0a0c10; --panel:#161a23; --border:#232838; --text:#eef0f5; --text-mid:#aab2c4; --text-dim:#6b7388; --accent:#c4f04f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.6 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .nav-bar { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+  .nav-bar a { color: var(--text-mid); font-weight: 600; }
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+  h1 { font-size: 42px; margin: 0 0 10px; letter-spacing: -0.5px; line-height: 1.15; }
+  .sub { color: var(--text-mid); font-size: 18px; margin: 0 0 36px; line-height: 1.6; }
+  .donate-grid { display: grid; gap: 14px; margin: 32px 0; }
+  .donate-card {
+    display: flex; align-items: center; gap: 18px;
+    padding: 18px 22px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; text-decoration: none; color: var(--text);
+    transition: 0.15s ease;
+  }
+  .donate-card:hover { border-color: var(--accent); transform: translateX(3px); text-decoration: none; }
+  .donate-icon { flex: 0 0 44px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+  .donate-body { flex: 1; }
+  .donate-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+  .donate-meta { color: var(--text-dim); font-size: 13px; }
+  .donate-arrow { color: var(--text-dim); font-size: 20px; }
+  .donate-card:hover .donate-arrow { color: var(--accent); }
+  .bmac { background: #fff8e7; color: #ff813f; font-weight: 800; font-size: 18px; }
+  .kofi { background: #e1f6ff; color: #29abe0; font-weight: 800; font-size: 18px; }
+  .gh   { background: #f0f6fc; color: #24292f; }
+  .stripe { background: #635bff; color: #fff; font-weight: 800; }
+  .paypal { background: #003087; color: #ffc439; font-weight: 800; font-size: 18px; }
+  .lic  { background: rgba(196,240,79,0.12); color: var(--accent); font-weight: 800; font-size: 20px; }
+  h2 { font-size: 22px; margin: 40px 0 12px; }
+  .where { padding: 22px; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 12px; }
+  .where p { margin: 0 0 8px; color: var(--text-mid); }
+  footer { padding: 30px 24px; text-align: center; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/">← marjers.com</a></div>
+
+<div class="container">
+  <h1>Support BlockBuilder Studio.</h1>
+  <p class="sub">The app is free and stays free. If it saves you time, a one-off contribution keeps it growing. No subscription, no perks-pyramid, just genuinely useful.</p>
+
+  <div class="donate-grid">
+    <!-- Replace the # in each href with your real account URLs. -->
+
+    <a class="donate-card" href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">
+      <div class="donate-icon bmac">☕</div>
+      <div class="donate-body">
+        <div class="donate-name">Buy me a coffee</div>
+        <div class="donate-meta">From €3 · one-tap with Apple Pay / Google Pay / card</div>
+      </div>
+      <div class="donate-arrow">→</div>
+    </a>
+
+    <a class="donate-card" href="https://ko-fi.com/marjers" target="_blank" rel="noopener">
+      <div class="donate-icon kofi">Ko</div>
+      <div class="donate-body">
+        <div class="donate-name">Ko-fi</div>
+        <div class="donate-meta">Any amount · PayPal or card</div>
+      </div>
+      <div class="donate-arrow">→</div>
+    </a>
+
+    <a class="donate-card" href="https://github.com/sponsors/marjers" target="_blank" rel="noopener">
+      <div class="donate-icon gh">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.8.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.4 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.8.2 3.1.1 3.4.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+      </div>
+      <div class="donate-body">
+        <div class="donate-name">GitHub Sponsors</div>
+        <div class="donate-meta">Recurring or one-time · for devs who already pay there</div>
+      </div>
+      <div class="donate-arrow">→</div>
+    </a>
+
+    <a class="donate-card" href="https://paypal.me/marjers" target="_blank" rel="noopener">
+      <div class="donate-icon paypal">PP</div>
+      <div class="donate-body">
+        <div class="donate-name">PayPal</div>
+        <div class="donate-meta">Send any amount in EUR / USD / GBP</div>
+      </div>
+      <div class="donate-arrow">→</div>
+    </a>
+
+    <a class="donate-card" href="https://blockbuilder.studio/buy" target="_blank" rel="noopener" style="border-color: var(--accent);">
+      <div class="donate-icon lic">€12</div>
+      <div class="donate-body">
+        <div class="donate-name">Buy a commercial licence (€12)</div>
+        <div class="donate-meta">If you use it for-profit, this is the right channel</div>
+      </div>
+      <div class="donate-arrow">→</div>
+    </a>
+  </div>
+
+  <h2>Where the money goes</h2>
+  <div class="where">
+    <p>Hosting + domain (~€80/year), code-signing certs (~€300/year combined Win + Mac), payment processor fees (~6% per transaction). Whatever's left funds my time to keep maintaining the app and ship new features.</p>
+    <p>This is solo work, no investors, no growth metrics to hit. Honest tools made by one person.</p>
+  </div>
+
+  <h2>Not into money? Other ways to help</h2>
+  <p style="color: var(--text-mid);">
+    Share BlockBuilder with a friend who 3D prints ·
+    <a href="https://github.com/marjers/blockbuilder-studio">Star the GitHub repo</a> ·
+    Post a model made with it on
+    <a href="https://makerworld.com">MakerWorld</a> /
+    <a href="https://printables.com">Printables</a>
+    with a "Made with BlockBuilder Studio" tag.
+  </p>
+</div>
+
+<footer>
+  Marjers · sole-trader, Portugal · <a href="https://blockbuilder.studio">blockbuilder.studio</a> · <a href="mailto:geral@marjers.com">geral@marjers.com</a>
+</footer>
+
+</body>
+</html>

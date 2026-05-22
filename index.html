@@ -22,6 +22,16 @@
 </head>
 <body>
   <header class="topbar">
+    <div class="topbar-right" id="mem-indicator" data-tip="JS heap usage. The MB number is what the app holds in memory; the % is how full V8's currently-allocated heap is (it grows on demand up to ~4 GB, so 70% of 10 MB is harmless). Watch the MB instead — that's the real footprint.">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6 H20 V18 H4 Z M4 10 H20 M9 14 H15"/></svg>
+      <span id="mem-text">—</span>
+    </div>
+    <button id="screenshot-btn" class="topbar-iconbtn tip" data-tip="Save a PNG snapshot of the viewport">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7 H7 L9 5 H15 L17 7 H21 V19 H3 Z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button id="settings-toggle" class="topbar-iconbtn tip" data-tip="Settings — theme, visibility, shadows">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8 a4 4 0 0 1 4 4 a4 4 0 0 1 -4 4 a4 4 0 0 1 -4 -4 a4 4 0 0 1 4 -4 Z M19.4 15 a1.7 1.7 0 0 0 0.3 1.8 l0.1 0.1 a2 2 0 1 1 -2.8 2.8 l-0.1 -0.1 a1.7 1.7 0 0 0 -1.8 -0.3 a1.7 1.7 0 0 0 -1 1.5 V21 a2 2 0 0 1 -4 0 v-0.1 a1.7 1.7 0 0 0 -1.1 -1.5 a1.7 1.7 0 0 0 -1.8 0.3 l-0.1 0.1 a2 2 0 1 1 -2.8 -2.8 l0.1 -0.1 a1.7 1.7 0 0 0 0.3 -1.8 a1.7 1.7 0 0 0 -1.5 -1 H3 a2 2 0 0 1 0 -4 h0.1 a1.7 1.7 0 0 0 1.5 -1.1 a1.7 1.7 0 0 0 -0.3 -1.8 l-0.1 -0.1 a2 2 0 1 1 2.8 -2.8 l0.1 0.1 a1.7 1.7 0 0 0 1.8 0.3 H9 a1.7 1.7 0 0 0 1 -1.5 V3 a2 2 0 0 1 4 0 v0.1 a1.7 1.7 0 0 0 1 1.5 a1.7 1.7 0 0 0 1.8 -0.3 l0.1 -0.1 a2 2 0 1 1 2.8 2.8 l-0.1 0.1 a1.7 1.7 0 0 0 -0.3 1.8 V9 a1.7 1.7 0 0 0 1.5 1 H21 a2 2 0 0 1 0 4 h-0.1 a1.7 1.7 0 0 0 -1.5 1 Z"/></svg>
+    </button>
     <a class="brand" href="#" aria-label="BlockBuilder Studio home">
       <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
         <defs>
@@ -38,61 +48,223 @@
 
     <div class="toolbar" id="toolbar">
       <div class="tool-group">
-        <button data-action="group" data-tip="Group selected (Ctrl+G)" class="tip">
+        <button data-action="group" data-tip="Group + combine with CSG: holes carve, solids merge (Ctrl+G). Reversible until Bake." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 11 L13 13"/></svg>
           <span>Group</span>
         </button>
-        <button data-action="ungroup" data-tip="Ungroup active" class="tip">
+        <button data-action="ungroup" data-tip="Restore the original parts of an unbaked group (brings hidden children back)" class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
           <span>Ungroup</span>
         </button>
-        <button data-action="bake" data-tip="Bake CSG to mesh" class="tip">
+        <button data-action="bake" data-tip="Finalise the group: delete child parts, keep only the combined mesh. Permanent — can't ungroup after." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6 L12 2 L20 6 L20 18 L12 22 L4 18 Z"/></svg>
           <span>Bake</span>
         </button>
+        <button data-action="split" data-tip="SPLIT — coming soon. The current welding algorithm produces unstable results on some CSG outputs; we're rewriting it. Disabled in this build." class="tip disabled" disabled aria-disabled="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 6 L9 10 M9 6 L5 10 M15 14 L19 18 M19 14 L15 18 M12 4 V20"/></svg>
+          <span>Split</span>
+          <span class="badge-soon">Soon</span>
+        </button>
+        <button data-action="cut" data-tip="Slice the shape along an X/Y/Z plane into two halves (Bambu-style cut)" class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12 H21 M7 6 L7 18 M17 6 L17 18 M3 12 L7 8 M21 12 L17 8"/></svg>
+          <span>Cut</span>
+        </button>
+        <button data-action="hollow" data-tip="Carve the inside, leaving a wall. Pick a thickness." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          <span>Hollow</span>
+        </button>
+        <button data-action="array" data-tip="Duplicate N times along a line or around an axis" class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/></svg>
+          <span>Array</span>
+        </button>
+        <button data-action="ruler" data-tip="Measure distance between two points (ESC to exit)" class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18 L18 3 L21 6 L6 21 Z M7 17 L9 15 M9 15 L11 17 M11 13 L13 15 M13 11 L15 13 M15 9 L17 11"/></svg>
+          <span>Ruler</span>
+        </button>
+        <button data-action="workplane" data-tip="Click a face to make it the active workplane for new shapes" class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z M12 12 L12 21 M3 7 L12 12 L21 7"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+          <span>Workplane</span>
+        </button>
       </div>
       <div class="tool-group">
-        <button data-action="align" data-tip="Align centers" class="tip">
+        <button data-action="extrude" data-tip="EXTRUDE SKETCH — click on the workplane to drop polygon corners, double-click or Enter to extrude into a 3D prism. Backspace undoes the last point; Esc cancels. Result is editable like any imported mesh." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18 L9 14 L14 19 L19 14 M5 18 L5 6 L9 2 L14 7 L19 2 L19 14"/></svg>
+          <span>Extrude</span>
+        </button>
+        <button data-action="scribble" data-tip="SCRIBBLE — hold left-click and drag to free-hand draw an outline on the workplane. Release to auto-close and extrude. Esc cancels." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 C 5 11, 9 9, 12 14 C 15 19, 19 11, 21 7"/></svg>
+          <span>Scribble</span>
+        </button>
+        <button data-action="revolve" data-tip="REVOLVE SKETCH — click points to draw a profile (X = radius from axis, Y = height). Enter to spin it around the Z axis into a lathe-style solid (vase, bottle, knob, etc). Esc cancels." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V21 M8 6 C 5 8, 5 16, 8 18 M16 6 C 19 8, 19 16, 16 18"/></svg>
+          <span>Revolve</span>
+        </button>
+      </div>
+      <div class="tool-group">
+        <button data-action="align" data-tip="ALIGN — opens a popup with 9 anchors (min / centre / max on each axis). Pick one and the selected shapes' edges or centres snap to that anchor on that axis. Needs at least 2 shapes selected." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V21 M5 8 H19 M7 16 H17"/></svg>
           <span>Align</span>
         </button>
-        <button data-action="duplicate" data-tip="Duplicate (Ctrl+D)" class="tip">
+        <button data-action="mirror" data-tip="MIRROR — opens a popup with X / Y / Z buttons. Click one to flip the selected shape across that axis through the combined bbox centre. Combines with Group to make symmetric pieces." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 V22 M6 6 L2 12 L6 18 M18 6 L22 12 L18 18"/></svg>
+          <span>Mirror</span>
+        </button>
+        <button data-action="drop" data-tip="DROP — push the selected shape down so its bottom face sits on the workplane (Z = 0). Useful after rotating something off the ground. Shortcut: D." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V14 M7 9 L12 14 L17 9 M4 19 H20"/></svg>
+          <span>Drop</span>
+        </button>
+        <button data-action="hide" data-tip="HIDE — toggle visibility of the selected shape. Keeps it in the scene + selectable from the outliner, just invisible in the viewport. Shortcut: H." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12 S6 5 12 5 S22 12 22 12 S18 19 12 19 S2 12 2 12 Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Hide</span>
+        </button>
+        <button data-action="duplicate" data-tip="DUPLICATE — make an exact copy of the selected shape offset slightly so you can see it. Inherits colour, params, transform, hole status. Shortcut: Ctrl+D." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15 L5 5 L15 5"/></svg>
           <span>Duplicate</span>
         </button>
-        <button data-action="delete" data-tip="Delete (Del)" class="tip danger">
+        <button data-action="delete" data-tip="DELETE — remove the selected shape(s) from the scene. Undoable with Ctrl+Z. Shortcut: Del or Backspace." class="tip danger">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6 H21 M8 6 V4 H16 V6 M6 6 V20 H18 V6 M10 11 V17 M14 11 V17"/></svg>
           <span>Delete</span>
         </button>
       </div>
       <div class="tool-group">
-        <label class="snap-label">
+        <label class="snap-label tip" data-tip="SNAP STEP — moves and resizes jump in increments of this value. 0 = no snap (totally free). Hold Ctrl while dragging to temporarily bypass. Rotations have their own snap: 0.1° by default, hold Shift during the rotate drag for 15° increments. This snap step also controls how aggressively shapes stick to other shapes' corners while body-dragging.">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9 H21 M3 15 H21 M9 3 V21 M15 3 V21"/></svg>
-          <select id="snap-step">
-            <option value="0">No snap</option>
-            <option value="0.1">0.1 mm</option>
-            <option value="0.5">0.5 mm</option>
-            <option value="1" selected>1 mm</option>
-            <option value="5">5 mm</option>
-            <option value="10">10 mm</option>
+          <span class="snap-text">Snap</span>
+          <input type="number" id="snap-step" value="1" min="0" max="100" step="0.1" class="tip" data-tip="Set the snap step in current units. Try 1 for general work, 0.1 for precision, 5+ for rough layout." />
+          <span class="snap-suffix">mm</span>
+          <select id="snap-preset" class="tip" data-tip="Quick presets — pick a common snap value without typing">
+            <option value="">Preset…</option>
+            <option value="0">Off</option>
+            <option value="0.1">0.1</option>
+            <option value="0.5">0.5</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
           </select>
         </label>
       </div>
       <div class="tool-group">
-        <button data-action="save" data-tip="Save project (JSON)" class="tip">
+        <button data-action="save" data-tip="SAVE PROJECT — download the whole scene as a JSON file you can reopen later. Includes all shapes, transforms, colours, and imported STL geometry (base64 inside the JSON, so files can be hefty)." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3 H17 L21 7 V21 H5 Z M8 3 V9 H15 V3 M8 21 V14 H17 V21"/></svg>
         </button>
-        <button data-action="load" data-tip="Load project" class="tip">
+        <button data-action="load" data-tip="LOAD PROJECT — open a previously-saved .json. Replaces the current scene (autosaved separately, so you don't lose anything — but undo history clears)." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 13 V19 A2 2 0 0 1 19 21 H5 A2 2 0 0 1 3 19 V13 M12 16 V4 M7 9 L12 4 L17 9"/></svg>
         </button>
-        <button data-action="export-stl" class="primary" data-tip="Export STL">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V15 M7 10 L12 15 L17 10 M5 21 H19"/></svg>
-          <span>Export STL</span>
+        <button data-action="import-mesh" data-tip="IMPORT — load a 3D mesh (.stl or .obj) into the scene as an editable shape. Imported shapes behave like primitives (move / scale / rotate / colour / hole / CSG). Works fully offline." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 19 V13 M7 11 L12 16 L17 11 M12 16 V4"/></svg>
+          <span>Import</span>
+        </button>
+        <button data-action="export-stl" class="primary" data-tip="EXPORT STL — download the current scene as an .stl file (binary). Standard format for 3D printers and most slicer software. All visible solid shapes are unioned; holes are subtracted."
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 21 V13 M7 8 L12 3 L17 8 M12 3 V15"/></svg>
+          <span>STL</span>
+        </button>
+        <button data-action="export-step" data-tip="EXPORT STEP — download as ISO 10303 (.step) faceted-brep. Imports into Fusion 360 / SolidWorks / FreeCAD / Onshape as a mesh body. Note: BlockBuilder works internally with triangles, so the STEP file represents the geometry as facets rather than parametric surfaces (no editable cylinders / fillets in the importing CAD). Same precision as STL, broader CAD compatibility." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 19 V13 M12 3 V15 M7 8 L12 3 L17 8"/></svg>
+          <span>STEP</span>
+        </button>
+        <button data-action="export-obj" data-tip="EXPORT OBJ — download as Wavefront .obj (text format with optional material file). Useful when STL won't do — e.g. for tools that need named groups or vertex normals preserved." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 21 V13 M7 8 L12 3 L17 8 M12 3 V15"/></svg>
+          <span>OBJ</span>
         </button>
         <input type="file" id="load-file" accept=".json,application/json" hidden />
       </div>
     </div>
   </header>
+
+  <div class="settings-panel" id="settings-panel" hidden>
+    <div class="settings-header">
+      <span>Settings</span>
+      <button class="settings-close" aria-label="Close">×</button>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">Theme</div>
+      <div class="settings-theme-row">
+        <button class="settings-theme-btn" data-theme="dark"   data-tip="Dark theme (default)">Dark</button>
+        <button class="settings-theme-btn" data-theme="light"  data-tip="Light theme — easier on the eyes in daylight">Light</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">Show / hide</div>
+      <label class="settings-toggle" data-tip="The blue floor grid (1mm minor / 10mm major lines)">
+        <input type="checkbox" data-key="showGrid" /> <span>Workplane grid</span>
+      </label>
+      <label class="settings-toggle" data-tip="The small XYZ widget in the bottom-left of the viewport">
+        <input type="checkbox" data-key="showAxisWidget" /> <span>Corner axis widget</span>
+      </label>
+      <label class="settings-toggle" data-tip="The interactive cube in the top-right that snaps the camera to a face">
+        <input type="checkbox" data-key="showViewcube" /> <span>Viewcube</span>
+      </label>
+      <label class="settings-toggle" data-tip="The bottom-of-viewport status line (shapes, selection, snap step)">
+        <input type="checkbox" data-key="showHud" /> <span>HUD bar</span>
+      </label>
+      <label class="settings-toggle" data-tip="Show the floating help bubble that appears when hovering controls. Turn off if you already know what every button does and find the hints distracting.">
+        <input type="checkbox" data-key="showTooltips" /> <span>Hover help bubbles</span>
+      </label>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">Background</div>
+      <div class="settings-bg-presets" data-tip="Quick viewport background presets — click any swatch to apply, or 'Reset' to use the theme default.">
+        <button class="settings-bg-preset" data-bg="theme" data-tip="Use the theme's default gradient">Reset</button>
+        <button class="settings-bg-preset" data-bg="#0a0c10" style="background:#0a0c10" data-tip="Deep space black"></button>
+        <button class="settings-bg-preset" data-bg="#1e3a5f" style="background:#1e3a5f" data-tip="Studio blueprint"></button>
+        <button class="settings-bg-preset" data-bg="#23303f" style="background:#23303f" data-tip="Slate"></button>
+        <button class="settings-bg-preset" data-bg="#f4f5f8" style="background:#f4f5f8" data-tip="Soft paper"></button>
+        <button class="settings-bg-preset" data-bg="#fff8e7" style="background:#fff8e7" data-tip="Warm ivory"></button>
+      </div>
+      <div class="settings-bg-custom">
+        <input type="color" id="bg-colour-picker" value="#1f2532" data-tip="Pick any custom viewport background colour" />
+        <span>Custom colour</span>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">License &amp; support</div>
+      <div class="settings-license" id="settings-license-box">
+        <!-- filled at runtime by bindSettingsPanel() depending on activation status -->
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">Units</div>
+      <div class="settings-units" id="settings-units-box">
+        <p class="license-sub">Current: <strong id="settings-unit-current">mm</strong></p>
+        <button class="action-btn" id="settings-unit-change" data-tip="Switch between mm / cm / inches. Affects display labels and grid spacing only — existing geometry is not rescaled." class="tip">Change unit…</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">Startup</div>
+      <label class="settings-toggle" data-tip="Show the New / Continue / Open / Recents modal every time the app launches. Turn off to skip straight into your last project.">
+        <input type="checkbox" id="settings-show-welcome" /> <span>Show welcome screen on launch</span>
+      </label>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">About</div>
+      <div class="settings-about">
+        <p><strong>BlockBuilder Studio</strong>, offline 3D editor with no accounts and no limits.</p>
+        <p>Built by <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>. Available for custom 3D modelling, web dev, automation, technical writing.</p>
+        <p class="settings-about-cta"><a href="https://marjers.com" target="_blank" rel="noopener" class="settings-about-link">Visit marjers.com →</a></p>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-cat">Performance</div>
+      <label data-tip="Render quality is a sharpness ↔ FPS trade-off. The renderer fills more pixels at higher quality, which the GPU draws each frame. Pick Fast if drags feel laggy with big imports; pick Sharp if you have GPU to spare and want pixel-perfect edges." class="tip" style="font-size:11px;color:var(--text-dim);">Rendering quality (sharpness vs FPS)</label>
+      <div class="settings-quality-row">
+        <button class="settings-quality-btn" data-quality="low"    data-tip="FAST: lowest quality, highest FPS. Pixel ratio 1.0 — slightly pixelated edges but the GPU does the least work. Pick this if dragging shapes feels laggy on a big STL." class="tip">⚡ Fast</button>
+        <button class="settings-quality-btn" data-quality="medium" data-tip="BALANCED (default): pixel ratio 1.5 — sharp enough on most displays, ~56 % of the GPU work compared to Sharp. Recommended starting point." class="tip">⚖ Balanced</button>
+        <button class="settings-quality-btn" data-quality="high"   data-tip="SHARP: highest quality, lowest FPS. Native pixel ratio (up to 2.0). Pixel-perfect edges on Retina / 4K screens but the GPU pushes 4× the fragment work. Drop to Balanced if FPS suffers." class="tip">✨ Sharp</button>
+      </div>
+      <label class="settings-toggle" data-tip="Soft shadows from the main light. Turn off if frames drop on big imports.">
+        <input type="checkbox" data-key="shadows" /> <span>Shadows</span>
+      </label>
+    </div>
+  </div>
 
   <main class="layout">
     <aside class="sidebar">
@@ -100,13 +272,27 @@
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="7"/><path d="M21 21 L16 16"/>
         </svg>
-        <input type="search" id="shape-search" placeholder="Search shapes…" />
+        <input type="search" id="shape-search" placeholder="Search shapes…" class="tip" data-tip="Filter the shape tiles below by name. Type 'cyl' to narrow down to Cylinder, etc." />
       </div>
 
-      <h2>Solid</h2>
+      <h2 class="tip" data-tip="SHAPES — the catalogue of primitives you can place. Drag any tile into the viewport to spawn one.">Shapes</h2>
+      <p class="sidebar-hint">Drag in. Toggle Solid ↔ Hole in the Properties panel.</p>
       <div class="shape-grid" id="shape-grid"></div>
-      <h2>Hole</h2>
-      <div class="shape-grid" id="hole-grid"></div>
+
+      <a href="https://makerworld.com/en/@marjers/upload?orderBy=downloadCount"
+         target="_blank" rel="noopener"
+         class="models-link tip"
+         data-tip="Opens Marjers' MakerWorld profile sorted by most-downloaded. Pick a model, download the .stl, then drag it into the viewport to edit it here.">
+        <div class="models-link-head">
+          <span>Marjers' top models</span>
+          <span class="models-badge">MakerWorld</span>
+        </div>
+        <span class="models-link-sub">Browse + download .stl → drag into viewport</span>
+        <span class="models-link-arrow">↗</span>
+      </a>
+
+      <h2 class="tip" data-tip="OUTLINER — list of every shape in the scene, in spawn order. Groups appear with a chevron and their children indented below. Click to select, double-click to rename, eye toggles visibility.">Outliner</h2>
+      <div id="outliner-body" class="tab-body"></div>
     </aside>
 
     <section class="viewport-wrap">
@@ -125,34 +311,105 @@
         </svg>
         <h3>Drag a shape to start</h3>
         <p>Pick from the left, drop it here. Click any shape to edit dimensions and colour.</p>
+        <p style="font-size:11px;opacity:0.7;margin-top:6px;">Press <kbd>?</kbd> (bottom right) for the full guide. Hover any control for an explanation.</p>
+        <p class="empty-state-author">Made by <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a> · custom 3D / web work at <a href="https://marjers.com" target="_blank" rel="noopener">marjers.com</a></p>
       </div>
 
-      <div class="viewcube" id="viewcube" role="toolbar" aria-label="View presets">
-        <button data-view="top" data-tip="Top (7)" class="tip">Top</button>
-        <button data-view="front" data-tip="Front (1)" class="tip">Front</button>
-        <button data-view="right" data-tip="Right (3)" class="tip">Right</button>
-        <button data-view="iso" data-tip="Iso (0)" class="tip">Iso</button>
+      <div class="viewcube-wrap" id="viewcube-wrap">
+        <!-- 3D rotating cube widget injected by viewcube.js -->
+        <div class="viewcube-actions">
+          <button data-view="iso" data-tip="HOME / ISO VIEW — return the camera to the default 3D isometric angle. Shortcut: 0." class="tip" aria-label="Home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12 L12 3 L21 12 M5 10 V21 H19 V10 M9 21 V15 H15 V21"/></svg>
+          </button>
+          <button data-action="toggle-projection" data-tip="PERSPECTIVE ↔ ORTHOGRAPHIC. Perspective (P) = realistic depth, far things look smaller. Orthographic (O) = parallel projection, no foreshortening — better for measuring, drafting, and aligning shapes." class="tip" id="proj-btn">
+            <span id="proj-label">P</span>
+          </button>
+        </div>
       </div>
 
       <div class="hud" id="hud"></div>
 
-      <div class="hint-strip" id="hint-strip">
-        <span><kbd>G</kbd>Move</span>
-        <span><kbd>R</kbd>Rotate</span>
-        <span><kbd>S</kbd>Scale</span>
-        <span><kbd>Ctrl</kbd>+<kbd>G</kbd>Group</span>
-        <span><kbd>Ctrl</kbd>+<kbd>D</kbd>Duplicate</span>
-        <span><kbd>Del</kbd>Delete</span>
+      <div class="help-fab" id="help-fab" data-tip="Help &amp; shortcuts (?)">
+        <button id="help-toggle" aria-label="Toggle help">?</button>
+        <div class="help-card" id="help-card" hidden>
+          <h3>Help &amp; shortcuts</h3>
+
+          <div class="help-section">
+            <div class="help-cat">Mouse</div>
+            <div><kbd>L-click</kbd> select shape</div>
+            <div><kbd>L-drag</kbd> body → move on XY</div>
+            <div><kbd>R-drag</kbd> orbit camera</div>
+            <div><kbd>Shift</kbd>+R-drag → pan</div>
+            <div><kbd>Scroll</kbd> zoom</div>
+            <div><kbd>Shift</kbd>+L-click add to selection</div>
+            <div><kbd>Ctrl</kbd>+L-click toggle in selection</div>
+            <div>Drag in empty space → marquee select</div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-cat">Handles (white squares)</div>
+            <div>Top corner → resize X+Y simultaneously</div>
+            <div>Top mid-edge → resize one axis</div>
+            <div>Top centre square → resize Z (height)</div>
+            <div>Top arrow → move on Z</div>
+            <div>Coloured arc → rotate around axis (snaps 0.1° · hold <kbd>Shift</kbd> for 15° increments · hold <kbd>Ctrl</kbd> to bypass all snap)</div>
+            <div><kbd>Shift</kbd> uniform scale · <kbd>Alt</kbd> from centre · <kbd>Ctrl</kbd> bypass snap</div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-cat">Operations</div>
+            <div><b>Group</b> → combine selected with CSG (holes carve, solids merge)</div>
+            <div><b>Ungroup</b> → restore the unbaked group's original parts</div>
+            <div><b>Bake</b> → finalise group, delete child parts (permanent)</div>
+            <div><b>Split</b> <span style="font-size:9px;background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:3px;letter-spacing:0.5px;font-weight:700;">SOON</span> → coming soon; algorithm being rewritten</div>
+            <div><b>Cut</b> → slice the shape along an X/Y/Z plane in two halves</div>
+            <div><b>Align</b> → snap selected shapes' edges/centres to one axis</div>
+            <div><b>Mirror</b> → flip selected shapes across an axis</div>
+            <div><b>Drop</b> → place the active shape on the workplane (Z = 0)</div>
+            <div><b>Hide</b> → toggle a shape's visibility (keeps it in scene)</div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-cat">Keyboard</div>
+            <div><kbd>Ctrl</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> redo</div>
+            <div><kbd>Ctrl</kbd>+<kbd>S</kbd> save project · <kbd>Ctrl</kbd>+<kbd>D</kbd> duplicate · <kbd>Ctrl</kbd>+<kbd>G</kbd> group</div>
+            <div><kbd>Ctrl</kbd>+<kbd>A</kbd> select all · <kbd>Esc</kbd> deselect</div>
+            <div><kbd>Del</kbd>/<kbd>⌫</kbd> delete selected</div>
+            <div><kbd>D</kbd> drop to workplane · <kbd>H</kbd> hide</div>
+            <div><kbd>R</kbd>/<kbd>S</kbd> rotate / scale gizmo</div>
+            <div><kbd>1</kbd>/<kbd>3</kbd>/<kbd>7</kbd> front / right / top view</div>
+            <div><kbd>0</kbd> iso · <kbd>F</kbd> fit to scene</div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-cat">Settings (gear icon ⚙)</div>
+            <div>Switch theme · show/hide grid, axes, viewcube, HUD · toggle shadows for perf</div>
+          </div>
+          <div class="help-author">
+            BlockBuilder Studio by <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>.<br>
+            Hire me for custom 3D, web, or freelance projects → <a href="https://marjers.com" target="_blank" rel="noopener">marjers.com</a>
+          </div>
+        </div>
       </div>
     </section>
 
     <aside class="properties" id="properties">
-      <h2>Properties</h2>
+      <h2 class="tip" data-tip="PROPERTIES — controls for the currently selected shape: dimensions, hole/solid, opacity, colour, metrics, lock, reset, delete. Hover any label for what it does.">Properties</h2>
       <div id="props-body">
         <div class="hint card">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8 V12 M12 16 H12.01"/></svg>
           <p>Click a shape in the viewport to edit its parameters, colour, or convert solid ↔ hole.</p>
         </div>
+      </div>
+
+      <!-- Permanent About card, pinned to the bottom of the right aside. Visible
+           regardless of selection state. Keeps Marjers attribution + CTA in
+           constant view without needing to open Settings every time. -->
+      <div class="props-about">
+        <div class="props-about-head">ABOUT <span class="props-about-ver" id="props-about-ver"></span></div>
+        <p><strong>BlockBuilder Studio</strong>, offline 3D editor with no accounts and no limits.</p>
+        <p>Built by <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>. Available for custom 3D modelling, web dev, automation, technical writing.</p>
+        <a href="https://marjers.com" target="_blank" rel="noopener" class="props-about-cta">Visit marjers.com →</a>
       </div>
     </aside>
   </main>

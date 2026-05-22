@@ -15,6 +15,9 @@ export function initTooltip() {
 }
 
 function onOver(ev) {
+  // Bail entirely when the user has switched tooltips off in Settings — saves
+  // the event work and keeps the floating bubble out of the DOM tree.
+  if (document.documentElement.classList.contains('no-tooltips')) return;
   const target = ev.target.closest('[data-tip]');
   if (!target) return;
   clearTimeout(_hideTimer);

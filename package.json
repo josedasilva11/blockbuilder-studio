@@ -1,17 +1,24 @@
 {
   "name": "blockbuilder-studio",
-  "version": "0.4.0",
-  "description": "Offline 3D printing toolkit — sketch shapes, combine with booleans, export STL. No account, no cloud, no limits.",
+  "version": "0.5.0",
+  "description": "Offline 3D printing toolkit. Sketch shapes, combine with booleans, export STL. No account, no cloud, no limits.",
   "private": true,
   "main": "electron/main.cjs",
-  "author": "BlockBuilder Studio",
+  "homepage": "https://blockbuilder.studio",
+  "author": {
+    "name": "Marjers",
+    "email": "geral@marjers.com",
+    "url": "https://marjers.com"
+  },
   "license": "UNLICENSED",
   "scripts": {
     "dev": "electron .",
     "dist": "electron-builder",
     "dist:portable": "electron-builder --win portable",
     "dist:installer": "electron-builder --win nsis",
-    "dist:all": "electron-builder --win nsis portable"
+    "dist:all": "electron-builder --win nsis portable",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux AppImage"
   },
   "devDependencies": {
     "electron": "^32.2.5",
@@ -20,12 +27,16 @@
   "build": {
     "appId": "studio.blockbuilder.app",
     "productName": "BlockBuilder Studio",
+    "copyright": "Copyright © 2026 Marjers",
     "files": [
       "app/**/*",
       "vendor/**/*",
       "electron/**/*",
       "index.html",
       "styles.css",
+      "!website/**",
+      "!cloudflare-worker/**",
+      "!keygen/**",
       "!**/.git/**",
       "!**/_*",
       "!**/.claude/**",
@@ -35,12 +46,22 @@
     "directories": {
       "output": "dist"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "marjers",
+        "repo": "blockbuilder-studio"
+      }
+    ],
     "win": {
       "target": [
         { "target": "portable", "arch": ["x64"] },
         { "target": "nsis",     "arch": ["x64"] }
       ],
-      "artifactName": "${productName}-${version}-${arch}-${ext}.exe"
+      "icon": "build/icon.ico",
+      "artifactName": "${productName}-${version}-${arch}-${ext}.exe",
+      "publisherName": "Marjers",
+      "verifyUpdateCodeSignature": false
     },
     "portable": {
       "artifactName": "BlockBuilderStudio-${version}-portable.exe"
@@ -51,15 +72,26 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "BlockBuilder Studio"
+      "shortcutName": "BlockBuilder Studio",
+      "include": "build/installer.nsh"
     },
     "linux": {
       "target": ["AppImage"],
-      "category": "Graphics"
+      "category": "Graphics",
+      "icon": "build/icon.png",
+      "maintainer": "geral@marjers.com",
+      "vendor": "Marjers",
+      "synopsis": "Offline 3D editor",
+      "description": "Drag-and-drop desktop 3D editor with CSG, STL/OBJ/STEP import-export, sketches, ruler. No account required."
     },
     "mac": {
       "target": ["dmg"],
-      "category": "public.app-category.graphics-design"
+      "category": "public.app-category.graphics-design",
+      "icon": "build/icon.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     }
   }
 }

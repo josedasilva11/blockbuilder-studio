@@ -1,0 +1,2228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BlockBuilder Studio · Model in minutes. Print the same day.</title>
+<meta name="description" content="A drag-and-drop 3D editor that runs fully offline. Solid + hole CSG, STL/OBJ/STEP export, sketch tools. No accounts, no limits. Free for personal use. €12 lifetime commercial licence." />
+<link rel="canonical" href="https://blockbuilder.studio" />
+<meta property="og:title" content="BlockBuilder Studio — offline 3D editor by Marjers" />
+<meta property="og:description" content="Drag-and-drop desktop 3D editor. No accounts. No limits. €12 lifetime commercial licence." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://blockbuilder.studio" />
+<meta property="og:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#0a0c10" />
+<meta name="author" content="Marjers" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2314171d'/%3E%3Cpath d='M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31' stroke='%23c4f04f' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" />
+<style>
+/* =========================================================================
+   BlockBuilder Studio — landing
+   by Marjers · designed for conversion, built for makers
+   ========================================================================= */
+
+:root {
+  --bg:           #0a0c10;
+  --bg-elev:      #11141b;
+  --panel:        #161a23;
+  --panel-soft:   #1c2030;
+  --border:       #232838;
+  --border-soft:  #1c2030;
+  --border-strong:#2f3548;
+
+  --text:         #eef0f5;
+  --text-mid:     #aab2c4;
+  --text-dim:     #6b7388;
+  --text-faint:   #4a5165;
+
+  --lime:         #c4f04f;
+  --lime-deep:    #8fc524;
+  --lime-glow:    rgba(196, 240, 79, 0.32);
+  --lime-soft:    rgba(196, 240, 79, 0.10);
+  --lime-line:    rgba(196, 240, 79, 0.22);
+
+  --warm:         #f0a624; /* secondary accent for danger / mobile notice */
+  --plum:         #b87df0; /* tertiary — used in voxel scene */
+
+  --r-sm: 6px;
+  --r:    10px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --max-w: 1180px;
+}
+
+* { box-sizing: border-box; }
+*::selection { background: var(--lime); color: #0a0c10; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+  font: 16px/1.6 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'ss01', 'cv11';
+  overflow-x: hidden;
+}
+a { color: var(--lime); text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* === Background grid texture ============================================= */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(196,240,79,0.06), transparent 60%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px) 0 0 / 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === Section primitives ================================================== */
+section, header, footer { position: relative; z-index: 1; }
+.inner { max-width: var(--max-w); margin: 0 auto; padding: 0 28px; }
+
+h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
+.serif { font-family: 'Instrument Serif', 'Times New Roman', serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+.eyebrow .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); margin-right: 8px; vertical-align: 1px; }
+
+/* === Release banner ====================================================== */
+.banner {
+  background: var(--lime);
+  color: #0a0c10;
+  text-align: center;
+  font-size: 13px;
+  padding: 9px 24px;
+  position: relative;
+  z-index: 50;
+  font-weight: 500;
+}
+.banner strong { font-weight: 700; }
+.banner .sep { opacity: 0.45; margin: 0 10px; }
+.banner-cta {
+  margin-left: 12px;
+  background: #0a0c10;
+  color: var(--lime) !important;
+  padding: 3px 10px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: inline-block;
+}
+.banner-cta:hover { background: #1a1d24; }
+.banner .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #0a0c10; margin-right: 8px; vertical-align: 1px; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
+
+/* === Nav ================================================================= */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(10, 12, 16, 0.78);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-bottom: 1px solid var(--border-soft);
+}
+.nav-in {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex; align-items: center;
+  padding: 14px 28px;
+  gap: 28px;
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 15px; color: var(--text);
+  letter-spacing: -0.01em;
+}
+.brand-mark { width: 30px; height: 30px; }
+.brand-name strong { font-weight: 700; }
+.brand-name { font-weight: 500; }
+.brand-tag {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  background: var(--lime);
+  color: #0a0c10;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: 2px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.nav-links { display: flex; gap: 28px; margin-left: 28px; font-size: 14px; }
+.nav-links a { color: var(--text-mid); transition: color 0.15s; }
+.nav-links a:hover { color: var(--text); }
+.nav-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+
+/* === Buttons ============================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--r);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1px solid transparent;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+.btn-primary {
+  background: var(--lime); color: #0a0c10; border-color: var(--lime);
+  box-shadow: 0 4px 14px rgba(196,240,79,0.18);
+}
+.btn-primary:hover { background: #d5ff58; border-color: #d5ff58; box-shadow: 0 8px 24px rgba(196,240,79,0.35); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--text-mid); border-color: var(--border); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
+.btn-lg { padding: 14px 24px; font-size: 15px; border-radius: var(--r); }
+.btn-xl { padding: 18px 28px; font-size: 16px; }
+.btn svg { width: 16px; height: 16px; }
+
+/* === Hero ================================================================ */
+.hero {
+  position: relative;
+  padding: 110px 28px 100px;
+  overflow: hidden;
+}
+.hero-in {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 12px 6px 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.hero-eyebrow .badge {
+  background: var(--lime);
+  color: #0a0c10;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+}
+.hero h1 {
+  font-size: clamp(46px, 6.4vw, 84px);
+  line-height: 0.98;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  margin: 0 0 24px;
+}
+.hero h1 .accent { color: var(--lime); }
+.hero h1 .stack { display: block; }
+.hero-lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--text-mid);
+  margin: 0 0 32px;
+  max-width: 540px;
+}
+.hero-lede strong { color: var(--text); font-weight: 600; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.hero-perks {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.hero-perks span { display: inline-flex; align-items: center; gap: 6px; }
+.hero-perks svg { width: 14px; height: 14px; color: var(--lime); }
+
+/* hero stats strip */
+.hero-stats {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-soft);
+  max-width: 540px;
+}
+.hero-stats > div { display: flex; flex-direction: column; gap: 2px; }
+.hero-stats strong {
+  font-size: 26px; font-weight: 700;
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.hero-stats span {
+  font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Hero polaroid stack — three real screenshots arranged with depth. The
+ * front (Porsche) is centred and largest, with the other two tucked
+ * behind at slight rotations so the eye reads the stack as a curated
+ * showcase rather than a flat grid. */
+.hero-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.05 / 1;
+  z-index: 1;
+}
+.hero-card {
+  position: absolute;
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.hero-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid var(--border);
+}
+.hero-card figcaption {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text-mid);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  letter-spacing: 0.2px;
+  background: var(--panel);
+}
+/* Back-left: Eiffel — narrow, slightly small, tilted left */
+.hero-card-back-left {
+  top: 2%; left: -2%;
+  width: 58%;
+  transform: rotate(-5.5deg);
+  z-index: 1;
+  filter: brightness(0.88) saturate(0.92);
+}
+/* Back-right: Hinge — slightly bigger, tilted right */
+.hero-card-back-right {
+  top: 8%; right: -4%;
+  width: 62%;
+  transform: rotate(5.2deg);
+  z-index: 2;
+  filter: brightness(0.92) saturate(0.94);
+}
+/* Front: Porsche — largest, slight tilt, lime-tinted glow */
+.hero-card-front {
+  bottom: 4%; left: 50%;
+  width: 78%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  z-index: 3;
+  border-color: var(--lime-line);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.55),
+    0 0 0 1px var(--lime-line),
+    0 0 60px rgba(196,240,79,0.12);
+}
+/* Subtle hover-spread: tilt outwards a bit when the hero comes into focus */
+.hero-stack:hover .hero-card-back-left  { transform: rotate(-8deg) translate(-12px, -6px); }
+.hero-stack:hover .hero-card-back-right { transform: rotate(8deg) translate(12px, -6px); }
+.hero-stack:hover .hero-card-front      { transform: translateX(-50%) rotate(0deg) translateY(-4px); }
+
+@media (max-width: 800px) {
+  .hero-stack { aspect-ratio: 1.2 / 1; }
+  .hero-card-back-left  { width: 62%; }
+  .hero-card-back-right { width: 64%; }
+  .hero-card-front      { width: 80%; }
+}
+
+/* === Real screenshots section ============================================ */
+.shots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+/* First (hero) shot spans both columns; the rest fall into a tight 2x2. */
+.shots-grid .shot-wide { grid-column: 1 / -1; }
+@media (min-width: 900px) {
+  .shots-grid { grid-template-columns: repeat(3, 1fr); }
+  .shots-grid .shot-wide { grid-column: 1 / -1; }
+}
+.shot {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: 0.2s var(--ease);
+}
+.shot:hover {
+  border-color: var(--lime-line);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid var(--border);
+}
+.shot figcaption {
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text-mid);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  letter-spacing: 0.2px;
+}
+@media (max-width: 800px) {
+  .shots-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+
+/* === Hero visual: isometric voxel scene ================================== */
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.scene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+}
+.scene svg { width: 100%; height: 100%; }
+.scene-glow {
+  position: absolute; inset: 12% 12%;
+  background: radial-gradient(circle at 50% 40%, var(--lime-glow), transparent 60%);
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* floating chips around the scene */
+.float-chip {
+  position: absolute;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-mid);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: float-bob 6s ease-in-out infinite;
+}
+.float-chip .swatch { width: 8px; height: 8px; border-radius: 2px; }
+.float-chip .swatch.lime { background: var(--lime); box-shadow: 0 0 12px var(--lime-glow); }
+.float-chip .swatch.warm { background: var(--warm); }
+.float-chip .swatch.plum { background: var(--plum); }
+.chip-1 { top: 12%; left: -8%; animation-delay: 0s; }
+.chip-2 { top: 38%; right: -12%; animation-delay: -2s; }
+.chip-3 { bottom: 14%; left: -2%; animation-delay: -4s; }
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* voxel rotation */
+.voxel-group { animation: voxel-rot 24s linear infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes voxel-rot {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voxel-group, .float-chip, .banner .pulse { animation: none !important; }
+}
+
+/* === Trust strip ========================================================= */
+.trust {
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  padding: 22px 28px;
+}
+.trust-in {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  align-items: center;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.trust-item svg { width: 18px; height: 18px; color: var(--lime); flex: 0 0 18px; }
+
+/* === Section header ====================================================== */
+.section { padding: 110px 28px; position: relative; }
+.section-head { max-width: 720px; margin: 0 auto 60px; text-align: center; }
+.section-head .eyebrow { margin-bottom: 16px; display: inline-block; }
+.section-head h2 {
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.section-head h2 .accent { color: var(--lime); }
+.section-head h2 .serif { color: var(--text-mid); }
+.section-head p {
+  font-size: 17px;
+  color: var(--text-mid);
+  margin: 18px auto 0;
+  max-width: 580px;
+  line-height: 1.55;
+}
+
+/* === Feature bento ======================================================= */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 16px;
+}
+.cell {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s var(--ease-out);
+}
+.cell:hover { border-color: var(--border-strong); }
+.cell-tall { grid-row: span 2; }
+.cell-wide-3 { grid-column: span 3; }
+.cell-wide-2 { grid-column: span 2; }
+.cell-wide-4 { grid-column: span 4; }
+.cell-wide-6 { grid-column: span 6; }
+
+.cell h3 { font-size: 19px; margin: 0 0 8px; letter-spacing: -0.01em; }
+.cell p  { font-size: 14px; color: var(--text-mid); margin: 0; line-height: 1.55; }
+.cell .icon {
+  width: 38px; height: 38px;
+  background: var(--lime-soft);
+  color: var(--lime);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.cell .icon svg { width: 20px; height: 20px; }
+
+/* feature hero cells (with illustration) */
+.cell-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 380px;
+}
+.cell-hero .feat-illust {
+  height: 200px;
+  margin: 12px -28px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Real-screenshot variant of the feature illustration. Used by Solid+Hole
+ * and STL/OBJ/STEP cards. Replaces the synthetic SVG/text mockups with
+ * actual UI captures so the cards match the showcase aesthetic. */
+.feat-shot {
+  background: radial-gradient(circle at 50% 50%, var(--bg-elev), var(--panel));
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+.feat-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* The export shot is a wide thin crop; fit so it stays sharp rather than
+ * cover-cropping the toolbar pixels into invisibility. */
+.feat-shot-export img {
+  object-fit: contain;
+  background: var(--bg-elev);
+  padding: 12px 24px;
+}
+.cell-hero h3 { font-size: 22px; }
+.cell-hero p { font-size: 15px; }
+
+/* boolean visualization */
+.feat-bool {
+  background: radial-gradient(circle at 50% 50%, var(--bg-elev), var(--panel));
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+}
+.feat-bool .op-sym {
+  color: var(--lime);
+  font-size: 32px;
+  font-weight: 200;
+  font-family: 'JetBrains Mono', monospace;
+}
+.feat-bool .blk {
+  width: 70px; height: 70px;
+  background: linear-gradient(135deg, var(--panel-soft) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  position: relative;
+}
+.feat-bool .blk.hole {
+  background: linear-gradient(135deg, rgba(255,95,109,0.18), rgba(255,95,109,0.05));
+  border-color: rgba(255,95,109,0.4);
+}
+.feat-bool .blk.result {
+  background: linear-gradient(135deg, var(--lime-soft), rgba(196,240,79,0.04));
+  border-color: var(--lime-line);
+  box-shadow: 0 0 20px var(--lime-soft);
+}
+.feat-bool .blk.result::after {
+  content: '';
+  position: absolute; inset: 22px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* export formats */
+.feat-export {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 30px 18px;
+}
+.feat-export .fmt {
+  padding: 12px 16px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  transition: 0.2s var(--ease-out);
+}
+.feat-export .fmt.primary {
+  background: var(--lime-soft);
+  border-color: var(--lime-line);
+  color: var(--lime);
+  transform: scale(1.05);
+  box-shadow: 0 0 16px var(--lime-soft);
+}
+.feat-export .arrow {
+  color: var(--text-faint);
+  font-size: 18px;
+}
+
+/* sketch illustration */
+.feat-sketch {
+  background: var(--bg-elev);
+  padding: 20px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* sysreq tag */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--lime-soft);
+  color: var(--lime);
+  border: 1px solid var(--lime-line);
+}
+.tag.warm { background: rgba(240,166,36,0.10); color: var(--warm); border-color: rgba(240,166,36,0.3); }
+.tag.neutral { background: var(--panel-soft); color: var(--text-mid); border-color: var(--border); }
+
+/* === Workflow steps ====================================================== */
+.workflow {
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 28px;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 38px;
+  left: 0; right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px);
+  z-index: 0;
+}
+.step {
+  background: var(--bg-elev);
+  padding: 0 22px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.step-num {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--lime);
+  position: relative;
+}
+.step-num::after {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: 50%; border: 1px dashed var(--border-soft);
+  pointer-events: none;
+}
+.step h3 { font-size: 17px; margin: 0 0 8px; }
+.step p { font-size: 13.5px; color: var(--text-mid); margin: 0; line-height: 1.55; }
+.step kbd {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* === Principles 2x3 ====================================================== */
+.principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.principle {
+  padding: 28px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  position: relative;
+  transition: all 0.2s var(--ease-out);
+}
+.principle:hover { border-color: var(--lime-line); }
+.principle-check {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--lime);
+  color: #0a0c10;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.principle-check svg { width: 16px; height: 16px; }
+.principle h3 { font-size: 17px; margin: 0 0 8px; }
+.principle p { font-size: 14px; color: var(--text-mid); margin: 0; line-height: 1.55; }
+.principle code {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-elev);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--lime);
+}
+
+/* === Use cases =========================================================== */
+.uses {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.use {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 26px;
+  transition: 0.2s var(--ease-out);
+}
+.use:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.use-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  background: var(--bg);
+  color: var(--text-mid);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.use h3 { font-size: 16px; margin: 0 0 6px; }
+.use p { font-size: 13.5px; color: var(--text-mid); margin: 0; line-height: 1.55; }
+
+/* === Pricing ============================================================= */
+.pricing {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.price {
+  padding: 36px;
+  border-radius: var(--r-lg);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.price-pro {
+  background: linear-gradient(180deg, rgba(196,240,79,0.08), rgba(196,240,79,0.02));
+  border-color: var(--lime-line);
+}
+.price-pro::before {
+  content: 'RECOMMENDED FOR COMMERCIAL USE';
+  position: absolute;
+  top: 18px; right: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: var(--lime);
+  color: #0a0c10;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.price-head { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+.price-name { font-size: 16px; font-weight: 600; color: var(--text); }
+.price-tag {
+  margin-top: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.price-amount {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.price-currency { font-size: 22px; font-weight: 600; color: var(--text-mid); }
+.price-unit { font-size: 14px; color: var(--text-dim); }
+.price-sub { font-size: 13px; color: var(--text-mid); margin-bottom: 24px; }
+
+.price ul { list-style: none; padding: 0; margin: 0 0 28px; }
+.price li {
+  font-size: 14px;
+  color: var(--text-mid);
+  padding: 7px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.price li svg { width: 14px; height: 14px; color: var(--lime); flex: 0 0 14px; margin-top: 4px; }
+.price li strong { color: var(--text); font-weight: 600; }
+.price .btn { width: 100%; }
+
+/* === Download section ==================================================== */
+.download {
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+.dl-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 880px;
+  margin: 0 auto 24px;
+}
+.dl-card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  color: var(--text);
+  transition: 0.2s var(--ease-out);
+  position: relative;
+}
+.dl-card:hover {
+  border-color: var(--lime);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(196,240,79,0.10);
+}
+.dl-os {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+}
+.dl-os svg { width: 26px; height: 26px; color: var(--text-mid); }
+.dl-os-name { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.dl-file { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.dl-meta { font-size: 11.5px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+.dl-card .dl-arrow {
+  position: absolute;
+  top: 22px; right: 22px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-mid);
+  transition: 0.2s;
+}
+.dl-card:hover .dl-arrow { background: var(--lime); border-color: var(--lime); color: #0a0c10; transform: translateY(3px); }
+
+.dl-card-match {
+  border-color: var(--lime-line);
+  background: linear-gradient(135deg, rgba(196,240,79,0.07), rgba(196,240,79,0));
+}
+.dl-card-match::after {
+  content: 'DETECTED';
+  position: absolute;
+  top: -1px;
+  left: 22px;
+  background: var(--lime);
+  color: #0a0c10;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 0 0 4px 4px;
+}
+.dl-card-match svg { color: var(--lime); }
+
+.dl-foot {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 26px 0 0;
+}
+.dl-foot a { color: var(--lime); }
+
+.sysreqs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 880px;
+  margin: 32px auto 0;
+}
+.sysreq {
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.sysreq strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.sysreq span {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  line-height: 1.55;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.mobile-notice {
+  display: none;
+  max-width: 600px;
+  margin: 0 auto 28px;
+  padding: 18px 22px;
+  background: var(--panel);
+  border: 1px solid rgba(240,166,36,0.3);
+  border-left: 3px solid var(--warm);
+  border-radius: var(--r);
+  font-size: 13.5px;
+  color: var(--text-mid);
+}
+.mobile-notice strong { color: var(--warm); display: block; margin-bottom: 4px; }
+html[data-mobile] .mobile-notice { display: block; }
+html[data-mobile] .dl-row { opacity: 0.5; pointer-events: none; }
+
+.mobile-email-form {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+.mobile-email-form input,
+.email-form input {
+  flex: 1;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13.5px;
+}
+.mobile-email-form input:focus,
+.email-form input:focus {
+  outline: none;
+  border-color: var(--lime);
+  box-shadow: 0 0 0 3px var(--lime-soft);
+}
+.mobile-email-form button,
+.email-form button {
+  background: var(--lime);
+  color: #0a0c10;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.mobile-email-form button:hover,
+.email-form button:hover { background: #d5ff58; }
+
+/* === FAQ ================================================================= */
+.faq-list { max-width: 800px; margin: 0 auto; }
+.faq-list details {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: 0.15s;
+}
+.faq-list details[open] { border-color: var(--lime-line); background: linear-gradient(180deg, rgba(196,240,79,0.04), transparent); }
+.faq-list summary {
+  cursor: pointer;
+  padding: 18px 22px;
+  font-weight: 600;
+  font-size: 15px;
+  list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px;
+  transition: color 0.15s;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after {
+  content: '+';
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-dim);
+  flex: 0 0 22px;
+  text-align: center;
+  transition: 0.15s;
+}
+.faq-list details[open] summary::after { content: '−'; color: var(--lime); transform: scale(1.1); }
+.faq-list summary:hover { color: var(--lime); }
+.faq-list .answer {
+  padding: 0 22px 22px;
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+.faq-list .answer p { margin: 0 0 10px; }
+.faq-list .answer p:last-child { margin: 0; }
+.faq-list .answer code {
+  background: var(--bg-elev);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--lime);
+}
+.faq-list .answer a { color: var(--lime); }
+
+/* === Maker / Marjers signature =========================================== */
+.maker {
+  text-align: center;
+  padding: 100px 28px 80px;
+  background: var(--bg);
+  position: relative;
+}
+.maker-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  position: relative;
+  overflow: hidden;
+}
+.maker-card::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -10%;
+  width: 60%; height: 80%;
+  background: radial-gradient(circle, var(--lime-soft), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+.maker-mark {
+  width: 76px; height: 76px;
+  margin: 0 auto 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.maker-mark span {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 42px;
+  color: var(--lime);
+  line-height: 1;
+}
+.maker h2 {
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0 0 18px;
+  position: relative; z-index: 1;
+}
+.maker h2 .serif { color: var(--text-mid); }
+.maker p {
+  font-size: 16px;
+  color: var(--text-mid);
+  margin: 0 auto 28px;
+  max-width: 540px;
+  line-height: 1.6;
+  position: relative; z-index: 1;
+}
+.maker-links {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+
+/* === Final CTA =========================================================== */
+.final {
+  text-align: center;
+  padding: 120px 28px;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,240,79,0.12), transparent 70%),
+    var(--bg);
+  border-top: 1px solid var(--border-soft);
+  position: relative;
+}
+.final h2 {
+  font-size: clamp(40px, 5.4vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin: 0 0 18px;
+}
+.final h2 .accent { color: var(--lime); }
+.final p {
+  font-size: 17px;
+  color: var(--text-mid);
+  margin: 0 auto 36px;
+  max-width: 520px;
+}
+.final-cta-row {
+  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+}
+.final-foot {
+  margin-top: 32px !important;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.final-foot a { color: var(--lime); }
+
+/* === Footer ============================================================== */
+footer {
+  background: var(--bg);
+  padding: 80px 28px 30px;
+  border-top: 1px solid var(--border-soft);
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+.footer-grid {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+.footer-brand { max-width: 320px; }
+.footer-brand .brand { margin-bottom: 14px; }
+.footer-brand p {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+}
+.footer-col a {
+  display: block;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 9px;
+  font-size: 13.5px;
+  transition: color 0.15s;
+}
+.footer-col a:hover { color: var(--lime); }
+.footer-bottom {
+  max-width: var(--max-w);
+  margin: 60px auto 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.footer-bottom .mono { font-family: 'JetBrains Mono', monospace; }
+.footer-by {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--text-mid);
+  text-decoration: none;
+}
+.footer-by .serif {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--lime);
+  line-height: 1;
+}
+.footer-by:hover { color: var(--text); }
+
+/* === Newsletter inline =================================================== */
+.email-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: center;
+}
+.email-card h3 { font-size: 18px; margin: 0 0 4px; }
+.email-card p { font-size: 13.5px; color: var(--text-mid); margin: 0; line-height: 1.5; }
+.email-form { display: flex; gap: 8px; }
+
+/* === Fade-up scroll animation ============================================ */
+.fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); }
+.fade-up.in { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .fade-up, .fade-up.in { opacity: 1; transform: none; transition: none; } }
+
+/* === Mobile ============================================================== */
+@media (max-width: 980px) {
+  .hero-in { grid-template-columns: 1fr; gap: 60px; }
+  .hero h1 { font-size: clamp(38px, 9vw, 56px); }
+  .hero-visual { max-width: 460px; margin: 0 auto; }
+  .hero-stats { grid-template-columns: 1fr 1fr; max-width: 100%; }
+  .nav-links { display: none; }
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .cell-wide-3, .cell-wide-2, .cell-wide-4, .cell-wide-6 { grid-column: span 2; }
+  .cell-tall { grid-row: span 1; }
+  .cell-hero { min-height: 340px; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 28px 0; }
+  .steps::before { display: none; }
+  .principles, .uses { grid-template-columns: 1fr; }
+  .pricing { grid-template-columns: 1fr; }
+  .dl-row { grid-template-columns: 1fr; }
+  .sysreqs { grid-template-columns: 1fr; }
+  .trust-in { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .email-card { grid-template-columns: 1fr; padding: 28px; gap: 18px; }
+  .section { padding: 80px 24px; }
+  .hero { padding: 70px 24px 60px; }
+  .float-chip { font-size: 11px; padding: 8px 10px; }
+  .chip-1 { top: 6%; left: 2%; }
+  .chip-2 { top: 38%; right: 2%; }
+  .chip-3 { bottom: 6%; left: 4%; }
+  .banner { font-size: 11.5px; padding: 7px 14px; }
+  .banner .sep { display: none; }
+  .banner-cta { margin-left: 8px; }
+}
+@media (max-width: 600px) {
+  .bento { grid-template-columns: 1fr; }
+  .cell-wide-3, .cell-wide-2, .cell-wide-4, .cell-wide-6 { grid-column: span 1; }
+  .steps { grid-template-columns: 1fr; }
+  .trust-in { grid-template-columns: 1fr; gap: 14px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .nav-actions .btn-ghost { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Release banner
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="banner">
+  <span class="pulse"></span>
+  <strong>BlockBuilder v0.5.0</strong> just shipped
+  <span class="sep">·</span>
+  Faster CSG, AP203 STEP export, dark/light theme polish
+  <a href="/changelog" class="banner-cta">Changelog →</a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Navigation
+     ════════════════════════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40">
+        <defs><linearGradient id="lg-nav" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#cdff45"/><stop offset="100%" stop-color="#7cbe1e"/>
+        </linearGradient></defs>
+        <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z" fill="url(#lg-nav)" opacity="0.18"/>
+        <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
+              stroke="url(#lg-nav)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-name"><strong>Block</strong>Builder</span>
+      <span class="brand-tag">STUDIO</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#pricing" class="btn btn-ghost">Buy licence · €12</a>
+      <a href="#download" class="btn btn-primary">Download free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Hero — headline + voxel scene
+     ════════════════════════════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-in">
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <span class="badge">v0.5.0</span>
+        <span>Offline 3D editor · Windows · macOS · Linux</span>
+      </div>
+      <h1>
+        <span class="stack">Model in</span>
+        <span class="stack"><span class="accent serif">minutes.</span></span>
+        <span class="stack">Print the same day.</span>
+      </h1>
+      <p class="hero-lede">
+        A <strong>drag-and-drop 3D editor</strong> that runs fully offline.
+        Drop in shapes, combine with booleans, export STL, hit print.
+        No account, no cloud waiting, no upload caps. Just you and your printer.
+      </p>
+      <div class="hero-cta">
+        <a href="#download" class="btn btn-primary btn-xl" id="hero-cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V14 M7 9 L12 14 L17 9 M4 19 H20"/></svg>
+          <span>Download for <span id="hero-os">your OS</span></span>
+        </a>
+        <a href="#workflow" class="btn btn-ghost btn-xl">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12 H21 M14 5 L21 12 L14 19"/></svg>
+          See workflow
+        </a>
+      </div>
+      <div class="hero-perks">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>
+          Free for personal use
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>
+          No account, no email
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>
+          Works offline
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>
+          Signed binaries
+        </span>
+      </div>
+      <div class="hero-stats">
+        <div><strong>v0.5.0</strong><span>Released May 2026</span></div>
+        <div><strong>13</strong><span>Primitive shapes</span></div>
+        <div><strong>3</strong><span>Sketch tools</span></div>
+        <div><strong>0</strong><span>Tracking pixels</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="scene-glow"></div>
+
+      <!-- Real screenshots arranged as a layered "polaroid stack". Porsche
+           is the front hero card; Eiffel + Hinge sit behind, slightly
+           rotated, to add depth. Floating monospace chips overlay on top
+           label CSG operations. Pure static — no video, no autoplay. -->
+      <div class="hero-stack">
+        <figure class="hero-card hero-card-back-left">
+          <img src="screenshots/eiffel.jpg" alt="Eiffel Tower STL — 123k triangles, live volume metrics" loading="eager" decoding="async" />
+          <figcaption>Eiffel · 123k tris</figcaption>
+        </figure>
+        <figure class="hero-card hero-card-back-right">
+          <img src="screenshots/hinge.jpg" alt="A modelled hinge — solids and holes grouped + baked" loading="eager" decoding="async" />
+          <figcaption>Hinge · CSG group + bake</figcaption>
+        </figure>
+        <figure class="hero-card hero-card-front">
+          <img src="screenshots/porsche.jpg" alt="Porsche 911 STL imported and orbiting in BlockBuilder Studio" loading="eager" decoding="async" />
+          <figcaption>Porsche 911 · 150k tris · orbited</figcaption>
+        </figure>
+      </div>
+
+      <div class="scene" hidden>
+        <!-- Isometric voxel scene. Three blocks: bottom solid base,
+             a hole cutout (red-tinted), and a lime-accented result block on top.
+             The whole composition slowly rotates to feel alive. -->
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="g-top" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2d3344"/><stop offset="100%" stop-color="#1a1e29"/>
+            </linearGradient>
+            <linearGradient id="g-left" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1e2230"/><stop offset="100%" stop-color="#11141c"/>
+            </linearGradient>
+            <linearGradient id="g-right" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#181c27"/><stop offset="100%" stop-color="#0c0f15"/>
+            </linearGradient>
+
+            <linearGradient id="g-lime-top" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#d9ff6e"/><stop offset="100%" stop-color="#9cd028"/>
+            </linearGradient>
+            <linearGradient id="g-lime-left" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a8d23a"/><stop offset="100%" stop-color="#789818"/>
+            </linearGradient>
+            <linearGradient id="g-lime-right" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#86a92d"/><stop offset="100%" stop-color="#5a7314"/>
+            </linearGradient>
+
+            <linearGradient id="g-warm-top" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff8a4c"/><stop offset="100%" stop-color="#d6571c"/>
+            </linearGradient>
+          </defs>
+
+          <g class="voxel-group">
+            <!-- shadow -->
+            <ellipse cx="200" cy="340" rx="120" ry="18" fill="black" opacity="0.45"/>
+
+            <!-- BOTTOM block (large dark base) -->
+            <g>
+              <!-- top face (rhombus) -->
+              <polygon points="200,170 320,230 200,290 80,230" fill="url(#g-top)" stroke="#3a4156" stroke-width="1"/>
+              <!-- left face -->
+              <polygon points="80,230 200,290 200,360 80,300" fill="url(#g-left)" stroke="#2a2f3e" stroke-width="1"/>
+              <!-- right face -->
+              <polygon points="320,230 200,290 200,360 320,300" fill="url(#g-right)" stroke="#2a2f3e" stroke-width="1"/>
+              <!-- top edge highlight -->
+              <polyline points="80,230 200,170 320,230" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+            </g>
+
+            <!-- HOLE cylinder cutout - drawn as a darker indent on top face -->
+            <g>
+              <ellipse cx="200" cy="230" rx="34" ry="17" fill="#08090d" stroke="#2a2f3e" stroke-width="1"/>
+              <ellipse cx="200" cy="222" rx="34" ry="17" fill="url(#g-warm-top)" opacity="0.25"/>
+            </g>
+
+            <!-- TOP lime block (smaller, sitting on top) -->
+            <g transform="translate(0,-46)">
+              <polygon points="200,170 270,205 200,240 130,205" fill="url(#g-lime-top)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="130,205 200,240 200,290 130,255" fill="url(#g-lime-left)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="270,205 200,240 200,290 270,255" fill="url(#g-lime-right)" stroke="#5e7e10" stroke-width="1"/>
+              <!-- glow inset -->
+              <polyline points="130,205 200,170 270,205" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+            </g>
+
+            <!-- floating small voxels (left) -->
+            <g opacity="0.85">
+              <polygon points="60,120 90,135 60,150 30,135" fill="url(#g-top)" stroke="#3a4156" stroke-width="1"/>
+              <polygon points="30,135 60,150 60,180 30,165" fill="url(#g-left)" stroke="#2a2f3e" stroke-width="1"/>
+              <polygon points="90,135 60,150 60,180 90,165" fill="url(#g-right)" stroke="#2a2f3e" stroke-width="1"/>
+            </g>
+
+            <!-- floating small voxels (right, lime) -->
+            <g opacity="0.95">
+              <polygon points="340,80 370,95 340,110 310,95" fill="url(#g-lime-top)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="310,95 340,110 340,140 310,125" fill="url(#g-lime-left)" stroke="#5e7e10" stroke-width="1"/>
+              <polygon points="370,95 340,110 340,140 370,125" fill="url(#g-lime-right)" stroke="#5e7e10" stroke-width="1"/>
+            </g>
+
+            <!-- vertex markers (lime dots — gives "sketch" feel) -->
+            <circle cx="80" cy="230" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
+            <circle cx="320" cy="230" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
+            <circle cx="200" cy="170" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
+            <circle cx="200" cy="290" r="4" fill="#c4f04f" stroke="#0a0c10" stroke-width="1.5"/>
+
+            <!-- measurement line -->
+            <g opacity="0.7">
+              <line x1="340" y1="170" x2="340" y2="240" stroke="#c4f04f" stroke-width="1" stroke-dasharray="3 3"/>
+              <line x1="335" y1="170" x2="345" y2="170" stroke="#c4f04f" stroke-width="1"/>
+              <line x1="335" y1="240" x2="345" y2="240" stroke="#c4f04f" stroke-width="1"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Trust strip
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="trust">
+  <div class="trust-in">
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 L20 6 V12 C20 17 12 22 12 22 C12 22 4 17 4 12 V6 Z"/><path d="M9 12 L11 14 L15 10"/></svg>
+      Code-signed binaries
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M5 5 L19 19"/></svg>
+      Zero telemetry
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4 H20 V20 H4 Z M4 12 H20"/></svg>
+      Files stay on your disk
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12 L11 14 L15 10"/></svg>
+      Free forever, personal use
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Features bento
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Features</span>
+      <h2>Everything you need to model<br>for the printer. <span class="serif">Nothing you don't.</span></h2>
+      <p>13 primitive shapes, full CSG (union + subtraction), STL/OBJ/STEP import-export, sketches, slicing, hollowing, arrays, ruler — all running locally on your machine.</p>
+    </div>
+
+    <div class="bento">
+      <!-- Hero feature 1: CSG -->
+      <div class="cell cell-hero cell-wide-3 fade-up">
+        <div>
+          <span class="tag">Core feature</span>
+        </div>
+        <div class="feat-illust feat-shot">
+          <img src="screenshots/feature-hole.jpg"
+               alt="A blue solid cylinder overlapping a red translucent hole-box, ready to be combined via Group."
+               loading="lazy" decoding="async" />
+        </div>
+        <div>
+          <h3>Solid + Hole booleans</h3>
+          <p>Toggle a shape to <em>hole</em> and it carves into anything it overlaps with after Group. Solids merge, holes subtract. Fully reversible until you bake. Powered by three-bvh-csg.</p>
+        </div>
+      </div>
+
+      <!-- Hero feature 2: Export -->
+      <div class="cell cell-hero cell-wide-3 fade-up">
+        <div>
+          <span class="tag warm">Export</span>
+        </div>
+        <div class="feat-illust feat-shot feat-shot-export">
+          <img src="screenshots/feature-export.jpg"
+               alt="Toolbar export buttons — Save, Upload, Import, STL, STEP, OBJ — with the OBJ tooltip showing its description."
+               loading="lazy" decoding="async" />
+        </div>
+        <div>
+          <h3>STL · OBJ · STEP export</h3>
+          <p>Printer-ready binary STL, Wavefront OBJ, or AP203 faceted-brep STEP for CAD/CAM pipelines. Bring in any mesh as an editable shape — your imports become primitives.</p>
+        </div>
+      </div>
+
+      <!-- small features -->
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18 L9 14 L14 19 L19 14 M5 18 L5 6 L9 2 L14 7 L19 2 L19 14"/></svg></div>
+        <h3>Sketch tools</h3>
+        <p>Extrude polygons, scribble free-hand outlines, revolve profiles into lathe-style solids.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12 H21 M7 6 L7 18 M17 6 L17 18"/></svg></div>
+        <h3>Cut along plane</h3>
+        <p>Bambu-style. Slice along X, Y, or Z into two halves with a live plane preview.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+        <h3>Hollow / Shell</h3>
+        <p>Carve the inside of any shape at a chosen wall thickness. Print-ready shells in two clicks.</p>
+      </div>
+
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18 L18 3 L21 6 L6 21 Z"/></svg></div>
+        <h3>Ruler · vertex snap</h3>
+        <p>Click two points. Distance + per-axis deltas. Locks to vertices so measurements are exact.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><rect x="15" y="15" width="6" height="6"/></svg></div>
+        <h3>Linear + circular arrays</h3>
+        <p>N copies along a line with spacing, or around an axis with a chosen total angle.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></div>
+        <h3>Workplane on face</h3>
+        <p>Drop the active workplane on any face. New shapes spawn aligned to that face's normal.</p>
+      </div>
+
+      <!-- live stats cell -->
+      <div class="cell cell-wide-6 fade-up" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 28px; padding: 32px; align-items: center;">
+        <div>
+          <h3 style="font-size: 17px; margin: 0 0 4px;">Live volume + surface area</h3>
+          <p style="font-size: 13px;">Estimate filament cost without leaving the app.</p>
+        </div>
+        <div>
+          <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Volume</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">42.18 <span style="font-size: 14px; color: var(--text-dim);">cm³</span></div>
+        </div>
+        <div>
+          <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Surface</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">87.41 <span style="font-size: 14px; color: var(--text-dim);">cm²</span></div>
+        </div>
+        <div>
+          <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Triangles</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--lime);">2,164</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Real screenshots — show the actual app, not just SVG impressions
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section shots" id="shots">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Real screenshots</span>
+      <h2>This is what it <span class="serif">actually looks like.</span></h2>
+      <p>No mockups, no hand-drawn figures. The real app, real geometry, real exported STLs.</p>
+    </div>
+    <div class="shots-grid">
+      <figure class="shot shot-wide fade-up">
+        <img src="screenshots/porsche.jpg"
+             alt="BlockBuilder Studio editing a high-detail Porsche 911 STL import — fully orbital camera, smooth shading, viewport unchanged from a primitive."
+             loading="lazy" decoding="async" />
+        <figcaption>Porsche 911 import · ~150k tris · orbited, no lag</figcaption>
+      </figure>
+      <figure class="shot fade-up">
+        <img src="screenshots/mercedes.jpg"
+             alt="Mercedes-Benz SLS — lime-shaded STL import standing on the workplane."
+             loading="lazy" decoding="async" />
+        <figcaption>Mercedes-Benz SLS · imported STL</figcaption>
+      </figure>
+      <figure class="shot fade-up">
+        <img src="screenshots/rhino-wrestler.jpg"
+             alt="Rhino Beetle Wrestler selected, with the Properties panel showing size, position, opacity, colour swatches, metrics (volume, surface area, tri count), and Lock / Reset / Delete actions."
+             loading="lazy" decoding="async" />
+        <figcaption>Properties panel · live volume + surface area</figcaption>
+      </figure>
+      <figure class="shot fade-up">
+        <img src="screenshots/eiffel.jpg"
+             alt="A high-poly Eiffel Tower STL import shown in BlockBuilder with the Properties panel reporting 123k triangles and a volume of 13.43k cm³."
+             loading="lazy" decoding="async" />
+        <figcaption>Eiffel Tower · 123k tris · live metrics</figcaption>
+      </figure>
+      <figure class="shot fade-up">
+        <img src="screenshots/sloth-yoga.jpg"
+             alt="Sloth Yoga character STL standing on a base, lime-shaded, viewed from the front."
+             loading="lazy" decoding="async" />
+        <figcaption>Sloth Yoga · imported character STL</figcaption>
+      </figure>
+      <figure class="shot fade-up">
+        <img src="screenshots/hinge.jpg"
+             alt="A modelled hinge with 16 evenly spaced cylindrical holes, made by combining a box with hole cylinders via Group + Bake."
+             loading="lazy" decoding="async" />
+        <figcaption>Hinge · solids + holes grouped + baked</figcaption>
+      </figure>
+      <figure class="shot fade-up">
+        <img src="screenshots/pikachu.jpg"
+             alt="Angry Pikachu STL import, coral-shaded, full-body."
+             loading="lazy" decoding="async" />
+        <figcaption>Angry Pikachu · imported character STL</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Workflow — 4 steps
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section workflow" id="workflow">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Workflow</span>
+      <h2>From idea to printable STL<br><span class="serif">in four steps.</span></h2>
+      <p>Five minutes from first launch to a printed bracket. No tutorial required.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step fade-up">
+        <div class="step-num">01</div>
+        <h3>Drop in a shape</h3>
+        <p>Drag any of the <strong style="color:var(--text)">13 primitives</strong> from the left panel. Tweak size + segments in Properties.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">02</div>
+        <h3>Toggle a Hole</h3>
+        <p>Mark a shape as <strong style="color:var(--text)">Hole</strong> and it carves into overlapping solids on Group.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">03</div>
+        <h3>Group to combine</h3>
+        <p>Select shapes, hit <kbd>Ctrl</kbd>+<kbd>G</kbd>. Live CSG. Reversible until you Bake.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">04</div>
+        <h3>Export · slice · print</h3>
+        <p>Click <strong style="color:var(--text)">STL</strong>. Open in Bambu Studio / Cura / PrusaSlicer. Done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Principles — no fine print
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>What you get</span>
+      <h2>Six promises. <span class="serif">No fine print.</span></h2>
+      <p>Same commitments for the free version and the licensed one. Same software, same code, same respect.</p>
+    </div>
+
+    <div class="principles">
+      <div class="principle fade-up">
+        <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
+        <h3>Fully offline</h3>
+        <p>The app never makes a network request once installed. Plane, air-gapped workstation, café Wi-Fi outage — same behaviour.</p>
+      </div>
+      <div class="principle fade-up">
+        <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
+        <h3>No accounts, ever</h3>
+        <p>No sign-up. No email confirmation. No "verify your identity". Install and use. Commercial licences are verified offline against the local file.</p>
+      </div>
+      <div class="principle fade-up">
+        <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
+        <h3>No upload limits</h3>
+        <p>Imports happen locally. Bring in a 500 MB STL with 5M triangles — your RAM is the only limit. BVH-accelerated picking handles it.</p>
+      </div>
+      <div class="principle fade-up">
+        <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
+        <h3>Your files stay yours</h3>
+        <p>Saves are plain JSON on your disk. STL exports land in <code>Downloads/</code>. Nothing leaves your machine unless you share it.</p>
+      </div>
+      <div class="principle fade-up">
+        <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
+        <h3>No tracking</h3>
+        <p>Zero telemetry. Zero analytics. Zero cookies. The app doesn't know you exist after install. This website doesn't either.</p>
+      </div>
+      <div class="principle fade-up">
+        <div class="principle-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg></div>
+        <h3>No subscription</h3>
+        <p>Personal use is free forever. Commercial licence is <strong style="color:var(--text)">€12 once</strong>, lifetime — every future update included until v1.0+.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Use cases
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="uses" style="background: var(--bg-elev); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Use cases</span>
+      <h2>Built for the work,<br><span class="serif">not the workflow.</span></h2>
+      <p>What people actually make with BlockBuilder.</p>
+    </div>
+
+    <div class="uses">
+      <div class="use fade-up">
+        <span class="use-tag">3D printing</span>
+        <h3>Custom replacement parts</h3>
+        <p>Bracket broke? Cabinet handle missing? Measure with a calliper, model in 5 minutes, print in 30.</p>
+      </div>
+      <div class="use fade-up">
+        <span class="use-tag">Prototyping</span>
+        <h3>Idea to mock in an afternoon</h3>
+        <p>Faster than Fusion for blocky designs. Move to parametric CAD once the proportions feel right.</p>
+      </div>
+      <div class="use fade-up">
+        <span class="use-tag">Education</span>
+        <h3>Classroom 3D without logins</h3>
+        <p>No student accounts to set up, no schoolwide trust forms. Each PC runs its own instance.</p>
+      </div>
+      <div class="use fade-up">
+        <span class="use-tag">Makers</span>
+        <h3>Jigs, fixtures, organisers</h3>
+        <p>Custom boxes, tool holders, drawer dividers, GoPro mounts. The boring practical stuff 3D printing is best at.</p>
+      </div>
+      <div class="use fade-up">
+        <span class="use-tag">Remixers</span>
+        <h3>Edit imported STLs</h3>
+        <p>Pull a model off Printables, scale it, slice a section, drill a hole, re-export. No 25 MB upload cap.</p>
+      </div>
+      <div class="use fade-up">
+        <span class="use-tag">Tabletop</span>
+        <h3>Bases · terrain · props</h3>
+        <p>Hex bases, ruined walls, simple miniatures. Star + polygon + extrude get you 80% of the way.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Pricing
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="pricing">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Pricing</span>
+      <h2>Two ways to use it.<br><span class="serif">Both are fair.</span></h2>
+      <p>Free for personal projects. €12 once for commercial use — covers the next ten years of updates.</p>
+    </div>
+
+    <div class="pricing">
+      <div class="price fade-up">
+        <div class="price-head"><span class="price-name">Personal</span> <span class="tag neutral">Hobby · learning · home prints</span></div>
+        <div class="price-tag">
+          <span class="price-currency">€</span>
+          <span class="price-amount">0</span>
+          <span class="price-unit">/ forever</span>
+        </div>
+        <p class="price-sub">No account, no email, no time limit. The full app.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Every feature</strong> — no lockouts, no nag screens you can't dismiss</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Unlimited STL · OBJ · STEP exports</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Free updates forever</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Email support, best effort</li>
+        </ul>
+        <a href="#download" class="btn btn-ghost btn-lg">Download free</a>
+      </div>
+
+      <div class="price price-pro fade-up">
+        <div class="price-head"><span class="price-name" style="color: var(--lime);">Commercial</span></div>
+        <div class="price-tag">
+          <span class="price-currency">€</span>
+          <span class="price-amount">12</span>
+          <span class="price-unit">once · lifetime</span>
+        </div>
+        <p class="price-sub">For selling prints, freelance, classroom, agency work.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Everything in Personal</strong></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Commercial licence</strong> — sell prints, freelance, agency, classroom</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Silences the in-app reminder dialog</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Priority email support · 48h reply</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Lifetime updates through v1.0+</li>
+        </ul>
+        <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Buy commercial licence — €12</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Download section
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section download" id="download">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Download · v0.5.0 · ~80 MB</span>
+      <h2>Pick your OS.<br><span class="serif">One click. Sixty seconds.</span></h2>
+      <p>No email, no signup, no waitlist. The download starts immediately.</p>
+    </div>
+
+    <div class="mobile-notice" id="mobile-notice">
+      <strong>You're on a phone or tablet.</strong>
+      BlockBuilder is desktop-only — it needs a mouse and keyboard for the 3D viewport.
+      Open this page on your computer to download, or send yourself a link:
+      <form class="mobile-email-form" action="https://buttondown.email/api/emails/embed-subscribe/marjers" method="post" target="_blank">
+        <input type="email" name="email" placeholder="you@example.com" required />
+        <button type="submit">Email me the link</button>
+      </form>
+    </div>
+
+    <div class="dl-row fade-up">
+      <a href="/download/windows" class="dl-card" data-os="win">
+        <div class="dl-os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 L10.5 4.5 L10.5 11.5 L3 11.5 Z M11.5 4.4 L21 3 L21 11.5 L11.5 11.5 Z M3 12.5 L10.5 12.5 L10.5 19.5 L3 18.5 Z M11.5 12.5 L21 12.5 L21 21 L11.5 19.6 Z"/></svg>
+          <span class="dl-os-name">Windows 10 · 11</span>
+        </div>
+        <span class="dl-file">BlockBuilder-Setup.exe</span>
+        <span class="dl-meta">~82 MB · NSIS installer · Signed</span>
+        <div class="dl-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4 V18 M6 12 L12 18 L18 12"/></svg>
+        </div>
+      </a>
+      <a href="/download/macos" class="dl-card" data-os="mac">
+        <div class="dl-os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 17 C16 21 14 21 12 20 C10 21 8 21 6 17 C2 12 5 5 9 5 C11 4.5 12 5.5 12 5.5 C12 5.5 13 4.5 15 5 C16.5 5 18.5 5.7 19.5 7.5 C16 9.5 16.5 14 19 15 C18.6 16 18 17 18 17 Z M13 4 C13 2.5 14 1 16 1 C16 2.5 15 4 13 4 Z"/></svg>
+          <span class="dl-os-name">macOS 12+</span>
+        </div>
+        <span class="dl-file">BlockBuilder.dmg</span>
+        <span class="dl-meta">~94 MB · Universal · Notarised</span>
+        <div class="dl-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4 V18 M6 12 L12 18 L18 12"/></svg>
+        </div>
+      </a>
+      <a href="/download/linux" class="dl-card" data-os="linux">
+        <div class="dl-os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C9 2 8 5 8 7 C8 9 7 11 6 13 C4 16 3 19 5 21 L19 21 C21 19 20 16 18 13 C17 11 16 9 16 7 C16 5 15 2 12 2 Z"/></svg>
+          <span class="dl-os-name">Linux x64</span>
+        </div>
+        <span class="dl-file">BlockBuilder.AppImage</span>
+        <span class="dl-meta">~88 MB · Portable · No install</span>
+        <div class="dl-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4 V18 M6 12 L12 18 L18 12"/></svg>
+        </div>
+      </a>
+    </div>
+
+    <p class="dl-foot">
+      <span class="mono" style="color: var(--text-mid);">v0.5.0</span> · Released May 2026 · Signed for Windows · Notarised for macOS · <a href="/changelog">See changelog →</a>
+    </p>
+
+    <div class="sysreqs fade-up">
+      <div class="sysreq">
+        <strong>Windows</strong>
+        <span>10 / 11 · x64 · 4 GB RAM · WebGL2 (most onboard graphics from 2015+)</span>
+      </div>
+      <div class="sysreq">
+        <strong>macOS</strong>
+        <span>12 Monterey or later · Intel x64 or Apple Silicon (M1+)</span>
+      </div>
+      <div class="sysreq">
+        <strong>Linux</strong>
+        <span>Ubuntu 22.04+ / Fedora 38+ / Arch / any distro with FUSE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     FAQ
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="faq">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>FAQ</span>
+      <h2>Questions, <span class="serif">answered honestly.</span></h2>
+      <p>If something here is unclear, email <a href="mailto:geral@marjers.com">geral@marjers.com</a> — replies usually within 48 hours.</p>
+    </div>
+
+    <div class="faq-list">
+      <details>
+        <summary>Is it really free?</summary>
+        <div class="answer">
+          <p>Yes. Free for personal use, no time limit, no feature lockout, no nag screens you can't dismiss. The €12 commercial licence is for people who use exports in for-profit work (selling prints, freelance, classroom) and silences the occasional reminder dialog. Everyone else can use it forever for €0.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Do I need an account or internet connection?</summary>
+        <div class="answer">
+          <p>Neither. Once installed, the app never makes a network request. Your work stays on your machine. No telemetry, no analytics, no auto-uploads.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Where is my work saved?</summary>
+        <div class="answer">
+          <p>Two places. <strong>Autosave:</strong> localStorage in the app's profile folder, restored on next launch. <strong>Project files:</strong> standard <code>.json</code> on disk that you save explicitly. STL/OBJ exports go wherever your downloads land (usually <code>Downloads/</code>).</p>
+        </div>
+      </details>
+      <details>
+        <summary>Why does Windows show a SmartScreen warning?</summary>
+        <div class="answer">
+          <p>Because the binary is new and SmartScreen hasn't built reputation for it yet. Click "More info" → "Run anyway" and it goes away forever for that install. Once enough people install BlockBuilder, the warning disappears for everyone. Builds are code-signed; the binary is genuinely from Marjers and contains no malware. You can verify the signature in the .exe properties.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can I use it commercially?</summary>
+        <div class="answer">
+          <p>Yes, with a one-time €12 commercial licence at <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener">marjers.com/blockbuilder</a>. Covers selling prints, freelance work, paid classroom use, agency work — anything for-profit. Personal/hobby use stays free.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Is this CAD?</summary>
+        <div class="answer">
+          <p>Not in the engineering sense. BlockBuilder is a <em>direct modelling</em> tool: drag primitives, scale them, combine with booleans. No parametric history, no constraints, no assemblies, no engineering drawings. It's optimised for the 80% of 3D-printing work that doesn't need those features — brackets, organisers, replacement parts, props, jigs. For mechanical engineering with version-controlled geometry, use a parametric CAD package.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can I import existing STL or OBJ files?</summary>
+        <div class="answer">
+          <p>Yes. Drag any <code>.stl</code> or <code>.obj</code> into the viewport (or use the Import button). Imported meshes behave like primitives: move, scale, rotate, colour, mark as Hole, group with others, run CSG against them. Big meshes (100k+ triangles) get an automatic BVH for fast picking.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can I export to STEP?</summary>
+        <div class="answer">
+          <p>Yes, with a caveat. BlockBuilder works internally with triangle meshes, not parametric CAD surfaces. The STEP export wraps the mesh in an AP203 <em>faceted B-Rep</em> file that Fusion 360, SolidWorks, FreeCAD, Onshape and most CAD/CAM tools will open as a mesh body. You won't get editable parametric features. For passing geometry to a CNC shop that requires STEP, this is a working option.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What if my STL fails the boolean operation?</summary>
+        <div class="answer">
+          <p>Imported meshes need to be watertight (manifold) for CSG. Use the <strong>Repair</strong> button in the Properties panel: it welds duplicate vertices, drops zero-area triangles, and rebuilds normals. Resolves most failures.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Is the source code available?</summary>
+        <div class="answer">
+          <p>Not yet. Open-sourcing is on the roadmap once the code is more polished. The Electron + Three.js stack is well-known with no proprietary dependencies, so the timeline is mostly about cleaning up.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do I get help or report bugs?</summary>
+        <div class="answer">
+          <p>Email <a href="mailto:geral@marjers.com">geral@marjers.com</a> with a description and, if possible, the saved <code>.json</code> that triggers the bug. Replies usually within 48 hours.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Touchscreens, iPads, phones?</summary>
+        <div class="answer">
+          <p>Not supported. BlockBuilder is desktop-only (mouse + keyboard). The 3D viewport relies on right-click orbit, scroll-zoom, and precise pointer hits that don't translate to touch. A web version may come later.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Maker signature — Marjers
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="maker">
+  <div class="maker-card fade-up">
+    <div class="maker-mark"><span>m</span></div>
+    <h2>From the workshop <span class="serif">of Marjers.</span></h2>
+    <p>
+      BlockBuilder Studio is built and maintained by <strong style="color:var(--text)">Marjers</strong> — a small studio
+      making honest desktop tools for makers. No VC, no growth team, no dark patterns.
+      Software that does what it says, costs what it costs, and gets out of your way.
+    </p>
+    <div class="maker-links">
+      <a href="https://marjers.com" target="_blank" rel="noopener" class="btn btn-primary">Visit marjers.com →</a>
+      <a href="https://marjers.com/support" target="_blank" rel="noopener" class="btn btn-ghost">Donate · buy me a coffee</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Newsletter
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section" style="padding: 40px 28px 100px;">
+  <div class="inner">
+    <div class="email-card fade-up">
+      <div>
+        <h3>Get notified about new releases</h3>
+        <p>One short email when there's a new version, with what changed. No marketing, no second email. Unsubscribe with one click.</p>
+      </div>
+      <form class="email-form" action="https://buttondown.email/api/emails/embed-subscribe/marjers" method="post" target="_blank">
+        <input type="email" name="email" placeholder="you@example.com" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Final CTA
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="final">
+  <div class="inner">
+    <h2 class="fade-up">Ready to <span class="accent serif">model?</span></h2>
+    <p class="fade-up">Free forever for personal use. No signup, no email, no credit card. Drop in shapes, hit print.</p>
+    <div class="final-cta-row fade-up">
+      <a href="#download" class="btn btn-primary btn-xl">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V14 M7 9 L12 14 L17 9 M4 19 H20"/></svg>
+        Download BlockBuilder Studio
+      </a>
+      <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener" class="btn btn-ghost btn-xl">Buy commercial licence · €12</a>
+    </div>
+    <p class="final-foot">Or <a href="https://marjers.com/support" target="_blank" rel="noopener">donate</a> if it saved you time. Free forever, powered by your support.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Footer
+     ════════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="brand">
+        <svg class="brand-mark" viewBox="0 0 40 40">
+          <defs><linearGradient id="lg-foot" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#cdff45"/><stop offset="100%" stop-color="#7cbe1e"/>
+          </linearGradient></defs>
+          <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z" fill="url(#lg-foot)" opacity="0.18"/>
+          <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
+                stroke="url(#lg-foot)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-name"><strong>Block</strong>Builder</span>
+        <span class="brand-tag">STUDIO</span>
+      </a>
+      <p>Offline desktop 3D editor. No accounts, no limits, no nonsense. <br>Built honestly by Marjers.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#download">Download</a>
+      <a href="/changelog">Changelog</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:geral@marjers.com">Contact</a>
+      <a href="https://marjers.com/support" target="_blank" rel="noopener">Donate</a>
+      <a href="https://marjers.com/blockbuilder" target="_blank" rel="noopener">Buy licence</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Maker</h4>
+      <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>
+      <a href="https://marjers.com/work" target="_blank" rel="noopener">Hire me</a>
+      <a href="https://github.com/marjers/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>© 2026 Marjers · BlockBuilder Studio is a trademark of Marjers</div>
+    <a href="https://marjers.com" target="_blank" rel="noopener" class="footer-by">
+      Made by <span class="serif">marjers</span>
+    </a>
+    <div class="mono">no accounts · no tracking · no telemetry</div>
+  </div>
+</footer>
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "BlockBuilder Studio",
+  "operatingSystem": "Windows, macOS, Linux",
+  "applicationCategory": "DesignApplication",
+  "description": "Offline desktop 3D editor for makers and 3D printing. Solid + hole CSG, STL/OBJ/STEP import-export, sketch tools, ruler, hollow, cut, array. No account required.",
+  "url": "https://blockbuilder.studio",
+  "softwareVersion": "0.5.0",
+  "author": { "@type": "Person", "name": "Marjers", "url": "https://marjers.com" },
+  "offers": [
+    { "@type": "Offer", "price": "0",  "priceCurrency": "EUR", "name": "Personal use",       "category": "Free" },
+    { "@type": "Offer", "price": "12", "priceCurrency": "EUR", "name": "Commercial licence", "category": "Paid" }
+  ]
+}
+</script>
+
+<!-- Page behaviour: OS detection, fade-ins, mobile guard -->
+<script>
+(() => {
+  const ua       = navigator.userAgent || '';
+  const platform = navigator.platform || '';
+  const isMac    = /Mac|iPhone|iPad|iPod/i.test(platform) || /Mac OS X/i.test(ua);
+  const isWin    = /Win/i.test(platform);
+  const isLinux  = /Linux/i.test(platform) && !/Android/i.test(ua);
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || matchMedia('(max-width: 600px)').matches;
+  if (isMobile) document.documentElement.setAttribute('data-mobile', '1');
+
+  // Reorder download cards so visitor's OS is first + highlighted.
+  const row = document.querySelector('.dl-row');
+  if (row) {
+    const order = isWin ? ['win','mac','linux']
+                : isMac ? ['mac','win','linux']
+                :         ['linux','win','mac'];
+    const map = {};
+    for (const el of row.querySelectorAll('.dl-card')) map[el.dataset.os] = el;
+    row.innerHTML = '';
+    for (const os of order) if (map[os]) row.appendChild(map[os]);
+    if (map[order[0]]) map[order[0]].classList.add('dl-card-match');
+  }
+
+  // Hero CTA label.
+  const heroOs = document.getElementById('hero-os');
+  const heroCta = document.getElementById('hero-cta');
+  if (heroOs) {
+    heroOs.textContent = isWin   ? 'Windows'
+                       : isMac   ? 'macOS'
+                       : isLinux ? 'Linux'
+                       : 'your OS';
+  }
+  if (heroCta && !isMobile) {
+    const target = isWin ? '/download/windows'
+                 : isMac ? '/download/macos'
+                 : isLinux ? '/download/linux'
+                 : '#download';
+    heroCta.setAttribute('href', target);
+  }
+
+  // Fade-up on scroll.
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    }
+  }, { rootMargin: '-40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Changelog · BlockBuilder Studio</title>
+<meta name="description" content="Release notes for BlockBuilder Studio." />
+<link rel="canonical" href="https://blockbuilder.studio/changelog" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2314171d'/%3E%3Cpath d='M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31' stroke='%23c4f04f' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+  :root {
+    --bg: #0e1117; --bg-elev: #14171f; --panel: #161a23;
+    --border: #2a2f3e; --text: #e8ebf2; --text-mid: #b5bccb;
+    --text-dim: #7c869a; --accent: #c4f04f;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.6 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .nav-bar {
+    position: sticky; top: 0;
+    background: rgba(14,17,23,0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+  }
+  .nav-bar a { color: var(--text-mid); font-weight: 600; }
+  .container {
+    max-width: 760px; margin: 0 auto; padding: 60px 24px;
+  }
+  h1 { font-size: 38px; margin: 0 0 10px; letter-spacing: -0.5px; }
+  .sub { color: var(--text-mid); margin: 0 0 50px; }
+  .release {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 18px;
+  }
+  .release h2 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .release h2 .ver {
+    background: var(--accent);
+    color: #0a0c10;
+    padding: 2px 9px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .release .date { color: var(--text-dim); font-size: 13px; margin-bottom: 14px; }
+  .release h3 {
+    margin: 14px 0 6px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
+    font-weight: 700;
+  }
+  .release ul {
+    margin: 0 0 0 18px;
+    padding: 0;
+    color: var(--text-mid);
+  }
+  .release ul li { margin-bottom: 4px; }
+  .release code {
+    background: var(--bg-elev);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: ui-monospace, monospace;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="nav-bar"><a href="/">← BlockBuilder Studio</a></div>
+
+<div class="container">
+  <h1>Changelog</h1>
+  <p class="sub">What's new across releases. Latest at the top.</p>
+
+  <section class="release">
+    <h2><span class="ver">v0.5.0</span> First public preview</h2>
+    <div class="date">Released 2026-05-19</div>
+
+    <h3>New tools</h3>
+    <ul>
+      <li><strong>Sketch tools</strong>: Extrude, Scribble, Revolve. Click polygon corners, freehand drag, or define a profile to lathe — all become editable shapes.</li>
+      <li><strong>Cut</strong>: Bambu-style slice along X/Y/Z with live plane preview.</li>
+      <li><strong>Hollow</strong>: carve any shape into a shell with adjustable wall thickness.</li>
+      <li><strong>Array</strong>: linear (count + spacing) and circular (count + axis + total angle).</li>
+      <li><strong>Ruler</strong>: 2-point distance with per-axis deltas, vertex snap with screen-space radius.</li>
+      <li><strong>Workplane on face</strong>: pick any face, new shapes spawn aligned to it.</li>
+      <li><strong>Split into loose parts</strong>: separate a mesh into its disconnected components via union-find.</li>
+    </ul>
+
+    <h3>Shape catalogue</h3>
+    <ul>
+      <li>13 primitives: Box, Cylinder, Sphere, Cone, Pyramid (now N-sided), Wedge, Roof, Tube, Torus, Polygon, Star, Heart.</li>
+      <li>Pyramid and Polygon both get the <code>Sides</code> slider.</li>
+    </ul>
+
+    <h3>Quality of life</h3>
+    <ul>
+      <li><strong>Undo/Redo</strong> (Ctrl+Z / Ctrl+Shift+Z) with 50-step history.</li>
+      <li><strong>Vertex / corner snap</strong> during body drag.</li>
+      <li><strong>Lock</strong> per shape (keeps it visible but non-interactive).</li>
+      <li><strong>Reset transform</strong> button in Properties.</li>
+      <li><strong>Volume + surface area + tri count</strong> in Properties.</li>
+      <li><strong>STL repair</strong> for imported meshes (weld, drop degenerate, rebuild normals + BVH).</li>
+      <li><strong>Screenshot</strong> button — instant PNG of the viewport.</li>
+      <li><strong>Light theme</strong> + customisable viewport background.</li>
+      <li><strong>Tooltips everywhere</strong>, can be disabled in Settings.</li>
+    </ul>
+
+    <h3>Performance</h3>
+    <ul>
+      <li>Render-on-demand main loop (idle scenes cost ~0).</li>
+      <li>three-mesh-bvh acceleration on imports + CSG results.</li>
+      <li>MeshStandardMaterial for solids (lighter than Physical).</li>
+      <li>Pixel ratio cap with Quality preset (Fast / Balanced / Sharp).</li>
+      <li>Shadow map reduced to 1024².</li>
+    </ul>
+
+    <h3>Distribution</h3>
+    <ul>
+      <li>Cross-platform installers: Windows NSIS + portable, macOS DMG, Linux AppImage.</li>
+      <li>Code signing pipeline for Windows + macOS notarisation.</li>
+      <li>GitHub Releases as the binary host, electron-updater ready.</li>
+    </ul>
+  </section>
+
+  <section class="release">
+    <h2><span class="ver">v0.4.0</span> Naming + first electron build</h2>
+    <div class="date">Internal — not released</div>
+    <ul>
+      <li>Rebrand from TinkerDesk to BlockBuilder Studio (avoid Autodesk trademark on "Tinker").</li>
+      <li>Electron 32 wrapper, ContextIsolation + sandbox enabled.</li>
+      <li>Welcome modal (New / Continue / Open / Recents).</li>
+      <li>Unit picker on first run (mm / cm / inches).</li>
+      <li>Autosave to localStorage, restore on launch.</li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>

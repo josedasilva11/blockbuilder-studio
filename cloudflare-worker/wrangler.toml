@@ -1,0 +1,8 @@
+name = "blockbuilder-license-issuer"
+main = "license-issuer.js"
+compatibility_date = "2026-01-01"
+
+# Secrets (set with `wrangler secret put NAME` — never commit values):
+#   BBS_PRIVATE_KEY              ECDSA P-256 private key PEM, used to sign licence keys
+#   LEMONSQUEEZY_SIGNING_SECRET  Shared secret from the LS webhook config (HMAC verification)
+#   RESEND_API_KEY               Resend API key for outgoing email (or use a different provider)

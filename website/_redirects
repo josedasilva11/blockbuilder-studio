@@ -1,0 +1,13 @@
+# Cloudflare Pages redirects. The download buttons on the landing page point
+# at these stable paths so that when a new release ships, only this file (or
+# the GitHub Release URL) needs to change, not the HTML.
+
+/download/windows  https://github.com/marjers/blockbuilder-studio/releases/latest/download/BlockBuilderStudio-Setup.exe  302
+/download/macos    https://github.com/marjers/blockbuilder-studio/releases/latest/download/BlockBuilderStudio.dmg        302
+/download/linux    https://github.com/marjers/blockbuilder-studio/releases/latest/download/BlockBuilderStudio.AppImage   302
+/download          /#download                                                                                            302
+
+# Vanity links
+/donate    https://marjers.com/support     302
+/buy       https://marjers.com/blockbuilder 302
+/github    https://github.com/marjers/blockbuilder-studio 302

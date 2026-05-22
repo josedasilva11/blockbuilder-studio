@@ -49,10 +49,20 @@ function buildHalfSphere(p) {
 }
 
 function buildPyramid(p) {
-  // Square-base pyramid (4 sides).
-  return new THREE.ConeGeometry(Math.hypot(p.width / 2, p.depth / 2), p.height, 4)
-    .rotateX(PI / 2)
-    .rotateZ(PI / 4);
+  // N-sided pyramid (3 = tetrahedron, 4 = square pyramid, 5+ = pentagonal etc).
+  // We use a ConeGeometry with low segment count and zero top radius — that's
+  // mathematically equivalent to a regular N-gon pyramid. The radial scale
+  // matches the cube's diagonal so a default 20×20 base still looks right.
+  const sides = Math.max(3, Math.floor(p.sides ?? 4));
+  // Radius of the circumscribed circle so a regular polygon with `sides`
+  // edges has the same XY footprint as the requested width/depth.
+  const r = Math.hypot(p.width / 2, p.depth / 2);
+  const g = new THREE.ConeGeometry(r, p.height, sides);
+  g.rotateX(PI / 2);
+  // For square base, rotate 45° so the flat face points along +X (consistent
+  // with the previous square-pyramid orientation).
+  if (sides === 4) g.rotateZ(PI / 4);
+  return g;
 }
 
 function buildWedge(p) {

@@ -1,5 +1,24 @@
 node_modules
-dist/win-unpacked
-dist/.cache
+
+# Build outputs — never commit. Portable zips ship via GitHub Releases.
+dist/
+*.zip
 *.log
 .DS_Store
+Thumbs.db
+
+# Raw video/screenshot captures used to make site assets. Heavy and unused.
+raw-footage/
+
+# Licence-signing private key. NEVER commit. Lives in Cloudflare Worker
+# Secrets after `node keygen/generate-keypair.js`. Losing this means losing
+# the ability to issue new keys; compromising it means anyone can forge keys.
+keygen/private-key.pem
+*.pem
+
+# Cloudflare Worker local state
+cloudflare-worker/.wrangler/
+cloudflare-worker/.dev.vars
+
+# Built website preview cache
+website/.cache/

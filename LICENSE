@@ -1,0 +1,41 @@
+BlockBuilder Studio — Proprietary licence
+Copyright © 2026 Marjers. All rights reserved.
+
+This software is provided in two licence tiers:
+
+1. PERSONAL USE — free
+   Anyone may download, install, and use BlockBuilder Studio for personal,
+   non-commercial purposes free of charge. "Personal use" includes hobbyist
+   3D printing, learning, individual projects, and content that is not
+   sold or used to generate revenue.
+
+2. COMMERCIAL USE — €12 one-time per user
+   A commercial-use licence is required if you use BlockBuilder Studio
+   to:
+     - Produce work for sale (e.g. selling 3D prints, freelance work, paid
+       client projects, prints sold via marketplaces)
+     - Use it in a for-profit setting (offices, studios, agencies,
+       commercial classrooms)
+     - Include exports in any commercial product
+   Buy a commercial licence at https://marjers.com/blockbuilder.
+   A commercial licence covers one named user across an unlimited number
+   of their own machines, for the lifetime of the BlockBuilder 0.x and
+   1.x release series.
+
+You MAY NOT, regardless of tier:
+  - Redistribute the binary or source under your own name.
+  - Modify the binary to remove or bypass licence verification.
+  - Resell licence keys, share licence keys publicly, or generate
+    additional keys from leaked or extracted private keys.
+  - Reverse-engineer the application for any purpose other than
+    interoperability with file formats you own.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For licensing questions, write to geral@marjers.com.

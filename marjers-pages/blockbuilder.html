@@ -1,0 +1,124 @@
+<!doctype html>
+<!--
+  Host at: https://marjers.com/blockbuilder
+  Purpose: dedicated sales / purchase page for the BlockBuilder Studio
+           commercial licence. Linked from the in-app nag dialog, the
+           Settings panel, and the landing page's pricing section.
+
+  To go live:
+    1. Sign up at lemonsqueezy.com and create a product:
+         Name: BlockBuilder Studio Commercial Licence
+         Price: 12 EUR one-time
+         Description: copy-paste from below
+    2. Get the "Buy now" embed snippet from LS (Overlay or Hosted checkout).
+    3. Paste it where the BUY-BUTTON-PLACEHOLDER comment is.
+    4. Publish at marjers.com/blockbuilder.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BlockBuilder Studio commercial licence · Marjers</title>
+<meta name="description" content="One-time €12 lifetime commercial licence for BlockBuilder Studio. For-profit use, freelance work, paid classroom use." />
+<link rel="canonical" href="https://marjers.com/blockbuilder" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+<style>
+  :root { --bg:#0a0c10; --panel:#161a23; --border:#232838; --text:#eef0f5; --text-mid:#aab2c4; --text-dim:#6b7388; --accent:#c4f04f; --accent-deep:#7cbe1e; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.6 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .nav-bar { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+  .nav-bar a { color: var(--text-mid); font-weight: 600; }
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+  h1 { font-size: 42px; margin: 0 0 10px; letter-spacing: -0.5px; line-height: 1.15; }
+  .price { font-size: 48px; font-weight: 800; color: var(--accent); margin: 30px 0 6px; letter-spacing: -1px; }
+  .price small { font-size: 16px; color: var(--text-mid); font-weight: 500; letter-spacing: 0; margin-left: 6px; }
+  .sub { color: var(--text-mid); font-size: 18px; margin: 0 0 30px; line-height: 1.6; }
+  ul.includes { padding: 0; list-style: none; margin: 30px 0; }
+  ul.includes li { padding: 10px 0 10px 28px; position: relative; color: var(--text); border-bottom: 1px solid var(--border); }
+  ul.includes li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .buy-area { padding: 28px; background: var(--panel); border: 1px solid var(--accent); border-radius: 14px; margin: 36px 0; text-align: center; box-shadow: 0 12px 40px rgba(196,240,79,0.10); }
+  .buy-btn { display: inline-block; padding: 16px 32px; background: var(--accent); color: #0a0c10; border-radius: 10px; font-weight: 700; font-size: 17px; border: none; cursor: pointer; }
+  .buy-btn:hover { background: var(--accent-deep); text-decoration: none; }
+  .reassure { color: var(--text-dim); font-size: 13px; margin: 14px 0 0; }
+  h2 { font-size: 22px; margin: 40px 0 12px; }
+  .faq-row { padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .faq-row b { color: var(--text); display: block; margin-bottom: 4px; }
+  .faq-row p { margin: 0; color: var(--text-mid); font-size: 14px; }
+  footer { padding: 30px 24px; text-align: center; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/">← marjers.com</a></div>
+
+<div class="container">
+  <h1>BlockBuilder Studio<br>commercial licence.</h1>
+  <p class="sub">One-time payment, lifetime use. For freelancers, agencies, paid classroom use, anyone who turns 3D prints into income.</p>
+
+  <div class="price">€12 <small>one-time · EUR · VAT included if applicable</small></div>
+
+  <ul class="includes">
+    <li>Use exports in any for-profit project (sold prints, freelance work, agency, paid teaching)</li>
+    <li>Works across all your personal devices (Win + Mac + Linux), no per-machine activation</li>
+    <li>Silences the support-reminder dialog in the app</li>
+    <li>"Licensed to [your name]" badge in Settings + STL/OBJ/STEP exports</li>
+    <li>All updates within the 0.x and 1.x release series</li>
+    <li>Email support within 48 hours</li>
+    <li>14-day money-back guarantee, no questions asked</li>
+  </ul>
+
+  <div class="buy-area">
+    <!-- BUY-BUTTON-PLACEHOLDER:
+         Replace this <a> with the Lemon Squeezy "Buy now" embed:
+           <a href="https://YOUR-STORE.lemonsqueezy.com/buy/PRODUCT-ID" class="lemonsqueezy-button buy-btn">
+             Buy commercial licence
+           </a>
+           <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+         Or use the Overlay checkout for an in-page modal.
+    -->
+    <a href="#" class="buy-btn">Buy commercial licence · €12</a>
+    <p class="reassure">Secure checkout via Lemon Squeezy. Pay by card, PayPal, Apple Pay, or Google Pay. EU VAT MOSS handled automatically. Refund within 14 days if not satisfied.</p>
+  </div>
+
+  <h2>How does activation work?</h2>
+  <p style="color:var(--text-mid);">After payment, Lemon Squeezy emails you a unique licence key signed offline with my private key. Open BlockBuilder Studio → Settings (gear icon top-right) → "I have a key" → paste. No internet check, no per-device activation, no DRM that pesters you. The key works on every machine you own.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq-row">
+    <b>Can I use the free version commercially?</b>
+    <p>No. Personal use only (hobbyist, learning, non-revenue projects). Buy this licence if you sell prints or work for paying clients.</p>
+  </div>
+  <div class="faq-row">
+    <b>Is it per-user or per-device?</b>
+    <p>Per-user. One key, all your machines. Don't share publicly — sharing invalidates the key.</p>
+  </div>
+  <div class="faq-row">
+    <b>What about future versions?</b>
+    <p>Free updates within the 0.x and 1.x series. If a major paid upgrade ever comes (v2+), existing buyers get a 50% discount.</p>
+  </div>
+  <div class="faq-row">
+    <b>Lost my key?</b>
+    <p>Email <a href="mailto:geral@marjers.com">geral@marjers.com</a> with the email you used to buy. I'll re-issue.</p>
+  </div>
+  <div class="faq-row">
+    <b>Refund policy</b>
+    <p>14 days, no questions. The key is invalidated when the refund is issued.</p>
+  </div>
+  <div class="faq-row">
+    <b>Volume / team licences?</b>
+    <p>For 5+ seats, write to <a href="mailto:geral@marjers.com">geral@marjers.com</a> for a 25% discount.</p>
+  </div>
+
+  <h2>Prefer to donate instead?</h2>
+  <p style="color:var(--text-mid);">If you only use BlockBuilder personally but want to support development: <a href="https://marjers.com/support">marjers.com/support</a>.</p>
+</div>
+
+<footer>
+  Marjers · sole-trader, Portugal · <a href="https://blockbuilder.studio/terms">Terms</a> · <a href="https://blockbuilder.studio/privacy">Privacy</a> · <a href="mailto:geral@marjers.com">geral@marjers.com</a>
+</footer>
+
+</body>
+</html>

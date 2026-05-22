@@ -3,10 +3,26 @@
 // The renderer is the same static HTML+JS that runs in a normal browser, just
 // loaded via file:// so it works fully offline.
 
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, session, shell } = require('electron');
 const path = require('node:path');
 
 const isDev = !app.isPackaged;
+
+// Single-instance lock. Two Electron processes both reading/writing the
+// IndexedDB autosave can corrupt the project. If a second instance launches,
+// focus the existing window instead.
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+  return;
+}
+app.on('second-instance', () => {
+  const all = BrowserWindow.getAllWindows();
+  if (all.length > 0) {
+    if (all[0].isMinimized()) all[0].restore();
+    all[0].focus();
+  }
+});
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -75,6 +91,11 @@ function buildMenu() {
 }
 
 app.whenReady().then(() => {
+  // Always start with a fresh module cache so edits to app/*.js are picked up
+  // immediately during dev.
+  if (isDev && session && session.defaultSession) {
+    session.defaultSession.clearCache().catch(() => {});
+  }
   buildMenu();
   createWindow();
 

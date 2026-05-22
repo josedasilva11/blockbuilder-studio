@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy · BlockBuilder Studio</title>
+<meta name="description" content="BlockBuilder Studio privacy policy. Zero telemetry, zero analytics, zero tracking. Your files stay on your disk." />
+<link rel="canonical" href="https://blockbuilder.studio/privacy" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2314171d'/%3E%3Cpath d='M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31' stroke='%23c4f04f' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+  :root { --bg:#0a0c10; --panel:#161a23; --border:#232838; --text:#eef0f5; --text-mid:#aab2c4; --text-dim:#6b7388; --accent:#c4f04f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.65 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .nav-bar { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+  .nav-bar a { color: var(--text-mid); font-weight: 600; }
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 100px; }
+  h1 { font-size: 38px; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .updated { color: var(--text-dim); font-size: 13px; margin: 0 0 40px; }
+  h2 { font-size: 20px; margin: 36px 0 10px; font-weight: 700; }
+  h3 { font-size: 15px; margin: 22px 0 6px; color: var(--text); }
+  p, ul { color: var(--text-mid); }
+  ul { padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  strong { color: var(--text); }
+  code { background: var(--panel); padding: 1px 6px; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 13px; }
+  .tldr { padding: 18px 22px; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; margin: 28px 0; font-size: 15px; color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/">← BlockBuilder Studio</a></div>
+
+<div class="container">
+  <h1>Privacy policy</h1>
+  <p class="updated">Last updated: 22 May 2026</p>
+
+  <div class="tldr">
+    <strong>TL;DR</strong> — The app makes zero network requests. The website has zero analytics, zero cookies, zero third-party trackers. We collect your email if you buy a licence (for receipt + key delivery) or subscribe to the newsletter (for release notes). That's it.
+  </div>
+
+  <h2>What we do not collect</h2>
+  <ul>
+    <li><strong>No telemetry</strong> in the desktop app. It does not phone home, not on launch, not on any action, not on close.</li>
+    <li><strong>No analytics</strong> on this website. No Google Analytics, no Meta pixel, no Plausible, no anything.</li>
+    <li><strong>No cookies</strong> set by this website, beyond what your browser sets locally for things like dark-mode preference (these never leave your machine).</li>
+    <li><strong>No fingerprinting</strong>, no IP logging beyond standard CDN-level logs that Cloudflare retains for 24h.</li>
+  </ul>
+
+  <h2>What we do collect</h2>
+  <h3>If you buy a commercial licence</h3>
+  <p>Lemon Squeezy is the payment processor. They collect your name, email, billing address, and payment method to process the transaction and the EU VAT MOSS filing. We receive your name and email from Lemon Squeezy via webhook, use them to:</p>
+  <ul>
+    <li>Sign your unique licence key (your email is included in the signed payload — this is how the app verifies the key offline).</li>
+    <li>Email the key to you via Resend (transactional email provider).</li>
+    <li>Honour any future support request you make about the purchase.</li>
+  </ul>
+  <p>We do not add you to any marketing list, do not share your information with anyone, do not analyse your usage. The key validation happens entirely on your machine — Marjers cannot tell when or how often you use the app.</p>
+
+  <h3>If you subscribe to the newsletter</h3>
+  <p>Email goes to Buttondown. You'll receive release notes when there's a new BlockBuilder Studio version. One-click unsubscribe. We don't email you anything else.</p>
+
+  <h3>If you email us</h3>
+  <p>The email you send and the address you send it from are retained as long as the conversation is active, plus a reasonable archive period (12 months).</p>
+
+  <h2>Where data lives</h2>
+  <ul>
+    <li>Lemon Squeezy stores your purchase record on their servers (US + EU).</li>
+    <li>Resend stores the transactional email log (EU).</li>
+    <li>Buttondown stores the newsletter subscriber list (US).</li>
+    <li>Cloudflare serves this website and proxies licence webhooks (global CDN).</li>
+    <li>Your project files (<code>.json</code>, <code>.stl</code>, <code>.obj</code>, <code>.step</code>) live exclusively on your machine. The app never uploads them.</li>
+  </ul>
+
+  <h2>Your rights (GDPR)</h2>
+  <p>If you're in the EU/EEA, you have the right to access, correct, export, and delete the personal data we hold about you. Write to <a href="mailto:geral@marjers.com">geral@marjers.com</a> and we'll handle it within 30 days. We can also issue a fresh licence key if you've lost the email containing yours.</p>
+
+  <h2>Contact</h2>
+  <p>Marjers, sole-trader business operating from Portugal. Questions about this policy: <a href="mailto:geral@marjers.com">geral@marjers.com</a>.</p>
+</div>
+
+</body>
+</html>

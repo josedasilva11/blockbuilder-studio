@@ -8,7 +8,8 @@ export const state = {
   controls: null,         // OrbitControls
   transformControls: null,
   workplane: { active: false, origin: [0, 0, 0], normal: [0, 0, 1] },
-  snapStep: 1,             // mm; 0 means off
+  snapStep: 1,             // base units; 0 means off
+  unit: 'mm',              // base unit label — chosen on first launch
   shapes: new Map(),       // id → TinkerShape (see Shape class)
   selectedId: null,
   groupHostId: null,       // when inside an Edit Group, the host id
