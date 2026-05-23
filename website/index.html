@@ -1591,9 +1591,103 @@ footer {
   .footer-grid { grid-template-columns: 1fr; }
   .nav-actions .btn-ghost { display: none; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   BETA MODE — controlled by [data-mode="beta"] on <body>. Strip these rules
+   (and the attribute) to flip to live. See LAUNCH.md for the exact diff.
+   ════════════════════════════════════════════════════════════════════════ */
+.beta-banner { display: none; }
+[data-mode="beta"] .beta-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #f7c948 0%, #f59e0b 100%);
+  color: #0a0c10;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+[data-mode="beta"] .beta-banner strong {
+  background: #0a0c10;
+  color: #f7c948;
+  padding: 2px 9px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+[data-mode="beta"] .beta-banner a {
+  color: #0a0c10;
+  text-decoration: underline;
+  font-weight: 700;
+}
+[data-mode="beta"] .beta-banner span { opacity: 0.92; }
+@media (max-width: 720px) {
+  [data-mode="beta"] .beta-banner {
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Hide every Lemonsqueezy checkout link in beta mode. Replace with a
+   "Request beta access" call to mailto: via ::after pseudo content where the
+   button text was. Coffee tier (BMC) stays visible — donations are fine in
+   beta. */
+[data-mode="beta"] a[href*="lemonsqueezy"] {
+  pointer-events: none;
+  position: relative;
+}
+[data-mode="beta"] a[href*="lemonsqueezy"] {
+  background: var(--panel) !important;
+  color: var(--text-dim) !important;
+  border: 1px dashed var(--border) !important;
+}
+[data-mode="beta"] a.btn[href*="lemonsqueezy"] {
+  font-size: 13px;
+}
+/* Replace the text via a wrapper that we'll inject with JS; CSS-only text
+   replacement is fragile. Done in the inline script at end of body. */
+
+/* Pricing tile: dim the commercial tile in beta */
+[data-mode="beta"] .price-pro .price-tag,
+[data-mode="beta"] .price-pro ul { opacity: 0.45; }
+[data-mode="beta"] .price-pro::after {
+  content: "PAUSED DURING BETA";
+  display: block;
+  margin: 16px 0 0;
+  padding: 8px 12px;
+  background: rgba(247, 201, 72, 0.12);
+  border: 1px solid rgba(247, 201, 72, 0.35);
+  border-radius: 8px;
+  color: #f7c948;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
 </style>
 </head>
-<body>
+<body data-mode="beta">
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     BETA banner. Visible only when <body data-mode="beta">. Remove the
+     data-mode attribute on <body> (or change to "live") to hide. See LAUNCH.md
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="beta-banner" role="status">
+  <strong>BETA</strong>
+  <span>BlockBuilder Studio is in private beta. Payments are paused while we shake out bugs.</span>
+  <a href="mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access">Request access →</a>
+</div>
+
 
 <!-- ════════════════════════════════════════════════════════════════════════
      Release banner
@@ -2636,6 +2730,23 @@ footer {
   }, { rootMargin: '-40px 0px' });
   document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
 })();
+</script>
+
+<!-- BETA MODE swap. Replace LS checkout buttons with a mailto "Request access".
+     Active only when <body data-mode="beta">. Delete this block when going live. -->
+<script>
+if (document.body.dataset.mode === 'beta') {
+  const MAILTO = 'mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access';
+  document.querySelectorAll('a[href*="lemonsqueezy"]').forEach(a => {
+    a.href = MAILTO;
+    // Replace button text. Buttons have leaf text content (sometimes preceded by
+    // svg/icon); rewriting innerText keeps icons but updates the label.
+    const original = (a.textContent || '').trim();
+    if (/buy/i.test(original) || /licence/i.test(original)) {
+      a.textContent = 'Request beta access →';
+    }
+  });
+}
 </script>
 
 </body>

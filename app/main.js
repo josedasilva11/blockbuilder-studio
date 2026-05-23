@@ -31,7 +31,7 @@ import { initWorkplane, toggleWorkplane } from './workplane.js';
 import { initSketch, startExtrude, startRevolve, startScribble } from './sketch.js';
 import { pushHistory, undo, redo, clearHistory } from './history.js';
 import { initSettings, getSetting, setSetting, onSettingChange } from './settings.js';
-import { bumpLaunchCount, shouldShowNag, showNag, isLicensed, getLicenseName, openLicenseDialog, revalidateLicense } from './support_nag.js';
+import { bumpLaunchCount, shouldShowNag, showNag, isLicensed, getLicenseName, openLicenseDialog, revalidateLicense, BETA_MODE, BETA_MAILTO } from './support_nag.js';
 import { toast } from './toast.js';
 import { APP_VERSION } from './version.js';
 import * as THREE from 'three';
@@ -305,6 +305,21 @@ function bindSettingsPanel() {
         <p class="license-status ok">✓ Licensed to <strong>${escapeAttr(getLicenseName())}</strong></p>
         <p class="license-sub">Commercial use unlocked. Thanks for supporting the project.</p>
       `;
+    } else if (BETA_MODE) {
+      licBox.innerHTML = `
+        <p class="license-sub"><strong style="color:#f7c948">BETA build.</strong> Payments are paused while we shake out bugs. If you've been invited and got a key from Marjers, click below to activate. Otherwise email <a href="mailto:geral@marjers.com">geral@marjers.com</a> to request beta access.</p>
+        <div class="license-actions">
+          <button class="action-btn" data-act="request">Request beta access</button>
+          <button class="action-btn" data-act="activate">I have a key</button>
+          <button class="action-btn" data-act="coffee">☕ Coffee</button>
+        </div>
+      `;
+      licBox.querySelector('[data-act="request"]').addEventListener('click',
+        () => window.open(BETA_MAILTO, '_blank'));
+      licBox.querySelector('[data-act="coffee"]').addEventListener('click',
+        () => window.open('https://buymeacoffee.com/marjers', '_blank'));
+      licBox.querySelector('[data-act="activate"]').addEventListener('click',
+        () => openLicenseDialog());
     } else {
       licBox.innerHTML = `
         <p class="license-sub">Free for personal use. Buy a one-time commercial licence if you use exports in for-profit work, or tip a coffee if it just earned its place on your machine.</p>

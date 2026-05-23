@@ -34,6 +34,14 @@ const DAYS_GRACE       = 7;     // also delay first nag by N days from install
 const DONATE_URL  = 'https://buymeacoffee.com/marjers';
 const LICENSE_URL = 'https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643';
 
+// === BETA MODE ===
+// When true:
+//   - Nag dialog is suppressed entirely (testers get keys manually, no upsell)
+//   - In other modules, "Buy licence" buttons become "Beta - email geral@marjers.com"
+// Flip to false when launching commercially. See LAUNCH.md for the full diff.
+export const BETA_MODE = true;
+export const BETA_MAILTO = 'mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access';
+
 export function bumpLaunchCount() {
   const cur = parseInt(localStorage.getItem(KEY_COUNT) || '0', 10) + 1;
   localStorage.setItem(KEY_COUNT, String(cur));
@@ -104,6 +112,7 @@ export function clearLicense() {
 
 // Decide whether to show the nag this session.
 export function shouldShowNag() {
+  if (BETA_MODE) return false;  // beta testers have keys; no upsell during beta
   if (isLicensed()) return false;
   const launches = parseInt(localStorage.getItem(KEY_COUNT) || '0', 10);
   const dismisses = parseInt(localStorage.getItem(KEY_DISMISS) || '0', 10);
