@@ -30,16 +30,24 @@ export async function showWelcome({ onClose }) {
   overlay.innerHTML = `
     <div class="welcome-card">
       <div class="welcome-brand">
-        <svg class="welcome-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <svg class="welcome-mark" viewBox="0 0 64 64" aria-hidden="true">
           <defs>
             <linearGradient id="wlg" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stop-color="#cdff45"/>
               <stop offset="100%" stop-color="#7cbe1e"/>
             </linearGradient>
           </defs>
-          <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z" fill="url(#wlg)" opacity="0.16"/>
-          <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
-                stroke="url(#wlg)" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+          <g fill="none" stroke="url(#wlg)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+            <path d="M14 22 L14 36 L26 42 L26 28"/>
+            <path d="M38 22 L38 36 L26 42"/>
+            <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+            <path d="M28 30 L28 44 L40 50 L40 36"/>
+            <path d="M52 30 L52 44 L40 50"/>
+            <path d="M34 12 L42 8 L50 12 L42 16 Z" fill="url(#wlg)" fill-opacity="0.22"/>
+            <path d="M34 12 L34 20 L42 24 L42 16"/>
+            <path d="M50 12 L50 20 L42 24"/>
+          </g>
         </svg>
         <h1><strong>Block</strong>Builder <span class="studio">Studio</span></h1>
         <p class="tagline">Build, snap, print. No accounts, no limits.</p>
