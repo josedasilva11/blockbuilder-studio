@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Monochrome light variant. White wireframe on transparent background.
+  Use on dark / brand colour / photo surfaces where the colour mark would
+  clash with the surface tone. Strip-out for embossing, single-colour print,
+  partner co-marketing materials.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z"
+        fill="#ffffff" opacity="0.12"/>
+  <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
+        stroke="#ffffff" stroke-width="2" fill="none"
+        stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

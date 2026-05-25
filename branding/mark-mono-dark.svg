@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Monochrome dark variant. Dark wireframe on transparent background.
+  Use on white / light surfaces (press kits on paper, light theme docs,
+  external blog posts with white backgrounds).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z"
+        fill="#0a0c10" opacity="0.08"/>
+  <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
+        stroke="#0a0c10" stroke-width="2" fill="none"
+        stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

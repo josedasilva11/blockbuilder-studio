@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Horizontal lockup. Mark left, wordmark right. Use in website headers,
+  email signatures, partner co-marketing. Total bounding box 320x80
+  (mark is 60x60 with 10px padding inside; wordmark sits to its right).
+  Width:height ratio is 4:1. Scales freely.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80"
+     font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#cdff45"/>
+      <stop offset="100%" stop-color="#7cbe1e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Mark (40x40 viewBox upscaled to 60x60 area). Positioned 10,10..70,70 -->
+  <g transform="translate(10 10) scale(1.5)">
+    <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z"
+          fill="url(#markGrad)" opacity="0.16"/>
+    <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
+          stroke="url(#markGrad)" stroke-width="2" fill="none"
+          stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark. 'Block' bolder, 'Builder' regular, both at the same size.
+       Drawn as text — relies on Inter being loaded; for embeds where the
+       font may not be available, use lockup-horizontal-text-flat.svg instead. -->
+  <text x="90" y="44" font-size="22" font-weight="700" fill="#eef0f5"
+        letter-spacing="-0.5">Block<tspan font-weight="400">Builder</tspan></text>
+  <text x="90" y="62" font-size="9" font-weight="600" fill="#aab2c4"
+        letter-spacing="0.18em" font-family="ui-monospace, 'JetBrains Mono', monospace">STUDIO</text>
+</svg>
