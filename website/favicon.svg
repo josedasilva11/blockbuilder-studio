@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Site favicon. Same cube wireframe as branding/mark-color.svg but with a
+  filled dark squircle background so it reads against any browser tab tint.
+  Referenced from every page's <link rel="icon"> tag.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <defs>
+    <linearGradient id="fav-mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#cdff45"/>
+      <stop offset="100%" stop-color="#7cbe1e"/>
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="8" fill="#14171d"/>
+  <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z"
+        fill="url(#fav-mark)" opacity="0.16"/>
+  <path d="M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31"
+        stroke="url(#fav-mark)" stroke-width="2" fill="none"
+        stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

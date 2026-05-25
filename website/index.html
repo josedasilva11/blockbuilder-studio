@@ -22,7 +22,7 @@
 <meta name="twitter:image" content="https://blockbuilder.studio/og-cover.png" />
 <meta name="theme-color" content="#0a0c10" />
 <meta name="author" content="Marjers" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2314171d'/%3E%3Cpath d='M10 14 L20 9 L30 14 L30 26 L20 31 L10 26 Z M10 14 L20 19 L30 14 M20 19 L20 31' stroke='%23c4f04f' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="icon" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" />
@@ -46,6 +46,10 @@
   --text-dim:     #6b7388;
   --text-faint:   #4a5165;
 
+  /* Brand tokens — see branding/BRAND.md for the canonical palette.
+     --lime maps to BRAND "Lime mid". The gradient hi/lo (#cdff45 / #7cbe1e)
+     is inlined on <linearGradient> stops where the mark is drawn so the SVG
+     matches branding/mark-color.svg byte-for-byte. */
   --lime:         #c4f04f;
   --lime-deep:    #8fc524;
   --lime-glow:    rgba(196, 240, 79, 0.32);

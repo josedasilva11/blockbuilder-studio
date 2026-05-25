@@ -1,4 +1,14 @@
-/* BlockBuilder Studio — dark + lime by default, light theme via data-theme. */
+/* BlockBuilder Studio — dark + lime by default, light theme via data-theme.
+ *
+ * Brand tokens mapping (see branding/BRAND.md for the canonical palette):
+ *   --accent       <- BRAND "Lime mid"  #c4f04f  (single-tone usage)
+ *   --accent-deep  <- BRAND "Lime lo"   #7cbe1e  (darkened for hover, gradient bottom)
+ *                     (Note: app uses #8fc524 here, a hair brighter than canonical
+ *                     #7cbe1e to keep enough contrast against the dark UI panels.)
+ *   For the mark's gradient (Lime hi #cdff45 -> Lime lo #7cbe1e) we inline the
+ *   stops on the <linearGradient> in main.js / welcome.js / support_nag.js,
+ *   matching branding/mark-color.svg byte-for-byte.
+ */
 
 :root {
   --bg:           #0e1117;
