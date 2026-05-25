@@ -39,7 +39,7 @@
       "!keygen/**",
       "!**/.git/**",
       "!**/_*",
-      "!**/.claude/**",
+      "!**/.*/**",
       "!serve.py",
       "!*.zip"
     ],
@@ -49,7 +49,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "marjers",
+        "owner": "josedasilva11",
         "repo": "blockbuilder-studio"
       }
     ],

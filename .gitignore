@@ -22,3 +22,8 @@ cloudflare-worker/.dev.vars
 
 # Built website preview cache
 website/.cache/
+
+# Editor / local agent config (any dot-folder created by the editor)
+.claude/
+.cursor/
+.aider/
