@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Variant: 4-cube 2x2 cluster. Inspired by the marjers.com portfolio
+  thumbnail. More "abundant blocks" / "building set" feel than v1's
+  L-step. Same lime gradient palette.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <defs>
+    <linearGradient id="stk2-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#cdff45"/>
+      <stop offset="100%" stop-color="#7cbe1e"/>
+    </linearGradient>
+    <linearGradient id="stk2-top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#d8ff5a" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="#a4dd35" stop-opacity="0.28"/>
+    </linearGradient>
+    <linearGradient id="stk2-left" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#7cbe1e" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5a8e15" stop-opacity="0.32"/>
+    </linearGradient>
+    <linearGradient id="stk2-right" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#a4dd35" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#7cbe1e" stop-opacity="0.24"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    4 cubes in a 2x2 arrangement (footprint), each 5 units wide isometric.
+    Layout (top-down):
+      back-left (D)   back-right (C)
+      front-left (A)  front-right (B)
+    Draw order matters: back cubes first, then front cubes overlap.
+  -->
+
+  <g stroke="url(#stk2-grad)" stroke-width="1.1" stroke-linejoin="round">
+    <!-- Cube D: back-left -->
+    <path d="M  8 13 L 13 10.5 L 18 13 L 13 15.5 Z" fill="url(#stk2-top)"/>
+    <path d="M  8 13 L 13 15.5 L 13 20.5 L  8 18 Z" fill="url(#stk2-left)"/>
+    <path d="M 13 15.5 L 18 13 L 18 18 L 13 20.5 Z" fill="url(#stk2-right)"/>
+
+    <!-- Cube C: back-right -->
+    <path d="M 18 13 L 23 10.5 L 28 13 L 23 15.5 Z" fill="url(#stk2-top)"/>
+    <path d="M 18 13 L 23 15.5 L 23 20.5 L 18 18 Z" fill="url(#stk2-left)"/>
+    <path d="M 23 15.5 L 28 13 L 28 18 L 23 20.5 Z" fill="url(#stk2-right)"/>
+
+    <!-- Cube A: front-left -->
+    <path d="M  8 18 L 13 15.5 L 18 18 L 13 20.5 Z" fill="url(#stk2-top)"/>
+    <path d="M  8 18 L 13 20.5 L 13 25.5 L  8 23 Z" fill="url(#stk2-left)"/>
+    <path d="M 13 20.5 L 18 18 L 18 23 L 13 25.5 Z" fill="url(#stk2-right)"/>
+
+    <!-- Cube B: front-right -->
+    <path d="M 18 18 L 23 15.5 L 28 18 L 23 20.5 Z" fill="url(#stk2-top)"/>
+    <path d="M 18 18 L 23 20.5 L 23 25.5 L 18 23 Z" fill="url(#stk2-left)"/>
+    <path d="M 23 20.5 L 28 18 L 28 23 L 23 25.5 Z" fill="url(#stk2-right)"/>
+  </g>
+</svg>

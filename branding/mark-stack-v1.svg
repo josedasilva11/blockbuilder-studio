@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Variant: stacked blocks. 3 cubes arranged in an isometric L step. Reads as
+  "BlockBuilder = building with blocks" more directly than the single
+  wireframe cube. Lime gradient, transparent background.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <defs>
+    <linearGradient id="stk-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#cdff45"/>
+      <stop offset="100%" stop-color="#7cbe1e"/>
+    </linearGradient>
+    <linearGradient id="stk-face-top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#d8ff5a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#a4dd35" stop-opacity="0.25"/>
+    </linearGradient>
+    <linearGradient id="stk-face-left" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#7cbe1e" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#5a8e15" stop-opacity="0.30"/>
+    </linearGradient>
+    <linearGradient id="stk-face-right" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#a4dd35" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#7cbe1e" stop-opacity="0.22"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    Three cubes in an L step. Each cube is 8 units wide (isometric).
+    Cube A: bottom-front-left.
+    Cube B: bottom-front-right (next to A).
+    Cube C: stacked on top of A.
+  -->
+
+  <!-- ====== Cube A: bottom-left ====== -->
+  <!-- top face -->
+  <path d="M 6 22 L 12 19 L 18 22 L 12 25 Z"
+        fill="url(#stk-face-top)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- left face -->
+  <path d="M 6 22 L 12 25 L 12 31 L 6 28 Z"
+        fill="url(#stk-face-left)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- right face -->
+  <path d="M 12 25 L 18 22 L 18 28 L 12 31 Z"
+        fill="url(#stk-face-right)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+
+  <!-- ====== Cube B: bottom-right ====== -->
+  <!-- top face -->
+  <path d="M 18 22 L 24 19 L 30 22 L 24 25 Z"
+        fill="url(#stk-face-top)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- left face (shared edge with A, drawn for clarity) -->
+  <path d="M 18 22 L 24 25 L 24 31 L 18 28 Z"
+        fill="url(#stk-face-left)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- right face -->
+  <path d="M 24 25 L 30 22 L 30 28 L 24 31 Z"
+        fill="url(#stk-face-right)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+
+  <!-- ====== Cube C: top of A ====== -->
+  <!-- top face -->
+  <path d="M 6 13 L 12 10 L 18 13 L 12 16 Z"
+        fill="url(#stk-face-top)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- left face -->
+  <path d="M 6 13 L 12 16 L 12 22 L 6 19 Z"
+        fill="url(#stk-face-left)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- right face -->
+  <path d="M 12 16 L 18 13 L 18 19 L 12 22 Z"
+        fill="url(#stk-face-right)" stroke="url(#stk-grad)" stroke-width="1.2" stroke-linejoin="round"/>
+</svg>
