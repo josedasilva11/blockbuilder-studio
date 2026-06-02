@@ -105,7 +105,7 @@ export async function showWelcome({ onClose }) {
           · need custom 3D / web work? <a href="https://marjers.com" target="_blank" rel="noopener">marjers.com</a>
         </span>
         <span class="welcome-support-row">${BETA_MODE
-          ? `<strong style="color:#f7c948">BETA build</strong>, thanks for testing. Bug reports? <a href="${BETA_MAILTO}" target="_blank" rel="noopener">email Marjers</a>.`
+          ? `<strong style="color:#f7c948">BETA build</strong>. If this is your first time here, drop a hi at <a href="mailto:geral@marjers.com?subject=BlockBuilder%20beta" target="_blank" rel="noopener">geral@marjers.com</a> so we know you're around. Bug reports welcome at the same address.`
           : `BlockBuilder is free and stays free. If it earns its place,
           <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">buy me a coffee ☕</a>
           or
