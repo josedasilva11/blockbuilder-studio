@@ -82,6 +82,11 @@ How to report
 -------------
 Just reply to this email with:
 - What you were doing
+- For crashes: please zip and attach the folder at
+  %APPDATA%\BlockBuilder Studio\ (open Run, paste, hit Enter, then
+  zip the folder). It contains the autosave + logs and tells us
+  exactly what state the app was in.
+- The other expected fields:
 - What you expected to happen
 - What actually happened
 - Screenshot if visual

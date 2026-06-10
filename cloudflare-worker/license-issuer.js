@@ -43,6 +43,15 @@ export default {
 async function handle(req, env) {
     if (req.method !== 'POST') return new Response('OK', { status: 200 });
 
+    // Kill switch. Set ISSUANCE_ENABLED='false' (string) while payments are
+    // paused (e.g. during private beta). Returns 503 so LS will retry rather
+    // than mark the webhook dead, and we get a clean signal in Cloudflare logs
+    // if a real order accidentally fires.
+    if (env.ISSUANCE_ENABLED === 'false') {
+      console.warn('issuance disabled — refusing to mint a key');
+      return new Response('issuance paused', { status: 503 });
+    }
+
     const raw = await req.text();
     const sigHeader = req.headers.get('X-Signature') || req.headers.get('x-signature');
 
@@ -100,6 +109,7 @@ async function handle(req, env) {
           reply_to: 'geral@marjers.com',
           subject: 'Your BlockBuilder Studio licence key',
           html: body,
+          text: renderEmailText(name, key),
         }),
       });
       if (!resp.ok) {
@@ -197,4 +207,30 @@ function renderEmail(name, key) {
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Plain-text alternative for clients that can't render HTML (terminal mail,
+// some screen readers, spam scanners). Lowers the spam score noticeably.
+function renderEmailText(name, key) {
+  return [
+    `Hi ${name},`,
+    '',
+    'Thank you for buying a commercial licence for BlockBuilder Studio.',
+    '',
+    'Your licence key:',
+    '',
+    key,
+    '',
+    'To activate:',
+    '  1. Open BlockBuilder Studio.',
+    '  2. Click the gear icon (top right) → "I have a key" in the License section.',
+    '  3. Paste the key above. Enter your name as you\'d like it to appear.',
+    '',
+    'The activation is offline. The key works on every machine you own — no per-device limit. Future updates are included.',
+    '',
+    'Questions? Reply to this email or write to geral@marjers.com.',
+    '',
+    '— Marjers',
+    'https://blockbuilder.studio',
+  ].join('\n');
 }

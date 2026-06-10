@@ -86,6 +86,21 @@ Also remove the BETA swap script near `</body>`:
 +export const BETA_MODE = false;
 ```
 
+### B.1 Cloudflare Worker kill switch
+
+While in BETA, the worker has an `ISSUANCE_ENABLED` secret set to the
+string `'false'`. Any incoming webhook (including accidental real
+orders) gets a 503 and no key is minted. Before going live:
+
+```bash
+cd cloudflare-worker
+echo -n 'true' | wrangler secret put ISSUANCE_ENABLED
+```
+
+Verify by hitting `https://api.blockbuilder.studio` with a fake POST,
+the worker should now reach signature verification (401 bad signature)
+instead of returning 503.
+
 That's it for the app. The `BETA_MODE` constant is the single switch — every
 gate (`shouldShowNag()`, Settings License section, Welcome footer) checks it.
 
