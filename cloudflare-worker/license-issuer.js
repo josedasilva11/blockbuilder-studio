@@ -97,13 +97,16 @@ async function handle(req, env) {
         body: JSON.stringify({
           from: 'BlockBuilder Studio <licences@marjers.com>',
           to: email,
+          reply_to: 'geral@marjers.com',
           subject: 'Your BlockBuilder Studio licence key',
           html: body,
         }),
       });
       if (!resp.ok) {
-        const t = await resp.text();
-        console.error('resend rejected: status=' + resp.status + ' body=' + t.slice(0, 200));
+        const raw = (await resp.text()).slice(0, 200);
+        // Redact buyer email if Resend echoed it back in the error message.
+        const safe = raw.replaceAll(email, '<redacted-buyer-email>');
+        console.error('resend rejected: status=' + resp.status + ' body=' + safe);
         return new Response('email failed', { status: 500 });
       }
     }

@@ -93,7 +93,10 @@ export async function revalidateLicense() {
 
 export async function activateLicense(key, name) {
   const k = (key || '').trim();
-  if (!k.startsWith('BBS2-')) return false;
+  // Accept both legacy 'BBS2-...' (keygen + early worker) and current
+  // 'BBS2....' (worker after the '.' separator switch). The verifier
+  // in license_crypto.js handles both forms internally.
+  if (!k.startsWith('BBS2-') && !k.startsWith('BBS2.')) return false;
   const payload = await verifyLicenseKey(k);
   if (!payload) return false;
   localStorage.setItem(KEY_LICKEY, k);
@@ -269,7 +272,7 @@ export function openLicenseDialog() {
           msg.className = 'lic-msg ok';
           setTimeout(close, 1800);
         } else {
-          msg.textContent = 'That key is not valid. Make sure you copied the full BBS2-... string from the purchase email. Contact geral@marjers.com if it still fails.';
+          msg.textContent = 'That key is not valid. Make sure you copied the full BBS2... string from the purchase email. Contact geral@marjers.com if it still fails.';
           msg.className = 'lic-msg err';
         }
       });
