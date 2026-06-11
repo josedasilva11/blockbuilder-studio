@@ -597,6 +597,18 @@ function buildPyramid(p) {
 
 function buildWedge(p) {
   // Right-triangular prism — tall vertical wall at +X, slopes down to -X.
+  const fillet = Math.max(0, +p.fillet || 0);
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  if (fillet > 0.001 || chamfer > 0.001) {
+    // Right triangle in XZ plane: (-w,-h), (w,-h), (w,h). ExtrudeGeometry
+    // bevels the perimeter edges of front/back faces; the 3 long edges along
+    // the prism axis are NOT bevelled by this approach. For full edge cover
+    // a custom geometry is needed (deferred). This is the partial version.
+    return buildExtrudedPrism(
+      [[-p.width/2, -p.height/2], [p.width/2, -p.height/2], [p.width/2, p.height/2]],
+      p.depth, fillet, chamfer, p.fillet_segments || 8
+    );
+  }
   const w = p.width / 2;
   const d = p.depth / 2;
   const h = p.height / 2;
@@ -625,6 +637,17 @@ function buildWedge(p) {
 
 function buildRoof(p) {
   // Gable roof: triangle prism with ridge along Y.
+  const fillet = Math.max(0, +p.fillet || 0);
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  if (fillet > 0.001 || chamfer > 0.001) {
+    // Isoceles triangle in XZ plane: apex at (0, h), base at (-w,-h)..(w,-h).
+    // Same caveat as Wedge: only perimeter (front/back face) edges bevel via
+    // ExtrudeGeometry. Long ridge + base edges along the prism axis are sharp.
+    return buildExtrudedPrism(
+      [[-p.width/2, -p.height/2], [p.width/2, -p.height/2], [0, p.height/2]],
+      p.depth, fillet, chamfer, p.fillet_segments || 8
+    );
+  }
   const w = p.width / 2, d = p.depth / 2, h = p.height / 2;
   const verts = new Float32Array([
     -w, -d, -h,  // 0
@@ -646,6 +669,43 @@ function buildRoof(p) {
   g.setIndex(indices);
   g.computeVertexNormals();
   return g;
+}
+
+// Generic prism builder for shapes whose cross-section is a flat polygon
+// extruded along the Y axis. Used by buildWedge and buildRoof when chamfer
+// or fillet is non-zero. Bevels the perimeter edges of the front/back faces
+// (where the extrude top/bottom meets the side walls). The long axial edges
+// (where adjacent side faces meet) are not bevelled — that needs a custom
+// geometry that this Extrude-based path doesn't support.
+function buildExtrudedPrism(profile2D, fullDepth, fillet, chamfer, filletSegments) {
+  // Build the 2D shape from the profile (list of [x, y] points). The profile
+  // is in the local XZ plane in world coordinates, but we hand it to
+  // ExtrudeGeometry as XY (it extrudes along Z) and rotate the result.
+  const shape = new THREE.Shape();
+  profile2D.forEach(([x, y], i) => { i === 0 ? shape.moveTo(x, y) : shape.lineTo(x, y); });
+  shape.closePath();
+  // Bound the bevel against half-depth, plus a fraction of the smallest
+  // profile span so it doesn't eat the whole prism.
+  const xs = profile2D.map(p => p[0]);
+  const ys = profile2D.map(p => p[1]);
+  const halfDepth = fullDepth / 2;
+  const minProfileSpan = Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys));
+  const bevelSize = Math.min(fillet || chamfer, minProfileSpan * 0.24, halfDepth * 0.49);
+  const bevelSeg = fillet > 0 ? Math.max(2, Math.min(32, Math.floor(filletSegments || 8))) : 1;
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth: fullDepth - 2 * bevelSize,
+    bevelEnabled: true,
+    bevelSize,
+    bevelThickness: bevelSize,
+    bevelSegments: bevelSeg,
+    bevelOffset: 0,
+  });
+  // Centre Z (the extrusion axis) on 0, then rotate -90° around X so the
+  // extrusion axis becomes world Y. The 2D Y-up (profile height) becomes
+  // world Z (up).
+  g.translate(0, 0, -(halfDepth - bevelSize));
+  g.rotateX(-PI / 2);
+  return mergeVerticesSafe(g);
 }
 
 function buildTube(p) {
