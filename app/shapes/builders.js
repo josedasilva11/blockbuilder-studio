@@ -9,6 +9,8 @@ const { PI, sin, cos } = Math;
 
 function buildCube(p) {
   // Origin at center; user shifts with location.
+  const r = Math.max(0, +p.fillet || 0);
+  if (r > 0.001) return buildFilletedBox(p.width, p.depth, p.height, r, p.fillet_segments || 8);
   const c = Math.max(0, +p.chamfer || 0);
   if (c > 0.001) return buildChamferedBox(p.width, p.depth, p.height, c);
   return new THREE.BoxGeometry(p.width, p.depth, p.height);
@@ -207,6 +209,206 @@ function buildChamferedLathe(rTop, rBot, h, c, segments) {
 
 function mergeVerticesSafe(g) {
   try { return mergeVertices(g, 1e-5); } catch { return g; }
+}
+
+// Box with filleted (rounded) edges. Same overall topology as the chamfered
+// box but each of the 12 cube edges is replaced by a quarter-cylinder arc
+// with N segments, and each of the 8 corners by an octant of a sphere of
+// the same radius. The 6 main faces shrink to inset rectangles whose corners
+// sit at the equator points of the corner spheres.
+//
+// Parameterisation per corner octant (sx, sy, sz):
+//   P(α, β) = (sx·(hw-r) + r·sx·cos(β)·cos(α),
+//              sy·(hd-r) + r·sy·cos(β)·sin(α),
+//              sz·(hh-r) + r·sz·sin(β))
+//   α ∈ [0, π/2]  (rotation around Z, from X-meridian toward Y-meridian)
+//   β ∈ [0, π/2]  (latitude from XY equator up to +Z pole)
+//
+// Boundaries (where the octant meets the adjacent edge cylinders):
+//   α = 0     ↔ Y-axis edge cylinder (axis runs along Y, X+Z quadrant)
+//   α = π/2   ↔ X-axis edge cylinder (axis runs along X, Y+Z quadrant)
+//   β = 0     ↔ Z-axis edge cylinder (axis runs along Z, X+Y quadrant)
+//   β = π/2   ↔ Z-face corner (a single point per corner — the pole)
+//   α=0,β=0   ↔ X-face corner of the inset rectangle
+//   α=π/2,β=0 ↔ Y-face corner of the inset rectangle
+//
+// The pole vertex is shared by all (i, j=N) of one corner — mergeVertices at
+// the end welds them into a single index. Edge cylinders re-use the corner
+// octants' boundary vertices, so the seam is naturally watertight.
+//
+// Triangle winding is chosen analytically per region so the outward normal
+// computed by computeVertexNormals matches the surface (no double-sided
+// material needed; CSG operations work).
+function buildFilletedBox(w, d, h, r, N) {
+  const hw = w / 2, hd = d / 2, hh = h / 2;
+  N = Math.max(2, Math.min(32, Math.floor(N || 8)));
+  r = Math.min(r, hw * 0.49, hd * 0.49, hh * 0.49);
+
+  const positions = [];
+  const indices = [];
+  function addV(x, y, z) {
+    const i = positions.length / 3;
+    positions.push(x, y, z);
+    return i;
+  }
+  function pushQuad(a, b, c, d, reverse) {
+    if (reverse) indices.push(a, d, c, a, c, b);
+    else         indices.push(a, b, c, a, c, d);
+  }
+
+  // Build the 8 corner octant vertex grids.
+  // Corner[sx][sy][sz][i][j], i,j ∈ 0..N
+  const Corner = {};
+  for (const sx of [-1, 1]) {
+    Corner[sx] = {};
+    for (const sy of [-1, 1]) {
+      Corner[sx][sy] = {};
+      for (const sz of [-1, 1]) {
+        const cx = sx * (hw - r);
+        const cy = sy * (hd - r);
+        const cz = sz * (hh - r);
+        const grid = [];
+        for (let i = 0; i <= N; i++) {
+          const a = (i / N) * (Math.PI / 2);
+          const ca = Math.cos(a), sa = Math.sin(a);
+          const row = [];
+          for (let j = 0; j <= N; j++) {
+            const b = (j / N) * (Math.PI / 2);
+            const cb = Math.cos(b), sb = Math.sin(b);
+            row.push(addV(cx + r * sx * cb * ca, cy + r * sy * cb * sa, cz + r * sz * sb));
+          }
+          grid.push(row);
+        }
+        Corner[sx][sy][sz] = grid;
+      }
+    }
+  }
+
+  // 8 corner octants. Winding outward when sx·sy·sz = +1 (derivation: cross
+  // ∂α × ∂β = r²·(sy·sz·cos²β·cos α, sx·sz·cos²β·sin α, sx·sy·cos β·sin β);
+  // for this to align with the outward radial direction (sx, sy, sz) we need
+  // sy·sz = sx, sx·sz = sy, sx·sy = sz, all equivalent to sx·sy·sz = 1).
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        const C = Corner[sx][sy][sz];
+        const reverse = (sx * sy * sz) < 0;
+        for (let i = 0; i < N; i++) {
+          for (let j = 0; j < N; j++) {
+            pushQuad(C[i][j], C[i+1][j], C[i+1][j+1], C[i][j+1], reverse);
+          }
+        }
+      }
+    }
+  }
+
+  // 12 edge cylinders. Each edge runs along one axis; we re-use the boundary
+  // vertices already created on the adjacent corner octants — no new positions.
+  //
+  // X-axis edges: indexed by (sy, sz). The cylinder uses the α=π/2 boundary
+  // (i=N) of corners (−1,sy,sz) and (+1,sy,sz).
+  // Cross ∂x × ∂β (going axial +X, angular +β) = (0, −sz·r·cos β, −sy·r·sin β).
+  // Aligns with outward (0, sy, sz) iff sy·sz = −1. So reverse when sy·sz > 0.
+  for (const sy of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const reverse = (sy * sz) > 0;
+      for (let j = 0; j < N; j++) {
+        const a = Corner[-1][sy][sz][N][j];
+        const b = Corner[+1][sy][sz][N][j];
+        const c = Corner[+1][sy][sz][N][j+1];
+        const d = Corner[-1][sy][sz][N][j+1];
+        pushQuad(a, b, c, d, reverse);
+      }
+    }
+  }
+  // Y-axis edges: (sx, sz), α=0 boundary (i=0). Going sy=−1 → +1 axially.
+  // Cross ∂y × ∂β = (sz·r·cos β, 0, sx·r·sin β). Aligns with outward (sx,0,sz)
+  // iff sx·sz = +1. Reverse when sx·sz < 0.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const reverse = (sx * sz) < 0;
+      for (let j = 0; j < N; j++) {
+        const a = Corner[sx][-1][sz][0][j];
+        const b = Corner[sx][+1][sz][0][j];
+        const c = Corner[sx][+1][sz][0][j+1];
+        const d = Corner[sx][-1][sz][0][j+1];
+        pushQuad(a, b, c, d, reverse);
+      }
+    }
+  }
+  // Z-axis edges: (sx, sy), β=0 boundary (j=0). Going sz=−1 → +1 axially.
+  // Cross ∂z × ∂α = (−sy·r·cos α, −sx·r·sin α, 0). Aligns with outward (sx,sy,0)
+  // iff sx·sy = −1. Reverse when sx·sy > 0.
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      const reverse = (sx * sy) > 0;
+      for (let i = 0; i < N; i++) {
+        const a = Corner[sx][sy][-1][i][0];
+        const b = Corner[sx][sy][+1][i][0];
+        const c = Corner[sx][sy][+1][i+1][0];
+        const d = Corner[sx][sy][-1][i+1][0];
+        pushQuad(a, b, c, d, reverse);
+      }
+    }
+  }
+
+  // 6 main faces. Each is a rectangle whose 4 corners sit at the equator-or-
+  // pole points of the 4 corner octants on the same face.
+  // +X face: vertices at (α=0, β=0) of (+1, sy, sz). Going CCW from +X view
+  // means (sy,sz) = (−1,−1) → (+1,−1) → (+1,+1) → (−1,+1).
+  // The default pushQuad winding gives (v0→v1→v2→v3); we cross-check that
+  // (v1−v0) × (v2−v0) aligns with the outward normal.
+  function faceQuad(v0, v1, v2, v3, outward) {
+    const p0 = [positions[3*v0], positions[3*v0+1], positions[3*v0+2]];
+    const p1 = [positions[3*v1], positions[3*v1+1], positions[3*v1+2]];
+    const p2 = [positions[3*v2], positions[3*v2+1], positions[3*v2+2]];
+    const e1 = [p1[0]-p0[0], p1[1]-p0[1], p1[2]-p0[2]];
+    const e2 = [p2[0]-p0[0], p2[1]-p0[1], p2[2]-p0[2]];
+    const n = [e1[1]*e2[2]-e1[2]*e2[1], e1[2]*e2[0]-e1[0]*e2[2], e1[0]*e2[1]-e1[1]*e2[0]];
+    const dot = n[0]*outward[0] + n[1]*outward[1] + n[2]*outward[2];
+    pushQuad(v0, v1, v2, v3, dot < 0);
+  }
+  // +X face
+  faceQuad(
+    Corner[+1][-1][-1][0][0], Corner[+1][+1][-1][0][0],
+    Corner[+1][+1][+1][0][0], Corner[+1][-1][+1][0][0],
+    [+1, 0, 0]);
+  // -X face
+  faceQuad(
+    Corner[-1][-1][-1][0][0], Corner[-1][+1][-1][0][0],
+    Corner[-1][+1][+1][0][0], Corner[-1][-1][+1][0][0],
+    [-1, 0, 0]);
+  // +Y face: vertices at (α=π/2, β=0) of (sx, +1, sz)
+  faceQuad(
+    Corner[-1][+1][-1][N][0], Corner[+1][+1][-1][N][0],
+    Corner[+1][+1][+1][N][0], Corner[-1][+1][+1][N][0],
+    [0, +1, 0]);
+  // -Y face
+  faceQuad(
+    Corner[-1][-1][-1][N][0], Corner[+1][-1][-1][N][0],
+    Corner[+1][-1][+1][N][0], Corner[-1][-1][+1][N][0],
+    [0, -1, 0]);
+  // +Z face: vertices at pole (β=π/2) of (sx, sy, +1). Any α works.
+  faceQuad(
+    Corner[-1][-1][+1][0][N], Corner[+1][-1][+1][0][N],
+    Corner[+1][+1][+1][0][N], Corner[-1][+1][+1][0][N],
+    [0, 0, +1]);
+  // -Z face
+  faceQuad(
+    Corner[-1][-1][-1][0][N], Corner[+1][-1][-1][0][N],
+    Corner[+1][+1][-1][0][N], Corner[-1][+1][-1][0][N],
+    [0, 0, -1]);
+
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  g.setIndex(indices);
+  // Merge the (N+1) duplicate pole vertices at each corner into one each.
+  // mergeVertices also resolves any tiny float-rounding seams between corner
+  // octants and adjacent edge cylinders (positions are derived from sin/cos
+  // so should match exactly, but be defensive).
+  const merged = mergeVerticesSafe(g);
+  merged.computeVertexNormals();
+  return merged;
 }
 
 // Tube with chamfered outer + inner rim edges (both top and bottom). Same

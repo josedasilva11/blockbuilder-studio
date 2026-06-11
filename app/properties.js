@@ -39,6 +39,8 @@ const PARAM_LABELS = {
   minor_segments: 'Tube Segments',
   sides: 'Sides',
   chamfer: 'Chamfer',
+  fillet: 'Fillet',
+  fillet_segments: 'Fillet smoothness',
 };
 // Hover-explanations for every editable parameter. Shown on the label so the
 // user knows what each number actually controls.
@@ -54,8 +56,10 @@ const PARAM_TIPS = {
   minor_segments:'TUBE SEGMENTS, slices around the tube cross-section. 16 is the sweet spot.',
   sides:        'SIDES, how many edges the polygon/star has. 3 = triangle, 5 = pentagon, 6 = hexagon, etc.',
   chamfer:      'CHAMFER, 45° bevel along every edge. 0 = sharp corners. Set to ~5% of the smallest dimension for a subtle softening, ~15% for a strong bevel. Caps at 49% of the smallest dim.',
+  fillet:       'FILLET, rounded edges with the given radius. 0 = sharp. Overrides Chamfer when > 0. Each cube edge becomes a quarter-cylinder, each corner a spherical octant. Caps at 49% of the smallest dim.',
+  fillet_segments: 'FILLET SMOOTHNESS, number of segments per 90° arc on the fillet. 4 = polygonal, 8 = smooth, 16 = mirror-like (heavier mesh). Only matters when Fillet > 0.',
 };
-const PARAM_STEP = { segments: 1, minor_segments: 1, sides: 1 };
+const PARAM_STEP = { segments: 1, minor_segments: 1, sides: 1, fillet_segments: 1 };
 
 const SCALED_PARAMS = new Set(['width', 'depth', 'height', 'radius', 'inner_radius', 'minor_radius', 'radius_top']);
 const PARAM_AXIS = {
@@ -113,7 +117,7 @@ function refreshLiveValues() {
 
 // Params that legitimately accept 0 (pointed cone, sharp box, etc.).
 // Everything else rejects 0 because the geometry collapses.
-const ZERO_OK_PARAMS = new Set(['chamfer', 'radius_top']);
+const ZERO_OK_PARAMS = new Set(['chamfer', 'radius_top', 'fillet']);
 
 function applyParam(shape, key, value) {
   if (!Number.isFinite(value) || value < 0) return;
