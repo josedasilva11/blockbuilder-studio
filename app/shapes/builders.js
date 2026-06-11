@@ -8,7 +8,149 @@ const { PI, sin, cos } = Math;
 
 function buildCube(p) {
   // Origin at center; user shifts with location.
+  const c = Math.max(0, +p.chamfer || 0);
+  if (c > 0.001) return buildChamferedBox(p.width, p.depth, p.height, c);
   return new THREE.BoxGeometry(p.width, p.depth, p.height);
+}
+
+// Box with 45° chamfered edges. 24 unique vertices (3 per corner × 8 corners),
+// 6 main rectangular faces (shrunk by c on each in-plane axis), 12 edge
+// chamfer quads, 8 corner triangles. Total 44 triangles.
+//
+// Naming convention: for corner sign (sx, sy, sz) where each is ±1, the corner
+// produces three vertices:
+//   V_X  on the X-perpendicular face (left/right): receded inward on Y and Z
+//   V_Y  on the Y-perpendicular face (front/back): receded inward on X and Z
+//   V_Z  on the Z-perpendicular face (top/bottom): receded inward on X and Y
+// Winding is CCW from outside (positive cross product in normal direction)
+// so back-face culling and lighting work without a doubled material.
+function buildChamferedBox(w, d, h, c) {
+  const hw = w / 2, hd = d / 2, hh = h / 2;
+  // Clamp chamfer to leave at least a few mm of original face — too aggressive
+  // a chamfer collapses faces to zero area and breaks normals.
+  c = Math.min(c, hw * 0.49, hd * 0.49, hh * 0.49);
+
+  const positions = [];
+  const indices = [];
+  const V = {};  // V[sx][sy][sz] = { X, Y, Z } indices
+
+  function addVert(x, y, z) {
+    const i = positions.length / 3;
+    positions.push(x, y, z);
+    return i;
+  }
+
+  // Build the 24 vertices.
+  for (const sx of [-1, 1]) {
+    V[sx] = {};
+    for (const sy of [-1, 1]) {
+      V[sx][sy] = {};
+      for (const sz of [-1, 1]) {
+        V[sx][sy][sz] = {
+          X: addVert(sx * hw,     sy * (hd - c), sz * (hh - c)),
+          Y: addVert(sx * (hw - c), sy * hd,     sz * (hh - c)),
+          Z: addVert(sx * (hw - c), sy * (hd - c), sz * hh),
+        };
+      }
+    }
+  }
+
+  function quad(a, b, cI, d) {
+    indices.push(a, b, cI, a, cI, d);
+  }
+  function tri(a, b, cI) {
+    indices.push(a, b, cI);
+  }
+
+  // --- 6 main faces (shrunken rectangles) ---
+  // +X (right): vertices V[+1][sy][sz].X for sy,sz ∈ {-1,+1}
+  // Looking against the +X normal (from outside): +Y is left, +Z is up.
+  // CCW (positive cross): (-Y,-Z) → (+Y,-Z) → (+Y,+Z) → (-Y,+Z)
+  quad(V[1][-1][-1].X, V[1][ 1][-1].X, V[1][ 1][ 1].X, V[1][-1][ 1].X);
+  // -X (left): reverse winding
+  quad(V[-1][ 1][-1].X, V[-1][-1][-1].X, V[-1][-1][ 1].X, V[-1][ 1][ 1].X);
+  // +Y (front): looking against +Y, +X is to right, +Z is up
+  // CCW: (-X,-Z) → (+X,-Z) → (+X,+Z) → (-X,+Z)? Verify with cross product:
+  // For +Y face, v1-v0 should be in +X direction and v3-v0 should be in +Z, then cross gives +Y. Confirmed.
+  quad(V[-1][ 1][-1].Y, V[ 1][ 1][-1].Y, V[ 1][ 1][ 1].Y, V[-1][ 1][ 1].Y);
+  // -Y (back): reverse
+  quad(V[ 1][-1][-1].Y, V[-1][-1][-1].Y, V[-1][-1][ 1].Y, V[ 1][-1][ 1].Y);
+  // +Z (top)
+  quad(V[-1][-1][ 1].Z, V[ 1][-1][ 1].Z, V[ 1][ 1][ 1].Z, V[-1][ 1][ 1].Z);
+  // -Z (bottom): reverse
+  quad(V[ 1][-1][-1].Z, V[-1][-1][-1].Z, V[-1][ 1][-1].Z, V[ 1][ 1][-1].Z);
+
+  // --- 12 edge chamfer quads ---
+  // X-axis edges: between Y face (sy) and Z face (sz). 4 such edges (sy, sz ∈ {-1,+1}).
+  // Outward normal direction: (0, sy, sz) normalised.
+  // The chamfer plane has 4 corners: V_Y and V_Z at sx=-1 and sx=+1.
+  // To get CCW from outside, the cross product (v1-v0)×(v2-v0) must align with
+  // the outward normal. Going (V_Z[-1] → V_Z[+1] → V_Y[+1] → V_Y[-1]) gives a
+  // normal proportional to (0, sz, sy). So this works when sy = sz (i.e.,
+  // sy*sz > 0). When sy*sz < 0, reverse the order.
+  for (const sy of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const a = V[-1][sy][sz].Z, b = V[ 1][sy][sz].Z;
+      const cI = V[ 1][sy][sz].Y, d = V[-1][sy][sz].Y;
+      if (sy * sz > 0) quad(a, b, cI, d);
+      else             quad(d, cI, b, a);
+    }
+  }
+  // Y-axis edges: between X face (sx) and Z face (sz). Outward normal (sx, 0, sz).
+  // Going V_Z[-1] → V_Z[+1] → V_X[+1] → V_X[-1] along Y: cross product proportional to (sz, 0, sx).
+  // Aligns with (sx, 0, sz) iff sx = sz.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const a = V[sx][-1][sz].Z, b = V[sx][ 1][sz].Z;
+      const cI = V[sx][ 1][sz].X, d = V[sx][-1][sz].X;
+      if (sx * sz > 0) quad(d, cI, b, a);
+      else             quad(a, b, cI, d);
+    }
+  }
+  // Z-axis edges: between X face (sx) and Y face (sy). Outward normal (sx, sy, 0).
+  // Going V_Y[-1] → V_Y[+1] → V_X[+1] → V_X[-1] along Z: cross product proportional to (sy, sx, 0).
+  // Aligns with (sx, sy, 0) iff sx = sy.
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      const a = V[sx][sy][-1].Y, b = V[sx][sy][ 1].Y;
+      const cI = V[sx][sy][ 1].X, d = V[sx][sy][-1].X;
+      if (sx * sy > 0) quad(a, b, cI, d);
+      else             quad(d, cI, b, a);
+    }
+  }
+
+  // --- 8 corner triangles ---
+  // Each corner (sx, sy, sz) has three vertices V_X, V_Y, V_Z forming a triangle.
+  // Outward normal: (sx, sy, sz) / sqrt(3). To get CCW from outside, the order
+  // depends on the signs. We need to ensure (V_Y - V_X) × (V_Z - V_X) aligns
+  // with the outward direction. Let's compute symbolically:
+  //   V_X = (sx·hw, sy·(hd-c), sz·(hh-c))
+  //   V_Y = (sx·(hw-c), sy·hd, sz·(hh-c))
+  //   V_Z = (sx·(hw-c), sy·(hd-c), sz·hh)
+  //   V_Y - V_X = (-sx·c, sy·c, 0)
+  //   V_Z - V_X = (-sx·c, 0, sz·c)
+  //   Cross = (sy·c · sz·c - 0 · 0,  0·(-sx·c) - (-sx·c)·sz·c,  (-sx·c)·0 - sy·c·(-sx·c))
+  //         = (sy·sz·c²,  sx·sz·c²,  sx·sy·c²)
+  // Compared to outward direction (sx, sy, sz):
+  //   Components match when sy·sz = sx, sx·sz = sy, sx·sy = sz.
+  //   This is equivalent to sx·sy·sz = 1 (all three signs multiplied = +1).
+  // So when sx·sy·sz = +1, (X, Y, Z) gives correct outward winding.
+  // When sx·sy·sz = -1, reverse: (X, Z, Y).
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        const v = V[sx][sy][sz];
+        if (sx * sy * sz > 0) tri(v.X, v.Y, v.Z);
+        else                  tri(v.X, v.Z, v.Y);
+      }
+    }
+  }
+
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geom.setIndex(indices);
+  geom.computeVertexNormals();
+  return geom;
 }
 
 function buildCylinder(p) {

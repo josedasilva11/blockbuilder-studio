@@ -38,6 +38,7 @@ const PARAM_LABELS = {
   segments: 'Segments',
   minor_segments: 'Tube Segments',
   sides: 'Sides',
+  chamfer: 'Chamfer',
 };
 // Hover-explanations for every editable parameter. Shown on the label so the
 // user knows what each number actually controls.
@@ -52,6 +53,7 @@ const PARAM_TIPS = {
   segments:     'SEGMENTS, how many slices around the curve. Higher = smoother but heavier. 32 is enough for most things, 64+ for very large or close-up shapes.',
   minor_segments:'TUBE SEGMENTS, slices around the tube cross-section. 16 is the sweet spot.',
   sides:        'SIDES, how many edges the polygon/star has. 3 = triangle, 5 = pentagon, 6 = hexagon, etc.',
+  chamfer:      'CHAMFER, 45° bevel along every edge. 0 = sharp corners. Set to ~5% of the smallest dimension for a subtle softening, ~15% for a strong bevel. Caps at 49% of the smallest dim.',
 };
 const PARAM_STEP = { segments: 1, minor_segments: 1, sides: 1 };
 
@@ -109,8 +111,13 @@ function refreshLiveValues() {
   updateMetrics(s);
 }
 
+// Params that legitimately accept 0 (pointed cone, sharp box, etc.).
+// Everything else rejects 0 because the geometry collapses.
+const ZERO_OK_PARAMS = new Set(['chamfer', 'radius_top']);
+
 function applyParam(shape, key, value) {
-  if (!Number.isFinite(value) || value <= 0) return;
+  if (!Number.isFinite(value) || value < 0) return;
+  if (value === 0 && !ZERO_OK_PARAMS.has(key)) return;
   if (SCALED_PARAMS.has(key)) {
     // Bake current scale: set the param to the new effective value, reset scale to 1.
     const ax = PARAM_AXIS[key] || 'x';

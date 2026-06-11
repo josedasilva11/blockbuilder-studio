@@ -1,8 +1,8 @@
 // Shape definitions: defaults, parameter schema, thumbnail SVG, friendly label.
 
 export const SHAPES = [
-  { kind: 'CUBE', label: 'Box', hint: 'rectangular block, edit width/depth/height',
-    icon: cubeIcon(), defaults: { width: 20, depth: 20, height: 20 }, params: ['width', 'depth', 'height'] },
+  { kind: 'CUBE', label: 'Box', hint: 'rectangular block, edit width/depth/height. Chamfer > 0 bevels all 12 edges.',
+    icon: cubeIcon(), defaults: { width: 20, depth: 20, height: 20, chamfer: 0 }, params: ['width', 'depth', 'height', 'chamfer'] },
   { kind: 'CYLINDER', label: 'Cylinder', hint: 'round column, radius + height (segments control smoothness)',
     icon: cylinderIcon(), defaults: { radius: 10, height: 20, segments: 48 }, params: ['radius', 'height', 'segments'] },
   { kind: 'SPHERE', label: 'Sphere', hint: 'ball — only radius matters; raise segments for smoother surface',
