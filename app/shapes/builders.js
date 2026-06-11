@@ -3,6 +3,7 @@
 // Three.js world unit as 1 mm so STL export sits in slicer-native scale).
 
 import * as THREE from 'three';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const { PI, sin, cos } = Math;
 
@@ -154,6 +155,8 @@ function buildChamferedBox(w, d, h, c) {
 }
 
 function buildCylinder(p) {
+  const c = Math.max(0, +p.chamfer || 0);
+  if (c > 0.001) return buildChamferedLathe(p.radius, p.radius, p.height, c, p.segments);
   const g = new THREE.CylinderGeometry(p.radius, p.radius, p.height, p.segments);
   g.rotateX(PI / 2); // align axis to +Z
   return g;
@@ -161,9 +164,79 @@ function buildCylinder(p) {
 
 function buildCone(p) {
   // Truncated cone; radius_top=0 → pointed
+  const c = Math.max(0, +p.chamfer || 0);
+  if (c > 0.001 && p.radius_top > 0.001) {
+    // Only chamfer truncated cones. Chamfering a pointed cone is moot
+    // — the tip has no edge to bevel.
+    return buildChamferedLathe(p.radius_top, p.radius, p.height, c, p.segments);
+  }
   const g = new THREE.CylinderGeometry(p.radius_top, p.radius, p.height, p.segments);
   g.rotateX(PI / 2);
   return g;
+}
+
+// Cylinder / truncated-cone with a 45° chamfer on both rim edges. Built as
+// a LatheGeometry from a chamfered profile sweeping around the Y axis, then
+// rotated so the axis lines up with +Z (BlockBuilder's vertical).
+//
+// Profile (X = radial, Y = axial):
+//   (0, -h/2) → (R_bot - c, -h/2) → (R_bot, -h/2 + c)
+//   → (R_top, h/2 - c) → (R_top - c, h/2) → (0, h/2)
+// LatheGeometry connects the points around the Y axis and seals both ends
+// when X starts/ends at 0.
+function buildChamferedLathe(rTop, rBot, h, c, segments) {
+  const hh = h / 2;
+  // Clamp chamfer so it never eats more than half the rim. For the cone case
+  // the smaller radius (top) bounds it.
+  const rMin = Math.min(rTop, rBot);
+  c = Math.min(c, rMin * 0.49, hh * 0.49);
+  const points = [
+    new THREE.Vector2(0,           -hh),
+    new THREE.Vector2(rBot - c,    -hh),
+    new THREE.Vector2(rBot,        -hh + c),
+    new THREE.Vector2(rTop,         hh - c),
+    new THREE.Vector2(rTop - c,     hh),
+    new THREE.Vector2(0,            hh),
+  ];
+  const g = new THREE.LatheGeometry(points, segments || 48);
+  g.rotateX(PI / 2);
+  // Lathe seams produce duplicate vertices along one meridian; merge them so
+  // CSG operations don't complain about non-manifold geometry.
+  return mergeVerticesSafe(g);
+}
+
+function mergeVerticesSafe(g) {
+  try { return mergeVertices(g, 1e-5); } catch { return g; }
+}
+
+// Tube with chamfered outer + inner rim edges (both top and bottom). Same
+// LatheGeometry strategy as buildChamferedLathe, but the swept polyline is
+// closed (annular cross-section): it traces all 4 corners of the ring.
+function buildChamferedTube(rOut, rIn, h, c, segments) {
+  const hh = h / 2;
+  rIn = Math.max(0.01, Math.min(rIn, rOut - 0.01));
+  // Each chamfer eats c from the radial AND axial extent of the corner it
+  // bevels. Clamp so no chamfer larger than 49 % of the smallest free dim.
+  const wallThickness = rOut - rIn;
+  c = Math.min(c, hh * 0.49, wallThickness * 0.49);
+  // Polyline closes on itself: ends meet the start so the swept surface is
+  // a watertight annulus. Order goes: outer-top corner → outer wall →
+  // outer-bottom corner → bottom face → inner-bottom corner → inner wall →
+  // inner-top corner → top face → back to start.
+  const points = [
+    new THREE.Vector2(rOut - c,  hh),
+    new THREE.Vector2(rOut,      hh - c),
+    new THREE.Vector2(rOut,     -hh + c),
+    new THREE.Vector2(rOut - c, -hh),
+    new THREE.Vector2(rIn  + c, -hh),
+    new THREE.Vector2(rIn,      -hh + c),
+    new THREE.Vector2(rIn,       hh - c),
+    new THREE.Vector2(rIn  + c,  hh),
+    new THREE.Vector2(rOut - c,  hh),
+  ];
+  const g = new THREE.LatheGeometry(points, segments || 48);
+  g.rotateX(PI / 2);
+  return mergeVerticesSafe(g);
 }
 
 function buildSphere(p) {
@@ -261,6 +334,8 @@ function buildRoof(p) {
 }
 
 function buildTube(p) {
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  if (chamfer > 0.001) return buildChamferedTube(p.radius, p.inner_radius, p.height, chamfer, p.segments);
   // Annular cylinder = outer cylinder with concentric hole.
   const seg = p.segments;
   const rOut = p.radius;
