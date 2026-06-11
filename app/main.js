@@ -23,6 +23,7 @@ import { maybeShowUnitPicker, applyUnitToUi, showUnitPicker } from './unit_picke
 import { showWelcome, addRecent } from './welcome.js';
 import { showAlignWidget, showMirrorWidget, closeAll as closeAmr } from './align_mirror.js';
 import { updateDimOverlay, setDimOverlayEnabled } from './dim_overlay.js';
+import { installShortcutsPaletteKeybind, openShortcutsPalette } from './shortcuts_palette.js';
 import { showCutWidget } from './cut.js';
 import { initModelsSection } from './models.js';
 import { showHollowWidget } from './hollow.js';
@@ -43,6 +44,7 @@ function main() {
   // The render loop in scene.js calls state._updateDimOverlay() each frame
   // it actually renders. Setting it here keeps scene.js free of UI imports.
   state._updateDimOverlay = updateDimOverlay;
+  installShortcutsPaletteKeybind();
   initGizmos();
   installPickHandler(canvas);
   initHandles(canvas);
