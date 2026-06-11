@@ -7,7 +7,7 @@ import { initProperties } from './properties.js';
 import { initGizmos, applySnap, attachToShape, hide as hideTC } from './gizmos.js';
 import { installPickHandler, selectShape, getMultiSelection, onSelectionChange } from './selection.js';
 import { state } from './state.js';
-import { groupShapes, ungroupShapes, bakeGroup } from './csg.js';
+import { groupShapes, ungroupShapes, bakeGroup, intersectShapes } from './csg.js';
 import { exportSTL, exportOBJ, saveProject, loadProject } from './io.js';
 import { downloadSTEP } from './step_exporter.js';
 import { pickAndImport } from './io_import.js';
@@ -22,6 +22,7 @@ import { initStatus } from './status.js';
 import { maybeShowUnitPicker, applyUnitToUi, showUnitPicker } from './unit_picker.js';
 import { showWelcome, addRecent } from './welcome.js';
 import { showAlignWidget, showMirrorWidget, closeAll as closeAmr } from './align_mirror.js';
+import { updateDimOverlay, setDimOverlayEnabled } from './dim_overlay.js';
 import { showCutWidget } from './cut.js';
 import { initModelsSection } from './models.js';
 import { showHollowWidget } from './hollow.js';
@@ -39,6 +40,9 @@ import * as THREE from 'three';
 function main() {
   const canvas = document.getElementById('viewport');
   initScene(canvas);
+  // The render loop in scene.js calls state._updateDimOverlay() each frame
+  // it actually renders. Setting it here keeps scene.js free of UI imports.
+  state._updateDimOverlay = updateDimOverlay;
   initGizmos();
   installPickHandler(canvas);
   initHandles(canvas);
@@ -131,6 +135,16 @@ function bindToolbar() {
         groupShapes(ids);
         break;
       }
+      case 'intersect': {
+        const selection = getMultiSelection();
+        const ids = selection.length > 0
+          ? selection
+          : [...state.shapes.values()].filter(s => s.mesh.visible).map(s => s.id);
+        if (ids.length < 2) return;
+        pushHistory();
+        intersectShapes(ids);
+        break;
+      }
       case 'ungroup': {
         const host = state.shapes.get(state.selectedId);
         if (host && host.isGroup) { pushHistory(); ungroupShapes(host); }
@@ -207,6 +221,7 @@ function bindKeyboard() {
     else if (ev.ctrlKey && (k === 's' || k === 'S')) { ev.preventDefault(); saveProject(); }
     else if (ev.ctrlKey && (k === 'a' || k === 'A')) { ev.preventDefault(); selectAll(); }
     else if (ev.ctrlKey && (k === 'd' || k === 'D')) { ev.preventDefault(); pushHistory(); duplicateSelected(); }
+    else if (ev.ctrlKey && ev.shiftKey && (k === 'g' || k === 'G')) { ev.preventDefault(); document.querySelector('[data-action="intersect"]')?.click(); }
     else if (ev.ctrlKey && (k === 'g' || k === 'G')) { ev.preventDefault(); document.querySelector('[data-action="group"]').click(); }
     else if (k === 'Delete' || k === 'Backspace') { pushHistory(); deleteSelected(); }
     else if (k === 'Escape') { selectShape(null); }

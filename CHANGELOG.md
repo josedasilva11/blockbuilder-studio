@@ -3,6 +3,25 @@
 All notable changes to BlockBuilder Studio are listed here.
 Latest at the top. Date format: YYYY-MM-DD.
 
+## [0.6.0] — 2026-06-02 — Tinkercad++
+
+### Added
+- **Intersect boolean (Ctrl+Shift+G).** Completes the CSG triad: Union (Group), Subtract (Hole + Group), and now Intersect. The result is only the volume common to every selected solid. Reversible until Bake, just like Group.
+- **Dimension overlay.** Select any shape (or several) and the X / Y / Z size labels appear at the bounding-box edges in the active unit. Colour-coded per axis (red / green / blue). Toggle via the setting `bb.showDims` (defaults on; click the gear icon to flip it).
+
+### Brand
+- New 3-staggered-cube mark replaces the single isometric cube wireframe. Applied to the favicon, app icon (16 / 32 / 64 / 128 / 256 / 1024), in-app brand area, welcome modal, support nag, and the App Store icon.
+
+### Fixed
+- **Critical:** `activateLicense()` now accepts both legacy `BBS2-...` keys (from the keygen script) and current `BBS2....` keys (from the Cloudflare worker). Previously a live LS purchase would have silently failed activation; caught by the launch-readiness audit before any real payment fired.
+- Resend payload gets a `reply_to: geral@marjers.com` so replies route to the address promised in the email body.
+- Buyer email is redacted before being logged on Resend error responses.
+
+### Beta hardening
+- New worker secret `ISSUANCE_ENABLED='false'` kill switch returns 503 to every webhook while payments are paused. Flip to `'true'` at launch (see LAUNCH.md, section B.1).
+- Release notes now publish the SHA-256 of the portable zip with a `Get-FileHash` verify command. Bug reports point to `%APPDATA%\BlockBuilder Studio\` for log + autosave attachment.
+- Welcome modal in beta builds nudges anonymous downloaders to say hi at `geral@marjers.com` so we can count + onboard.
+
 ## [0.5.0] — 2026-05-22 — First public preview
 
 ### New tools

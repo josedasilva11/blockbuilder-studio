@@ -156,6 +156,9 @@ export function initScene(canvas) {
       if (damped || _interacting) _settleFrames = 4;
       else _settleFrames = Math.max(0, _settleFrames - 1);
       _dirty = false;
+      // Update screen-space overlays AFTER the WebGL render so projection
+      // sees the final camera. Lazy import keeps scene.js standalone.
+      if (state._updateDimOverlay) state._updateDimOverlay();
     }
     requestAnimationFrame(tick);
   }

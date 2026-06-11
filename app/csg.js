@@ -6,7 +6,7 @@
 // mergeVertices first so every brush is indexed + welded.
 
 import * as THREE from 'three';
-import { Evaluator, Brush, ADDITION, SUBTRACTION } from 'three-bvh-csg';
+import { Evaluator, Brush, ADDITION, SUBTRACTION, INTERSECTION } from 'three-bvh-csg';
 import { MeshBVH } from 'three-mesh-bvh';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { state } from './state.js';
@@ -168,6 +168,63 @@ export async function groupShapes(ids) {
 
   hideStatus();
   selectShape(host.id);
+  return host;
+}
+
+// Intersect: keep only the volume common to all selected solids.
+// First selected becomes the host; the rest are stored as hidden children
+// so ungrouping restores the original parts. Holes in the selection are
+// skipped (intersect against a void is meaningless).
+export async function intersectShapes(ids) {
+  const shapes = ids.map(id => state.shapes.get(id)).filter(Boolean);
+  const solids = shapes.filter(s => !s.isHole);
+  if (solids.length < 2) {
+    toast.error('Intersect needs 2 or more solid shapes selected');
+    return null;
+  }
+  if (solids.length !== shapes.length) {
+    toast.warn('Holes ignored in Intersect (operates on solids only)');
+  }
+
+  const host = solids[0];
+  host.csgChildren = (host.csgChildren || []).filter(id => !ids.includes(id));
+
+  showStatus(`Computing intersect (${solids.length} shapes)…`);
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+  let resultBrush;
+  try {
+    resultBrush = makeBrushFromMesh(host.mesh);
+    for (let i = 1; i < solids.length; i++) {
+      const b = makeBrushFromMesh(solids[i].mesh);
+      resultBrush = evaluator.evaluate(resultBrush, b, INTERSECTION);
+    }
+  } catch (err) {
+    hideStatus();
+    console.error('Intersect CSG failed:', err);
+    toast.error('Intersect failed', { detail: `${err.message}. Imported meshes need to be watertight. Try Repair, or use a cleaner mesh.` });
+    return null;
+  }
+
+  const newGeo = resultBrush.geometry.clone();
+  newGeo.computeVertexNormals();
+  newGeo.applyMatrix4(host.mesh.matrixWorld.clone().invert());
+  attachBVH(newGeo);
+  host.mesh.geometry.dispose();
+  host.mesh.geometry = newGeo;
+
+  host.csgChildren = [];
+  for (const s of solids) {
+    if (s === host) continue;
+    host.csgChildren.push(s.id);
+    s.mesh.visible = false;
+  }
+  host.isGroup = true;
+  host.groupKind = 'intersect';
+
+  hideStatus();
+  selectShape(host.id);
+  toast.ok('Intersect baked', { detail: `${solids.length} shapes -> 1 (common volume)` });
   return host;
 }
 

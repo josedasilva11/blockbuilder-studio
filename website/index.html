@@ -518,6 +518,65 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   line-height: 1.55;
 }
 
+/* === What's new (v0.6 release card + roadmap) ============================ */
+.whatsnew { background: linear-gradient(180deg, rgba(196,240,79,0.04) 0%, transparent 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.whatsnew-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 0 auto 48px;
+  max-width: 1100px;
+}
+.wn-card {
+  padding: 28px 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  position: relative;
+  transition: 0.2s var(--ease-out);
+}
+.wn-card:hover { border-color: var(--lime-line); transform: translateY(-2px); }
+.wn-num {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--lime);
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+  padding: 3px 8px;
+  background: var(--lime-soft);
+  border-radius: 4px;
+}
+.wn-card h3 { font-size: 19px; margin: 0 0 10px; letter-spacing: -0.2px; }
+.wn-card p { font-size: 14px; line-height: 1.55; color: var(--text-mid); margin: 0; }
+.wn-card code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--text); }
+
+.whatsnew-roadmap-intro { text-align: center; margin: 36px auto 16px; color: var(--text-mid); font-size: 15px; max-width: 720px; }
+.whatsnew-roadmap-intro strong { color: var(--text); }
+.whatsnew-roadmap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 22px 24px;
+  list-style: none;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--lime);
+  border-radius: 12px;
+}
+.whatsnew-roadmap li {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.55;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-soft, var(--border));
+}
+.whatsnew-roadmap li:last-child { border-bottom: 0; }
+.whatsnew-roadmap li strong { color: var(--text); }
+.whatsnew-roadmap code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--text); }
+@media (max-width: 900px) {
+  .whatsnew-grid { grid-template-columns: 1fr; }
+}
+
 /* === Feature bento ======================================================= */
 .bento {
   display: grid;
@@ -1940,6 +1999,49 @@ footer {
 </section>
 
 <!-- ════════════════════════════════════════════════════════════════════════
+     What's new in v0.6 (sits above the Features bento)
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section whatsnew" id="whatsnew">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>v0.6.0 just shipped</span>
+      <h2>Three new things<br><span class="serif">testers asked for.</span></h2>
+      <p>The first batch of polish from the private beta cohort. Each item is direct-modelling friendly, no parametric-history baggage.</p>
+    </div>
+
+    <div class="whatsnew-grid fade-up">
+      <div class="wn-card">
+        <div class="wn-num">01</div>
+        <h3>Intersect boolean</h3>
+        <p>Already had Group (union) and Hole + Group (subtract). Now there's <strong>Intersect</strong> too. Select two solids, press <code>Ctrl+Shift+G</code>, get only the volume in both. Reversible until you Bake.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">02</div>
+        <h3>Dimensions on screen</h3>
+        <p>Select any shape, X / Y / Z labels appear at the bounding-box edges in your active unit. No more squinting at the properties panel to check if the bracket is 12.4 or 12.5 mm.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">03</div>
+        <h3>New brand mark</h3>
+        <p>Three staggered isometric cubes replace the single wireframe one. Cleaner, more on-brand, and reads at every size from favicon to App Store icon.</p>
+      </div>
+    </div>
+
+    <p class="whatsnew-roadmap-intro fade-up">
+      <strong>Coming next</strong> (working order). Each one ships as its own update when ready — no big-bang rewrites.
+    </p>
+    <ul class="whatsnew-roadmap fade-up">
+      <li><strong>Fillet + Chamfer</strong> on edges. The biggest "feels professional" upgrade. Rounds and bevels for 3D-print-ready parts.</li>
+      <li><strong>Push / Pull face.</strong> Drag a face to extrude or inset. Replaces the "make a box, mark as hole, group" dance for pockets.</li>
+      <li><strong>Vertex + midpoint snap</strong> during move and resize. Beyond grid: snap to other shapes' corners and edge midpoints.</li>
+      <li><strong>Sketch constraints</strong> (parallel, perpendicular, equal, tangent). Light parametric inside the Sketch tool only.</li>
+      <li><strong>Equations in property values.</strong> <code>width = 2 * wall + 4</code>. Parametric-light without a history timeline.</li>
+      <li><strong>Modifier stack per shape.</strong> Stackable, reorderable, non-destructive Array / Mirror / Bevel / Hollow. The right way to do "almost parametric".</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
      Features bento
      ════════════════════════════════════════════════════════════════════════ -->
 <section class="section" id="features">
@@ -1947,7 +2049,7 @@ footer {
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>Features</span>
       <h2>Everything you need to model<br>for the printer. <span class="serif">Nothing you don't.</span></h2>
-      <p>13 primitive shapes, full CSG (union + subtraction), STL/OBJ/STEP import-export, sketches, slicing, hollowing, arrays, ruler, all running locally on your machine.</p>
+      <p>13 primitive shapes, full CSG (union, subtraction, intersection), STL/OBJ/STEP import-export, sketches, slicing, hollowing, arrays, ruler, all running locally on your machine.</p>
     </div>
 
     <div class="bento">
