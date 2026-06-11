@@ -3,12 +3,12 @@
 export const SHAPES = [
   { kind: 'CUBE', label: 'Box', hint: 'rectangular block, edit width/depth/height. Chamfer > 0 = 45° bevel on all 12 edges. Fillet > 0 = rounded edges (overrides Chamfer); fillet_segments controls smoothness.',
     icon: cubeIcon(), defaults: { width: 20, depth: 20, height: 20, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['width', 'depth', 'height', 'chamfer', 'fillet', 'fillet_segments'] },
-  { kind: 'CYLINDER', label: 'Cylinder', hint: 'round column, radius + height (segments control smoothness). Chamfer > 0 bevels the top and bottom rim.',
-    icon: cylinderIcon(), defaults: { radius: 10, height: 20, segments: 48, chamfer: 0 }, params: ['radius', 'height', 'segments', 'chamfer'] },
+  { kind: 'CYLINDER', label: 'Cylinder', hint: 'round column, radius + height (segments control smoothness). Chamfer = 45° rim bevel. Fillet = rounded rim (overrides Chamfer); fillet_segments controls arc smoothness.',
+    icon: cylinderIcon(), defaults: { radius: 10, height: 20, segments: 48, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'height', 'segments', 'chamfer', 'fillet', 'fillet_segments'] },
   { kind: 'SPHERE', label: 'Sphere', hint: 'ball — only radius matters; raise segments for smoother surface',
     icon: sphereIcon(), defaults: { radius: 10, segments: 32 }, params: ['radius', 'segments'] },
-  { kind: 'CONE', label: 'Cone', hint: 'tapered shape — set top radius > 0 for a truncated cone (frustum). Chamfer only applies to truncated cones (top radius > 0).',
-    icon: coneIcon(), defaults: { radius: 10, radius_top: 0, height: 20, segments: 48, chamfer: 0 }, params: ['radius', 'radius_top', 'height', 'segments', 'chamfer'] },
+  { kind: 'CONE', label: 'Cone', hint: 'tapered shape — set top radius > 0 for a truncated cone (frustum). Chamfer / Fillet only apply to truncated cones (top radius > 0).',
+    icon: coneIcon(), defaults: { radius: 10, radius_top: 0, height: 20, segments: 48, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'radius_top', 'height', 'segments', 'chamfer', 'fillet', 'fillet_segments'] },
   // Dome (HALF_SPHERE) hidden from the sidebar — geometry produced bad normals
   // on the flat cap, which made CSG flaky. Kept in SHAPE_BY_KIND so existing
   // saves still deserialise without throwing; just not pickable any more.
@@ -20,8 +20,8 @@ export const SHAPES = [
     icon: wedgeIcon(), defaults: { width: 20, depth: 20, height: 20 }, params: ['width', 'depth', 'height'] },
   { kind: 'ROOF', label: 'Roof', hint: 'triangular prism — like a house roof',
     icon: roofIcon(), defaults: { width: 20, depth: 30, height: 15 }, params: ['width', 'depth', 'height'] },
-  { kind: 'TUBE', label: 'Tube', hint: 'hollow cylinder — inner radius cuts the hole; great as a pipe / ring. Chamfer > 0 bevels every rim edge (outer + inner, top + bottom).',
-    icon: tubeIcon(), defaults: { radius: 10, inner_radius: 6, height: 20, segments: 48, chamfer: 0 }, params: ['radius', 'inner_radius', 'height', 'segments', 'chamfer'] },
+  { kind: 'TUBE', label: 'Tube', hint: 'hollow cylinder — inner radius cuts the hole; great as a pipe / ring. Chamfer = 45° bevel on every rim edge. Fillet = rounded rim edges (overrides Chamfer); fillet_segments controls smoothness.',
+    icon: tubeIcon(), defaults: { radius: 10, inner_radius: 6, height: 20, segments: 48, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'inner_radius', 'height', 'segments', 'chamfer', 'fillet', 'fillet_segments'] },
   { kind: 'TORUS', label: 'Torus', hint: 'donut shape — radius = ring size, minor radius = tube thickness',
     icon: torusIcon(), defaults: { radius: 10, minor_radius: 3, segments: 48, minor_segments: 16 }, params: ['radius', 'minor_radius', 'segments', 'minor_segments'] },
   { kind: 'POLYGON', label: 'Polygon', hint: 'N-sided prism — set sides for triangle (3), pentagon (5), hex (6), etc.',

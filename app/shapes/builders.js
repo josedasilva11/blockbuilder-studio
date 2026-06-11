@@ -157,6 +157,8 @@ function buildChamferedBox(w, d, h, c) {
 }
 
 function buildCylinder(p) {
+  const r = Math.max(0, +p.fillet || 0);
+  if (r > 0.001) return buildFilletedLathe(p.radius, p.radius, p.height, r, p.fillet_segments || 8, p.segments);
   const c = Math.max(0, +p.chamfer || 0);
   if (c > 0.001) return buildChamferedLathe(p.radius, p.radius, p.height, c, p.segments);
   const g = new THREE.CylinderGeometry(p.radius, p.radius, p.height, p.segments);
@@ -166,6 +168,10 @@ function buildCylinder(p) {
 
 function buildCone(p) {
   // Truncated cone; radius_top=0 → pointed
+  const r = Math.max(0, +p.fillet || 0);
+  if (r > 0.001 && p.radius_top > 0.001) {
+    return buildFilletedLathe(p.radius_top, p.radius, p.height, r, p.fillet_segments || 8, p.segments);
+  }
   const c = Math.max(0, +p.chamfer || 0);
   if (c > 0.001 && p.radius_top > 0.001) {
     // Only chamfer truncated cones. Chamfering a pointed cone is moot
@@ -411,6 +417,54 @@ function buildFilletedBox(w, d, h, r, N) {
   return merged;
 }
 
+// Cylinder / truncated-cone with 90° filleted rim edges (rounded transitions
+// between the wall and the top/bottom face). Same LatheGeometry strategy as
+// buildChamferedLathe — sweep a profile around the Y axis, then rotate so
+// the axis aligns with +Z — but the profile uses circular arcs at the rim
+// corners instead of single chamfer segments.
+//
+// Profile sketch (Cylinder, rTop = rBot = R):
+//   (0, -h/2) → (R-r, -h/2) → bottom arc (centered at (R-r, -h/2+r), N segs)
+//   → (R, -h/2+r) → (R, h/2-r) [straight wall] → top arc (centered at
+//   (R-r, h/2-r), N segs) → (R-r, h/2) → (0, h/2)
+//
+// For truncated cones (rTop ≠ rBot) the wall between the two arcs is slanted;
+// the arcs themselves stay 90° in the radial-axial plane.
+function buildFilletedLathe(rTop, rBot, h, r, filletSegments, radialSegments) {
+  const hh = h / 2;
+  const rMin = Math.min(rTop, rBot);
+  r = Math.min(r, rMin * 0.49, hh * 0.49);
+  const N = Math.max(2, Math.min(32, Math.floor(filletSegments || 8)));
+
+  const pts = [];
+  pts.push(new THREE.Vector2(0, -hh));
+  // Bottom rim arc: angle θ from -π/2 to 0
+  // Center (rBot - r, -hh + r), radius r
+  for (let i = 0; i <= N; i++) {
+    const t = (i / N) * (PI / 2) - PI / 2;  // [-π/2 .. 0]
+    pts.push(new THREE.Vector2(
+      (rBot - r) + r * Math.cos(t),
+      (-hh + r) + r * Math.sin(t),
+    ));
+  }
+  // Slanted wall (straight): from end of bottom arc to start of top arc
+  // The wall already starts at (rBot, -hh+r); the top arc starts at (rTop, hh-r).
+  // No extra point needed; the next arc's first point is appended directly.
+  // Top rim arc: angle θ from 0 to π/2, center (rTop - r, hh - r)
+  for (let i = 0; i <= N; i++) {
+    const t = (i / N) * (PI / 2);  // [0 .. π/2]
+    pts.push(new THREE.Vector2(
+      (rTop - r) + r * Math.cos(t),
+      (hh - r) + r * Math.sin(t),
+    ));
+  }
+  pts.push(new THREE.Vector2(0, hh));
+
+  const g = new THREE.LatheGeometry(pts, radialSegments || 48);
+  g.rotateX(PI / 2);
+  return mergeVerticesSafe(g);
+}
+
 // Tube with chamfered outer + inner rim edges (both top and bottom). Same
 // LatheGeometry strategy as buildChamferedLathe, but the swept polyline is
 // closed (annular cross-section): it traces all 4 corners of the ring.
@@ -436,6 +490,65 @@ function buildChamferedTube(rOut, rIn, h, c, segments) {
     new THREE.Vector2(rIn  + c,  hh),
     new THREE.Vector2(rOut - c,  hh),
   ];
+  const g = new THREE.LatheGeometry(points, segments || 48);
+  g.rotateX(PI / 2);
+  return mergeVerticesSafe(g);
+}
+
+// Tube with filleted rim edges (rounded corners instead of 45° bevels). The
+// 8 chamfer segments of the chamfered tube get replaced with 4 quarter-arc
+// curves, one per rim corner. The annular profile stays closed so the
+// swept surface is a watertight ring.
+//
+// Cross-section sweep order (radial, axial):
+//   outer-top corner arc (start at outer wall, end at top face)
+//   → top face (R_out_top → R_in_top)
+//   → inner-top corner arc (top face → inner wall)
+//   → inner wall (down)
+//   → inner-bottom corner arc (inner wall → bottom face)
+//   → bottom face (R_in_bot → R_out_bot)
+//   → outer-bottom corner arc (bottom face → outer wall)
+//   → outer wall (up) → back to start
+function buildFilletedTube(rOut, rIn, h, r, filletSegments, segments) {
+  const hh = h / 2;
+  rIn = Math.max(0.01, Math.min(rIn, rOut - 0.01));
+  const wallThickness = rOut - rIn;
+  r = Math.min(r, hh * 0.49, wallThickness * 0.49);
+  const N = Math.max(2, Math.min(32, Math.floor(filletSegments || 8)));
+
+  const points = [];
+  // Helper to push an arc from angle θ₀ to θ₁ around center (cx, cy), radius r,
+  // with N segments. Skips first point if it duplicates the previous push.
+  function arc(cx, cy, t0, t1) {
+    for (let i = 0; i <= N; i++) {
+      const t = t0 + (i / N) * (t1 - t0);
+      points.push(new THREE.Vector2(cx + r * Math.cos(t), cy + r * Math.sin(t)));
+    }
+  }
+
+  // Outer-top arc: angle 0 (pointing +radial) to π/2 (pointing +axial)
+  // Centered at (rOut - r, hh - r). Starts at (rOut, hh-r), ends at (rOut-r, hh).
+  arc(rOut - r, hh - r, 0, PI / 2);
+  // Top face is straight from (rOut-r, hh) to (rIn+r, hh) — last point of
+  // previous arc IS (rOut-r, hh); next arc start is (rIn+r, hh), so push only
+  // the latter as the next arc's first point automatically.
+  // Inner-top arc: angle π/2 to π. Centered at (rIn + r, hh - r).
+  // Starts at (rIn+r, hh), ends at (rIn, hh-r).
+  arc(rIn + r, hh - r, PI / 2, PI);
+  // Inner wall: straight from (rIn, hh-r) down to (rIn, -hh+r). No extra point.
+  // Inner-bottom arc: angle π to 3π/2. Centered at (rIn + r, -hh + r).
+  // Starts at (rIn, -hh+r), ends at (rIn+r, -hh).
+  arc(rIn + r, -hh + r, PI, 3 * PI / 2);
+  // Bottom face: straight from (rIn+r, -hh) to (rOut-r, -hh). No extra point.
+  // Outer-bottom arc: angle 3π/2 to 2π. Centered at (rOut - r, -hh + r).
+  // Starts at (rOut-r, -hh), ends at (rOut, -hh+r).
+  arc(rOut - r, -hh + r, 3 * PI / 2, 2 * PI);
+  // Outer wall: straight from (rOut, -hh+r) up to (rOut, hh-r). No extra point.
+  // Close the loop by repeating the very first point — LatheGeometry won't
+  // auto-close, so we explicitly bridge back to start.
+  points.push(new THREE.Vector2(rOut, hh - r));
+  points.push(new THREE.Vector2(rOut - r + r * Math.cos(0), hh - r + r * Math.sin(0)));
+
   const g = new THREE.LatheGeometry(points, segments || 48);
   g.rotateX(PI / 2);
   return mergeVerticesSafe(g);
@@ -536,6 +649,8 @@ function buildRoof(p) {
 }
 
 function buildTube(p) {
+  const fillet = Math.max(0, +p.fillet || 0);
+  if (fillet > 0.001) return buildFilletedTube(p.radius, p.inner_radius, p.height, fillet, p.fillet_segments || 8, p.segments);
   const chamfer = Math.max(0, +p.chamfer || 0);
   if (chamfer > 0.001) return buildChamferedTube(p.radius, p.inner_radius, p.height, chamfer, p.segments);
   // Annular cylinder = outer cylinder with concentric hole.
