@@ -30,6 +30,47 @@ const _hit = new THREE.Vector3();
 let _bodyDrag = null; // { shape, offsetXY: Vector2, origZ, dragged: bool }
 const DRAG_THRESHOLD = 3; // pixels before we count as a drag (vs click-only)
 
+// Visual marker shown when body-drag is snapped to a corner / edge midpoint
+// / centre of another shape. HTML overlay positioned via world-to-screen so
+// it floats over the viewport without touching three.js scene state.
+let _snapMarkerEl = null;
+function getSnapMarker() {
+  if (_snapMarkerEl) return _snapMarkerEl;
+  _snapMarkerEl = document.createElement('div');
+  _snapMarkerEl.id = 'snap-marker';
+  _snapMarkerEl.style.cssText = [
+    'position:fixed',
+    'width:16px', 'height:16px',
+    'border:2px solid #c4f04f',
+    'border-radius:50%',
+    'background:rgba(196,240,79,0.18)',
+    'box-shadow:0 0 8px rgba(196,240,79,0.55)',
+    'transform:translate(-50%,-50%)',
+    'pointer-events:none',
+    'z-index:50',
+    'display:none',
+  ].join(';');
+  document.body.appendChild(_snapMarkerEl);
+  return _snapMarkerEl;
+}
+function showSnapMarker(worldPos2D) {
+  const el = getSnapMarker();
+  if (!worldPos2D || !state.camera || !state.renderer) {
+    el.style.display = 'none';
+    return;
+  }
+  // Place at workplane Z=0 (body-drag operates on the workplane).
+  const v = new THREE.Vector3(worldPos2D.x, worldPos2D.y, 0).project(state.camera);
+  if (v.z >= 1) { el.style.display = 'none'; return; }
+  const rect = state.renderer.domElement.getBoundingClientRect();
+  el.style.left = ((v.x * 0.5 + 0.5) * rect.width + rect.left) + 'px';
+  el.style.top  = ((-v.y * 0.5 + 0.5) * rect.height + rect.top) + 'px';
+  el.style.display = 'block';
+}
+function hideSnapMarker() {
+  if (_snapMarkerEl) _snapMarkerEl.style.display = 'none';
+}
+
 export function onSelectionChange(fn) {
   _selectionListeners.add(fn);
   return () => _selectionListeners.delete(fn);
@@ -162,13 +203,21 @@ export function installPickHandler(canvas) {
         s.mesh.updateMatrixWorld(true);
         const bb = new THREE.Box3().setFromObject(s.mesh);
         if (bb.isEmpty()) continue;
-        // 4 top-down corners + bbox centre — plenty of useful anchors.
+        const mx = (bb.min.x + bb.max.x) / 2;
+        const my = (bb.min.y + bb.max.y) / 2;
+        // 4 top-down corners + 4 edge midpoints + bbox centre = 9 anchors per
+        // shape. The midpoints make centring a shape against another's edge
+        // (e.g., a screw hole on the midline of a bracket) one drag away.
         snapTargets.push(
-          new THREE.Vector2(bb.min.x, bb.min.y),
+          new THREE.Vector2(bb.min.x, bb.min.y),  // corners
           new THREE.Vector2(bb.max.x, bb.min.y),
           new THREE.Vector2(bb.min.x, bb.max.y),
           new THREE.Vector2(bb.max.x, bb.max.y),
-          new THREE.Vector2((bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2),
+          new THREE.Vector2(mx, bb.min.y),        // edge midpoints
+          new THREE.Vector2(mx, bb.max.y),
+          new THREE.Vector2(bb.min.x, my),
+          new THREE.Vector2(bb.max.x, my),
+          new THREE.Vector2(mx, my),              // centre
         );
       }
       _bodyDrag = {
@@ -228,6 +277,7 @@ export function installPickHandler(canvas) {
       // Snap-to-corner: if the *primary* shape's projected reference point is
       // close to a pre-computed snap target, slide the whole drag delta so it
       // lands exactly on that target. Hold Ctrl to bypass.
+      let activeSnap = null;
       if (!ev.ctrlKey && _bodyDrag.snapTargets.length) {
         const primary = _bodyDrag.shapes[0];
         const primInit = _bodyDrag.initPositions[0];
@@ -242,8 +292,10 @@ export function installPickHandler(canvas) {
         if (best) {
           dx = best.x - primInit.x;
           dy = best.y - primInit.y;
+          activeSnap = best;
         }
       }
+      showSnapMarker(activeSnap);
       for (let i = 0; i < _bodyDrag.shapes.length; i++) {
         const s = _bodyDrag.shapes[i];
         const init = _bodyDrag.initPositions[i];
@@ -276,6 +328,7 @@ export function installPickHandler(canvas) {
       }
       _bodyDrag = null;
     }
+    hideSnapMarker();
   }
   canvas.addEventListener('pointerup', (ev) => {
     try { canvas.releasePointerCapture(ev.pointerId); } catch {}

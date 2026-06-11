@@ -8,6 +8,8 @@ Latest at the top. Date format: YYYY-MM-DD.
 ### Added
 - **Intersect boolean (Ctrl+Shift+G).** Completes the CSG triad: Union (Group), Subtract (Hole + Group), and now Intersect. The result is only the volume common to every selected solid. Reversible until Bake, just like Group.
 - **Dimension overlay.** Select any shape (or several) and the X / Y / Z size labels appear at the bounding-box edges in the active unit. Colour-coded per axis (red / green / blue). Toggle via the setting `bb.showDims` (defaults on; click the gear icon to flip it).
+- **Improved body-drag snap.** Snap targets now include the 4 edge midpoints of every neighbouring shape's bounding box (on top of the 4 corners + centre we already had). Centring a screw hole on the midline of a bracket is one drag away. A lime ring marker pops over the snap point while the snap is active; hold Ctrl to bypass.
+- **Arithmetic in property values.** Type `2 * 12 + 4`, `(40 - 6) / 2`, `sqrt(50)`, or `max(10, 8)` into any size / position input and it evaluates on Enter. Supports `+ - * / % **` plus `sqrt abs round ceil floor min max sin cos tan pow`. Resolves to the numeric value once entered.
 
 ### Brand
 - New 3-staggered-cube mark replaces the single isometric cube wireframe. Applied to the favicon, app icon (16 / 32 / 64 / 128 / 256 / 1024), in-app brand area, welcome modal, support nag, and the App Store icon.

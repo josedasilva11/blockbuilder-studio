@@ -10,6 +10,22 @@ import { pushHistory } from './history.js';
 import { requestRender } from './scene.js';
 import { meshVolume, meshSurfaceArea, triangleCount } from './metrics.js';
 import { repairSelected } from './repair.js';
+import { evalExpression } from './expr.js';
+
+// Resolve a property input value to a number, accepting either a plain numeric
+// string or an arithmetic expression like "2 * 12 + 4", "(40 - 6) / 2",
+// "sqrt(50)", or "max(10, ceil(7.4))". Returns null if the expression is
+// invalid; callers should bail out (don't push a NaN into the shape state).
+function readNumberInput(input) {
+  const txt = input.value;
+  const v = evalExpression(txt);
+  if (!Number.isFinite(v)) return null;
+  // After evaluation, normalise the visible value to the resolved number so
+  // subsequent edits start from a clean state. Expression history isn't
+  // preserved — this is single-shot arithmetic, not a parametric tree.
+  if (txt !== String(v)) input.value = +v.toFixed(4) + '';
+  return v;
+}
 
 const PARAM_LABELS = {
   width: 'Width',
@@ -156,10 +172,15 @@ function render(shape) {
       const tip = PARAM_TIPS[key] || `Edit ${PARAM_LABELS[key] || key}. Change is undoable with Ctrl+Z.`;
       row.innerHTML = `
         <label for="${id}" class="tip" data-tip="${tip}">${PARAM_LABELS[key] || key}${suffix}</label>
-        <input id="${id}" type="number" step="${step}" min="${step}" value="${effectiveDim(shape, key).toFixed(2)}" />
+        <input id="${id}" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${effectiveDim(shape, key).toFixed(2)}" title="Accepts plain numbers or expressions like 2*12+4, sqrt(50), max(10, 8). Press Enter to evaluate." />
       `;
       const input = row.querySelector('input');
-      input.addEventListener('change', () => { pushHistory(); applyParam(shape, key, parseFloat(input.value)); });
+      input.addEventListener('change', () => {
+        const v = readNumberInput(input);
+        if (v === null) { input.value = effectiveDim(shape, key).toFixed(2); return; }
+        pushHistory();
+        applyParam(shape, key, v);
+      });
       _inputs[key] = input;
       _body.appendChild(row);
     }
@@ -172,17 +193,17 @@ function render(shape) {
       const sz = bb.getSize(new THREE.Vector3());
       const row = document.createElement('div');
       row.className = 'prop-row';
-      row.innerHTML = `<label class="tip" data-tip="SIZE, current bounding-box size of the imported mesh in ${state.unit}. Editing each field scales the mesh on that axis. X / Y / Z = width / depth / height.">Size (${state.unit})</label>
+      row.innerHTML = `<label class="tip" data-tip="SIZE, current bounding-box size of the imported mesh in ${state.unit}. Editing each field scales the mesh on that axis. Accepts expressions (e.g. 2*12+4).">Size (${state.unit})</label>
         <div style="display:flex;gap:4px;">
-          <input type="number" step="0.1" data-axis="x" value="${sz.x.toFixed(2)}" title="X size (width)" />
-          <input type="number" step="0.1" data-axis="y" value="${sz.y.toFixed(2)}" title="Y size (depth)" />
-          <input type="number" step="0.1" data-axis="z" value="${sz.z.toFixed(2)}" title="Z size (height)" />
+          <input type="text" inputmode="decimal" autocomplete="off" data-axis="x" value="${sz.x.toFixed(2)}" title="X size (width). Accepts expressions like 2*12+4." />
+          <input type="text" inputmode="decimal" autocomplete="off" data-axis="y" value="${sz.y.toFixed(2)}" title="Y size (depth). Accepts expressions like 2*12+4." />
+          <input type="text" inputmode="decimal" autocomplete="off" data-axis="z" value="${sz.z.toFixed(2)}" title="Z size (height). Accepts expressions like 2*12+4." />
         </div>`;
       const inputs = [...row.querySelectorAll('input')];
       ['x', 'y', 'z'].forEach((ax, i) => {
         inputs[i].addEventListener('change', () => {
-          const target = parseFloat(inputs[i].value);
-          if (!Number.isFinite(target) || target <= 0) return;
+          const target = readNumberInput(inputs[i]);
+          if (target === null || target <= 0) { inputs[i].value = sz[ax].toFixed(2); return; }
           // Scale relative to the unscaled-bbox size on that axis
           pushHistory();
           const localBb = new THREE.Box3().setFromBufferAttribute(shape.mesh.geometry.attributes.position);
@@ -197,17 +218,19 @@ function render(shape) {
   // Position
   const posRow = document.createElement('div');
   posRow.className = 'prop-row';
-  posRow.innerHTML = `<label class="tip" data-tip="POSITION, world-space centre of the shape, in ${state.unit}. X = left/right, Y = back/front, Z = up/down (Z = 0 is the workplane).">Position (${state.unit})</label><div style="display:flex;gap:4px;">
-    <input type="number" step="0.1" data-axis="x" title="X, left/right position" />
-    <input type="number" step="0.1" data-axis="y" title="Y, back/front position" />
-    <input type="number" step="0.1" data-axis="z" title="Z, up/down position (0 = workplane)" />
+  posRow.innerHTML = `<label class="tip" data-tip="POSITION, world-space centre of the shape, in ${state.unit}. X = left/right, Y = back/front, Z = up/down (Z = 0 is the workplane). Accepts expressions (e.g. 2*12+4).">Position (${state.unit})</label><div style="display:flex;gap:4px;">
+    <input type="text" inputmode="decimal" autocomplete="off" data-axis="x" title="X, left/right position. Accepts 2*12+4." />
+    <input type="text" inputmode="decimal" autocomplete="off" data-axis="y" title="Y, back/front position. Accepts 2*12+4." />
+    <input type="text" inputmode="decimal" autocomplete="off" data-axis="z" title="Z, up/down position (0 = workplane). Accepts 2*12+4." />
   </div>`;
   _posInputs = [...posRow.querySelectorAll('input')];
   ['x', 'y', 'z'].forEach((ax, i) => {
     _posInputs[i].value = shape.mesh.position[ax].toFixed(2);
     _posInputs[i].addEventListener('change', () => {
-      const v = parseFloat(_posInputs[i].value);
-      if (Number.isFinite(v)) { pushHistory(); shape.mesh.position[ax] = v; }
+      const v = readNumberInput(_posInputs[i]);
+      if (v === null) { _posInputs[i].value = shape.mesh.position[ax].toFixed(2); return; }
+      pushHistory();
+      shape.mesh.position[ax] = v;
     });
   });
   _body.appendChild(posRow);
