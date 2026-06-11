@@ -24,12 +24,12 @@ export const SHAPES = [
     icon: tubeIcon(), defaults: { radius: 10, inner_radius: 6, height: 20, segments: 48, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'inner_radius', 'height', 'segments', 'chamfer', 'fillet', 'fillet_segments'] },
   { kind: 'TORUS', label: 'Torus', hint: 'donut shape — radius = ring size, minor radius = tube thickness',
     icon: torusIcon(), defaults: { radius: 10, minor_radius: 3, segments: 48, minor_segments: 16 }, params: ['radius', 'minor_radius', 'segments', 'minor_segments'] },
-  { kind: 'POLYGON', label: 'Polygon', hint: 'N-sided prism — set sides for triangle (3), pentagon (5), hex (6), etc.',
-    icon: polygonIcon(), defaults: { radius: 10, height: 20, sides: 6 }, params: ['radius', 'height', 'sides'] },
-  { kind: 'STAR', label: 'Star', hint: 'N-pointed star prism — outer radius is points, inner is valleys',
-    icon: starIcon(), defaults: { radius: 12, inner_radius: 5, height: 8, sides: 5 }, params: ['radius', 'inner_radius', 'height', 'sides'] },
-  { kind: 'HEART', label: 'Heart', hint: 'heart-shaped prism — flat extrusion of a heart silhouette',
-    icon: heartIcon(), defaults: { radius: 12, height: 8, segments: 64 }, params: ['radius', 'height', 'segments'] },
+  { kind: 'POLYGON', label: 'Polygon', hint: 'N-sided prism — set sides for triangle (3), pentagon (5), hex (6), etc. Chamfer / Fillet bevel the top + bottom rim.',
+    icon: polygonIcon(), defaults: { radius: 10, height: 20, sides: 6, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'height', 'sides', 'chamfer', 'fillet', 'fillet_segments'] },
+  { kind: 'STAR', label: 'Star', hint: 'N-pointed star prism — outer radius is points, inner is valleys. Chamfer / Fillet bevel the top + bottom rim.',
+    icon: starIcon(), defaults: { radius: 12, inner_radius: 5, height: 8, sides: 5, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'inner_radius', 'height', 'sides', 'chamfer', 'fillet', 'fillet_segments'] },
+  { kind: 'HEART', label: 'Heart', hint: 'heart-shaped prism — flat extrusion of a heart silhouette. Chamfer / Fillet bevel the top + bottom edge.',
+    icon: heartIcon(), defaults: { radius: 12, height: 8, segments: 64, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['radius', 'height', 'segments', 'chamfer', 'fillet', 'fillet_segments'] },
 ];
 
 export const SHAPE_BY_KIND = Object.fromEntries(SHAPES.map(s => [s.kind, s]));

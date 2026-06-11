@@ -693,10 +693,52 @@ function buildTorus(p) {
 }
 
 function buildPolygon(p) {
-  // N-sided prism around Z.
+  // N-sided prism around Z. When fillet > 0 or chamfer > 0 we switch from
+  // CylinderGeometry to ExtrudeGeometry of an N-gon profile so we can use
+  // three.js's built-in bevel options (top + bottom rim bevels along the
+  // extrusion axis).
+  const fillet = Math.max(0, +p.fillet || 0);
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  if (fillet > 0.001 || chamfer > 0.001) {
+    return buildExtrudedPolygon(p.radius, p.height, p.sides, fillet, chamfer, p.fillet_segments || 8);
+  }
   const g = new THREE.CylinderGeometry(p.radius, p.radius, p.height, p.sides);
   g.rotateX(PI / 2);
   return g;
+}
+
+// N-sided prism via ExtrudeGeometry, with optional bevel on the rim (top +
+// bottom edges around the perimeter). Bevel size + thickness are equal so
+// the bevel goes in at 45° — chamfer if bevelSegments = 1, rounded fillet
+// if bevelSegments > 1.
+function buildExtrudedPolygon(radius, height, sides, fillet, chamfer, filletSegments) {
+  const n = Math.max(3, sides);
+  // Build the N-gon outline in the XY plane.
+  const shape = new THREE.Shape();
+  for (let i = 0; i < n; i++) {
+    const a = PI / 2 + (2 * PI * i) / n;
+    const x = radius * cos(a);
+    const y = radius * sin(a);
+    if (i === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
+  }
+  shape.closePath();
+  // Resolve bevel size (clamped to < radius and < height/2 so the bevel
+  // doesn't eat the whole shape).
+  const bevelSize = Math.min(fillet || chamfer, radius * 0.49, (height / 2) * 0.49);
+  const bevelSeg = fillet > 0 ? Math.max(2, Math.min(32, Math.floor(filletSegments || 8))) : 1;
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth: height - 2 * bevelSize,
+    bevelEnabled: true,
+    bevelSize,
+    bevelThickness: bevelSize,
+    bevelSegments: bevelSeg,
+    bevelOffset: 0,
+    curveSegments: n,  // matches the polygon side count
+  });
+  // ExtrudeGeometry extrudes along +Z from z=0. Centre on Z=0 and account for
+  // the bevel that grows beyond the depth.
+  g.translate(0, 0, -(height / 2));
+  return mergeVerticesSafe(g);
 }
 
 function buildStar(p) {
@@ -714,9 +756,23 @@ function buildStar(p) {
     if (i === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
   }
   shape.closePath();
-  const g = new THREE.ExtrudeGeometry(shape, { depth: p.height, bevelEnabled: false });
+  const fillet = Math.max(0, +p.fillet || 0);
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  const useBevel = fillet > 0.001 || chamfer > 0.001;
+  const bevelSize = useBevel
+    ? Math.min(fillet || chamfer, rIn * 0.49, (p.height / 2) * 0.49)
+    : 0;
+  const bevelSeg = fillet > 0 ? Math.max(2, Math.min(32, Math.floor(p.fillet_segments || 8))) : 1;
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth: p.height - 2 * bevelSize,
+    bevelEnabled: useBevel,
+    bevelSize,
+    bevelThickness: bevelSize,
+    bevelSegments: bevelSeg,
+    bevelOffset: 0,
+  });
   g.translate(0, 0, -p.height / 2);
-  return g;
+  return useBevel ? mergeVerticesSafe(g) : g;
 }
 
 function buildHeart(p) {
@@ -742,9 +798,25 @@ function buildHeart(p) {
     if (i === 0) shape.moveTo(nx, ny); else shape.lineTo(nx, ny);
   });
   shape.closePath();
-  const g = new THREE.ExtrudeGeometry(shape, { depth: p.height, bevelEnabled: false });
+  const fillet = Math.max(0, +p.fillet || 0);
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  const useBevel = fillet > 0.001 || chamfer > 0.001;
+  // Heart is irregular; clamp bevel against half-height and a fraction of the
+  // heart's radius to avoid the bevel eating concave features near the dip.
+  const bevelSize = useBevel
+    ? Math.min(fillet || chamfer, r * 0.20, (p.height / 2) * 0.49)
+    : 0;
+  const bevelSeg = fillet > 0 ? Math.max(2, Math.min(32, Math.floor(p.fillet_segments || 8))) : 1;
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth: p.height - 2 * bevelSize,
+    bevelEnabled: useBevel,
+    bevelSize,
+    bevelThickness: bevelSize,
+    bevelSegments: bevelSeg,
+    bevelOffset: 0,
+  });
   g.translate(0, 0, -p.height / 2);
-  return g;
+  return useBevel ? mergeVerticesSafe(g) : g;
 }
 
 // Cheap geometry merger that concatenates BufferGeometries with the same attribute layout.

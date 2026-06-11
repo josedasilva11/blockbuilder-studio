@@ -2041,8 +2041,7 @@ footer {
       <strong>Coming next</strong> (working order). Each one ships as its own update when ready — no big-bang rewrites.
     </p>
     <ul class="whatsnew-roadmap fade-up">
-      <li><strong>Chamfer for Box / Cylinder / Cone / Tube</strong> shipped. Set the <code>Chamfer</code> property in Properties to bevel edges. Box bevels all 12 edges; the round primitives bevel the top + bottom rim. Wedge / Pyramid / Roof / Polygon / Star coming after.</li>
-      <li><strong>Fillet for Box / Cylinder / Cone / Tube</strong> shipped. Set the <code>Fillet</code> property in Properties for rounded edges. Box: every cube edge becomes a quarter-cylinder, every corner a spherical octant. Cylinder / Cone / Tube: every rim corner gets a 90° arc in the radial-axial plane (Tube rounds all 4 rims, outer + inner). <code>fillet_segments</code> controls smoothness; <code>Fillet</code> overrides <code>Chamfer</code>. Wedge / Pyramid / Roof / Polygon / Star fillets coming after.</li>
+      <li><strong>Chamfer + Fillet for 7 primitives</strong> shipped: Box, Cylinder, Cone, Tube, Polygon, Star, Heart. Set the <code>Chamfer</code> or <code>Fillet</code> property in Properties; <code>fillet_segments</code> controls arc smoothness (default 8). <code>Fillet</code> overrides <code>Chamfer</code> when both are non-zero. Wedge, Pyramid, Roof coming after — their topology is non-radially-symmetric so they each need a custom geometry pass.</li>
       <li><strong>Push / Pull face.</strong> Drag a face to extrude or inset. Replaces the "make a box, mark as hole, group" dance for pockets.</li>
       <li><strong>Sketch constraints</strong> (parallel, perpendicular, equal, tangent). Light parametric inside the Sketch tool only.</li>
       <li><strong>Equations in property values.</strong> <code>width = 2 * wall + 4</code>. Parametric-light without a history timeline.</li>
