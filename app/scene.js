@@ -28,7 +28,15 @@ export function initScene(canvas) {
   // preserveDrawingBuffer lets us read the canvas (toDataURL / toBlob) after
   // a render without losing the framebuffer. Small perf cost; matters for the
   // screenshot feature which would otherwise capture a blank canvas.
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  //
+  // logarithmicDepthBuffer dramatically increases depth-buffer precision
+  // across the camera's near/far range. Without it, two opaque faces at the
+  // same Z (e.g. two boxes of the same height stacked on the workplane)
+  // z-fight visibly — bands of pixels flicker between the two faces as the
+  // camera moves. With log-depth, even sub-millimetre depth differences
+  // resolve reliably. Cost: ~10 % fragment-shader overhead via gl_FragDepth
+  // (disables early-Z on some GPUs), negligible at our scene scale.
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
   // Default to 1.5 — invisible quality loss vs 2.0 on most displays, but only
   // ~56 % of the fragment shader work. The Quality setting in the UI bumps
   // this up or down at runtime via setRendererPixelRatio().
