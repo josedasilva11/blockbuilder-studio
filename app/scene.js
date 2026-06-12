@@ -237,15 +237,32 @@ function makeWorkplaneGrid(theme = 'dark') {
     light: { minor: 0xc0c6d0, major: 0x9098a6, mOpa: 0.65, MOpa: 0.85 },
   };
   const p = palettes[theme] || palettes.dark;
+  // Minor and major grids are both transparent line layers that need to live
+  // on the same workplane. Putting them at exactly the same Z causes z-fighting
+  // when the camera is near-perpendicular (top view): the depth test winner is
+  // non-deterministic per pixel, so bands of lines visually drop out.
+  //
+  // Fix:
+  //   - depthWrite=false on both so transparent lines never block siblings
+  //     in the depth buffer
+  //   - tiny Z lift for the major grid (sub-millimetre, invisible) so its
+  //     fragments win over the minor grid's at exactly the same screen pixel
+  //   - explicit renderOrder so three.js doesn't sort by distance and re-flip
+  //     the draw order when the camera moves
   const minor = new THREE.GridHelper(total, 100, p.minor, p.minor);
   minor.material.opacity = p.mOpa;
   minor.material.transparent = true;
+  minor.material.depthWrite = false;
   minor.rotation.x = Math.PI / 2;
+  minor.renderOrder = 1;
   group.add(minor);
   const major = new THREE.GridHelper(total, 10, p.major, p.major);
   major.material.opacity = p.MOpa;
   major.material.transparent = true;
+  major.material.depthWrite = false;
   major.rotation.x = Math.PI / 2;
+  major.position.z = 0.002;   // ~0.002 mm lift, well below visible threshold
+  major.renderOrder = 2;
   group.add(major);
   return group;
 }
