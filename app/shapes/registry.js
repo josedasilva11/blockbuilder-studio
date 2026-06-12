@@ -14,8 +14,8 @@ export const SHAPES = [
   // saves still deserialise without throwing; just not pickable any more.
   { kind: 'HALF_SPHERE', label: 'Dome', hidden: true,
     icon: domeIcon(), defaults: { radius: 10, segments: 32 }, params: ['radius', 'segments'] },
-  { kind: 'PYRAMID', label: 'Pyramid', hint: 'N-sided pyramid (3 = tetrahedron, 4 = square, 5+ = pentagonal…); apex on top',
-    icon: pyramidIcon(), defaults: { width: 20, depth: 20, height: 20, sides: 4 }, params: ['width', 'depth', 'height', 'sides'] },
+  { kind: 'PYRAMID', label: 'Pyramid', hint: 'N-sided pyramid (3 = tetrahedron, 4 = square, 5+ = pentagonal…); apex on top. Chamfer / Fillet bevel the N base edges; lateral edges (going up to the apex) stay sharp because they meet at a single point.',
+    icon: pyramidIcon(), defaults: { width: 20, depth: 20, height: 20, sides: 4, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['width', 'depth', 'height', 'sides', 'chamfer', 'fillet', 'fillet_segments'] },
   { kind: 'WEDGE', label: 'Wedge', hint: 'right-angle ramp — useful for transitions and supports. Chamfer / Fillet bevel the front and back face perimeters (long axial edges stay sharp — custom geometry coming later).',
     icon: wedgeIcon(), defaults: { width: 20, depth: 20, height: 20, chamfer: 0, fillet: 0, fillet_segments: 8 }, params: ['width', 'depth', 'height', 'chamfer', 'fillet', 'fillet_segments'] },
   { kind: 'ROOF', label: 'Roof', hint: 'triangular prism — like a house roof. Chamfer / Fillet bevel the front and back gable perimeters (ridge + base axial edges stay sharp).',

@@ -2041,7 +2041,7 @@ footer {
       <strong>Coming next</strong> (working order). Each one ships as its own update when ready — no big-bang rewrites.
     </p>
     <ul class="whatsnew-roadmap fade-up">
-      <li><strong>Chamfer + Fillet for 9 of 13 primitives</strong> shipped: Box, Cylinder, Cone, Tube, Polygon, Star, Heart, Wedge, Roof. Set the <code>Chamfer</code> or <code>Fillet</code> property; <code>fillet_segments</code> controls arc smoothness. Wedge + Roof bevels only the front/back face perimeters (long axial edges stay sharp — full edge coverage pending a custom geometry pass). Pyramid is the remaining primitive (tapered geometry, needs a dedicated builder).</li>
+      <li><strong>Chamfer + Fillet for all 10 bevellable primitives</strong> shipped: Box, Cylinder, Cone, Tube, Polygon, Star, Heart, Wedge, Roof, Pyramid. (Sphere, Torus, Dome have no sharp edges; nothing to bevel.) Set the <code>Chamfer</code> or <code>Fillet</code> property; <code>fillet_segments</code> controls arc smoothness. Coverage varies by topology: Box gets full 12-edge bevel; Cylinder / Cone / Tube / Polygon / Star / Heart bevel the rim (top + bottom edges around perimeter); Wedge + Roof bevel only the front/back face perimeters; Pyramid bevels the N base edges (lateral edges going up to apex stay sharp by design).</li>
       <li><strong>Push / Pull face.</strong> Drag a face to extrude or inset. Replaces the "make a box, mark as hole, group" dance for pockets.</li>
       <li><strong>Sketch constraints</strong> (parallel, perpendicular, equal, tangent). Light parametric inside the Sketch tool only.</li>
       <li><strong>Equations in property values.</strong> <code>width = 2 * wall + 4</code>. Parametric-light without a history timeline.</li>

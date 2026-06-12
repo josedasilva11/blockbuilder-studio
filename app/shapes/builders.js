@@ -580,18 +580,139 @@ function buildHalfSphere(p) {
 
 function buildPyramid(p) {
   // N-sided pyramid (3 = tetrahedron, 4 = square pyramid, 5+ = pentagonal etc).
+  const sides = Math.max(3, Math.floor(p.sides ?? 4));
+  const r = Math.hypot(p.width / 2, p.depth / 2);
+  const fillet = Math.max(0, +p.fillet || 0);
+  const chamfer = Math.max(0, +p.chamfer || 0);
+  if (fillet > 0.001 || chamfer > 0.001) {
+    const result = buildPyramidWithBaseBevel(r, p.height, sides, fillet, chamfer, p.fillet_segments || 8);
+    if (sides === 4) result.rotateZ(PI / 4);
+    return result;
+  }
   // We use a ConeGeometry with low segment count and zero top radius — that's
   // mathematically equivalent to a regular N-gon pyramid. The radial scale
   // matches the cube's diagonal so a default 20×20 base still looks right.
-  const sides = Math.max(3, Math.floor(p.sides ?? 4));
-  // Radius of the circumscribed circle so a regular polygon with `sides`
-  // edges has the same XY footprint as the requested width/depth.
-  const r = Math.hypot(p.width / 2, p.depth / 2);
   const g = new THREE.ConeGeometry(r, p.height, sides);
   g.rotateX(PI / 2);
   // For square base, rotate 45° so the flat face points along +X (consistent
   // with the previous square-pyramid orientation).
   if (sides === 4) g.rotateZ(PI / 4);
+  return g;
+}
+
+// N-sided pyramid with the base perimeter bevelled. Lateral edges (going up
+// from each base corner to the apex) stay sharp because they meet at the
+// apex point — chamfering them would round the apex into a small cap which
+// changes the shape's identity. Only the N base edges (where the base face
+// meets the N lateral faces) are bevelled.
+//
+// Chamfer: single 45° plane per edge → 2N quad triangles forming the bevel.
+// Fillet: K-segment arc per edge → 2N*K quad triangles forming a rounded
+// transition from base to lateral face.
+//
+// Geometry layers (bottom to top):
+//   - Apex: 1 vertex at (0, 0, +h/2)
+//   - K+1 rings of vertices following the arc/chamfer profile (K=1 for
+//     chamfer, fillet_segments for fillet). Each ring has N vertices at
+//     positions interpolated between the base ring and the lateral start.
+//   - Base inner ring: N vertices at (r_inset, z=-h/2) — the shrunken base
+//   - Centre of base face: 1 vertex at (0, 0, -h/2)
+function buildPyramidWithBaseBevel(radius, height, sides, fillet, chamfer, filletSegments) {
+  const hh = height / 2;
+  const useArc = fillet > 0.001;
+  const K = useArc ? Math.max(2, Math.min(32, Math.floor(filletSegments || 8))) : 1;
+  // Bevel size (clamped). The "thickness" eats into the bottom of the
+  // pyramid; the "size" eats into the base's radius.
+  let bevel = useArc ? fillet : chamfer;
+  bevel = Math.min(bevel, radius * 0.45, hh * 0.45);
+  const innerRadius = radius - bevel;
+  const baseZ = -hh;
+  const arcTopZ = -hh + bevel;
+
+  const positions = [];
+  const indices = [];
+  function addV(x, y, z) {
+    const i = positions.length / 3;
+    positions.push(x, y, z);
+    return i;
+  }
+
+  // Apex
+  const apex = addV(0, 0, hh);
+
+  // K+1 perimeter rings, from the bottom (j=0, base inset) to top of the
+  // bevel (j=K, where the lateral face starts).
+  // For chamfer (K=1): just 2 rings forming a single flat plane per edge.
+  // For fillet (K>1): K+1 rings forming an arc.
+  //
+  // Arc geometry: in the radial-axial plane, the curve goes from
+  // (innerRadius, baseZ) at j=0 to (radius, arcTopZ) at j=K.
+  // For chamfer: straight line between those two points.
+  // For fillet: circular arc, centre at (innerRadius, arcTopZ), radius bevel.
+  // At parameter t ∈ [0, 1]: angle θ = -π/2 + t * π/2 (going from -π/2 to 0).
+  //   point = (innerRadius + bevel*cos(θ), arcTopZ + bevel*sin(θ))
+  //   at t=0, θ=-π/2: (innerRadius, arcTopZ - bevel) = (innerRadius, baseZ) ✓
+  //   at t=1, θ=0:    (innerRadius + bevel, arcTopZ) = (radius, arcTopZ) ✓
+  const rings = [];
+  for (let j = 0; j <= K; j++) {
+    const ring = [];
+    let rRing, zRing;
+    if (useArc) {
+      const t = j / K;
+      const ang = -PI / 2 + t * (PI / 2);
+      rRing = innerRadius + bevel * Math.cos(ang);
+      zRing = arcTopZ + bevel * Math.sin(ang);
+    } else {
+      // Chamfer: linear interpolation
+      const t = j / K;
+      rRing = innerRadius + (radius - innerRadius) * t;
+      zRing = baseZ + (arcTopZ - baseZ) * t;
+    }
+    for (let i = 0; i < sides; i++) {
+      const a = (2 * PI * i) / sides;
+      ring.push(addV(rRing * Math.cos(a), rRing * Math.sin(a), zRing));
+    }
+    rings.push(ring);
+  }
+
+  // Base centre + base fan
+  const baseCentre = addV(0, 0, baseZ);
+  for (let i = 0; i < sides; i++) {
+    const a = rings[0][i];
+    const b = rings[0][(i + 1) % sides];
+    // Base face faces -Z, so winding for outward normal (-Z) is reversed
+    // from the natural CCW-from-above traversal.
+    indices.push(baseCentre, b, a);
+  }
+
+  // Bevel quads between consecutive rings
+  for (let j = 0; j < K; j++) {
+    const lo = rings[j];
+    const hi = rings[j + 1];
+    for (let i = 0; i < sides; i++) {
+      const i2 = (i + 1) % sides;
+      // CCW from outside (the bevel surface faces outward + downward).
+      indices.push(lo[i], lo[i2], hi[i2]);
+      indices.push(lo[i], hi[i2], hi[i]);
+    }
+  }
+
+  // Lateral faces: triangle from each top-ring edge up to the apex.
+  const top = rings[K];
+  for (let i = 0; i < sides; i++) {
+    const a = top[i];
+    const b = top[(i + 1) % sides];
+    indices.push(a, b, apex);
+  }
+
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  g.setIndex(indices);
+  g.computeVertexNormals();
+  // Apply the same axis convention as the sharp pyramid (Z = up, base in XY).
+  // ConeGeometry rotateX(PI/2) is no longer needed because we built directly
+  // with the right axes. No extra rotation here; sides===4 rotation handled
+  // by the caller.
   return g;
 }
 
