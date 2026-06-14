@@ -214,10 +214,13 @@ function installTabletPropsCardSync() {
   import('./selection.js').then(({ onSelectionChange }) => {
     onSelectionChange(update);
   });
-  // Close button on the floating card hides it (until next selection change).
+  // Close button on the floating card hides it. On tablet that means clearing
+  // data-shape-selected (auto-show); on phone it means clearing data-phone-sheet
+  // (explicit open). Clear both so it works in either layout.
   const close = document.querySelector('.props-card-close');
   if (close) close.addEventListener('click', () => {
     delete document.body.dataset.shapeSelected;
+    if (document.body.dataset.phoneSheet === 'props') delete document.body.dataset.phoneSheet;
   });
 }
 

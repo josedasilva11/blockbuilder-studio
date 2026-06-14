@@ -3266,9 +3266,10 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   /* Dock activates. */
   .tool-dock { display: flex !important; }
 
-  /* Properties as a bottom-sheet anchored above the dock. body[data-shape-selected="1"]
-     OR explicit "edit" tap on the dock both bring it up. */
-  body[data-shape-selected="1"] .props-card,
+  /* Properties as a bottom-sheet anchored above the dock. On phone we ONLY
+     trigger on explicit "Edit" tap, not on selection alone, otherwise the
+     sheet covers the canvas every time you tap a shape, which means the
+     thing you're editing disappears. Tap Edit in the dock to bring it up. */
   body[data-phone-sheet="props"] .props-card {
     display: flex !important;
     flex-direction: column;
