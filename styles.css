@@ -3244,6 +3244,12 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
     width: 320px;
     max-height: calc(100dvh - 88px);
   }
+  /* Scrim behind tablet insert popover + more menu so taps outside dismiss. */
+  body[data-tablet-insert] .mobile-drawer-scrim,
+  body[data-more-menu="open"] .mobile-drawer-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 /* Phone (=768 px): Womp-style. Bottom dock with 6 large icons, canvas full
@@ -3253,7 +3259,6 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
 @media (max-width: 768px) {
   body { font-size: 13px; }
   .topbar .toolbar { display: none; }
-  .topbar .toolbar.mobile-only { display: none !important; }
   .layout {
     grid-template-columns: 1fr;
     grid-template-areas: "viewport";
@@ -3319,7 +3324,8 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   }
 
   /* Scrim shows when ANY phone sheet is open (insert / props). */
-  body[data-phone-sheet] .mobile-drawer-scrim {
+  body[data-phone-sheet] .mobile-drawer-scrim,
+  body[data-more-menu="open"] .mobile-drawer-scrim {
     opacity: 1;
     pointer-events: auto;
   }
@@ -3348,9 +3354,6 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   .prop-row-scrub > input.prop-slider { height: 24px; }
   .brand-studio { display: none !important; }
 }
-
-/* Show mobile-only buttons only when mobile media query is active. */
-.mobile-only { display: none; }
 
 /* On any coarse pointer (touch screens, even on wider tablets), bump the
    handle widgets in the viewport so a fingertip can hit them. The HTML

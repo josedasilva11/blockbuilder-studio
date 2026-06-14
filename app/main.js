@@ -130,24 +130,14 @@ function main() {
   installTabletPropsCardSync();
 }
 
-// Mobile: Shapes (sidebar) and Properties slide in from the sides as drawers,
-// triggered by the two .mobile-only buttons in the toolbar. The same scrim
-// closes either drawer; Esc and clicking the scrim both clear the state.
-// Drawer state lives on body[data-mobile-drawer]; CSS handles the transform.
-function toggleMobileDrawer(which) {
-  const current = document.body.dataset.mobileDrawer;
-  if (current === which) {
-    delete document.body.dataset.mobileDrawer;
-  } else {
-    document.body.dataset.mobileDrawer = which;
-  }
-}
-
+// Scrim shared by the tablet insert popover, tablet props card, phone sheets,
+// and the More menu. Tap-to-close clears every panel that might be open.
 function closeMobileDrawer() {
-  delete document.body.dataset.mobileDrawer;
-  // Phone sheets share the same scrim. Close any open insert / props sheet.
   delete document.body.dataset.phoneSheet;
+  delete document.body.dataset.tabletInsert;
+  delete document.body.dataset.moreMenu;
   document.querySelector('.sidebar')?.classList.remove('phone-sheet-anchored');
+  document.querySelector('.sidebar')?.classList.remove('tablet-insert-anchored');
 }
 
 // Tablet (769-1024 px): the sidebar acts as a fly-out popover anchored next
@@ -255,7 +245,9 @@ function bindMobileDrawers() {
   window.addEventListener('keydown', (ev) => {
     if (ev.key !== 'Escape') return;
     if (ev.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(ev.target.tagName)) return;
-    if (document.body.dataset.mobileDrawer) closeMobileDrawer();
+    if (document.body.dataset.phoneSheet || document.body.dataset.tabletInsert || document.body.dataset.moreMenu) {
+      closeMobileDrawer();
+    }
   });
   // Tapping inside the drawer's content should NOT close it; the scrim
   // sits behind the drawer and only catches taps that miss it, so this is
@@ -327,8 +319,6 @@ function bindToolbar() {
       case 'phone-shortcuts': openShortcutsPalette(); break;
       case 'phone-more': toggleMoreMenu(); break;
       case 'more-close': closeMoreMenu(); break;
-      case 'mobile-drawer-shapes': toggleMobileDrawer('shapes'); break;
-      case 'mobile-drawer-properties': toggleMobileDrawer('properties'); break;
       case 'extrude':   startExtrude();   break;
       case 'revolve':   startRevolve();   break;
       case 'scribble':  startScribble();  break;
