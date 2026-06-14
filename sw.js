@@ -8,7 +8,7 @@
 // every app file. Electron does NOT register the SW (it's served from
 // file://), so this is a no-op in the desktop build.
 
-const CACHE_VERSION = 'bb-v0.6.3';
+const CACHE_VERSION = 'bb-v0.6.4';
 // Relative URLs (not /-prefixed) so the SW works whether the app is hosted at
 // site root or a sub-path (blockbuilder.studio/app/). The SW's scope already
 // constrains "/" anchoring; here we resolve everything against the SW's own
