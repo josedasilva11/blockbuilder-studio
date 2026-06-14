@@ -359,21 +359,37 @@ body {
   pointer-events: none;
 }
 .shape-tile {
-  aspect-ratio: 1;
+  /* Slightly shorter than square so the grid feels denser, less wasted space.
+     Old aspect-ratio 1 left ~50 % blank around a tiny 36 px icon. */
+  aspect-ratio: 1.05;
   border-radius: var(--radius);
   border: 1px solid var(--border-soft);
-  background: linear-gradient(180deg, var(--panel-soft) 0%, var(--panel) 100%);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(196,240,79,0.06) 0%, transparent 55%),
+    linear-gradient(165deg, var(--panel-soft) 0%, var(--panel) 60%, rgba(0,0,0,0.18) 100%);
   cursor: grab;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 4px;
-  font-size: 10px;
-  color: var(--text-dim);
-  transition: all 0.15s var(--ease);
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text);
+  transition: transform 0.15s var(--ease), border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
   position: relative;
   overflow: hidden;
+}
+/* Subtle inner shadow + accent glow on the top edge so the tile has depth
+   instead of reading as a flat box around a wireframe icon. */
+.shape-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 -12px 24px rgba(0,0,0,0.18);
 }
 .shape-tile::before {
   content: '';
@@ -387,12 +403,29 @@ body {
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-2px);
-  box-shadow: var(--shadow), 0 0 0 1px var(--accent-glow);
+  box-shadow: var(--shadow), 0 0 0 1px var(--accent-glow), 0 8px 24px rgba(0,0,0,0.35);
 }
 .shape-tile:hover::before { opacity: 1; }
 .shape-tile:active { transform: scale(0.97); cursor: grabbing; }
-.shape-tile svg { width: 36px; height: 36px; position: relative; z-index: 1; }
-.shape-tile span { position: relative; z-index: 1; font-weight: 500; }
+/* Bigger icon. The line drawings only read as identifiable shapes around
+   44 px+; below that they look like generic noise. Stroke weight nudged
+   thicker via filter so old icons still pop without re-drawing each one. */
+.shape-tile svg {
+  width: 46px;
+  height: 46px;
+  position: relative;
+  z-index: 1;
+  color: var(--accent);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  transition: transform 0.15s var(--ease);
+}
+.shape-tile:hover svg { transform: translateY(-1px) scale(1.05); }
+.shape-tile span {
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+}
 .shape-tile.hole {
   background: linear-gradient(180deg, rgba(255, 95, 109, 0.08) 0%, rgba(255, 95, 109, 0.02) 100%);
   border-color: rgba(255, 95, 109, 0.25);
@@ -2923,6 +2956,21 @@ summary:focus-visible,
   color: var(--text);
 }
 
+/* Mobile drawer scrim. Outside any media query because it must NOT be a grid
+   item at any width, otherwise it eats the first column of `.layout` and
+   pushes Sidebar / Properties out of place. Hidden by default; mobile CSS
+   below shows it when body[data-mobile-drawer] is set. */
+.mobile-drawer-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 10, 14, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease);
+}
+
 /* ============================================================================
    RESPONSIVE: tablet (=1024 px) + phone (=768 px).
    The desktop layout is a fixed 240px / 1fr / 300px grid. On narrow screens
@@ -2998,17 +3046,6 @@ summary:focus-visible,
   body[data-mobile-drawer="shapes"] .sidebar { transform: translateX(0); }
   body[data-mobile-drawer="properties"] .properties { transform: translateX(0); }
 
-  /* Scrim behind whichever drawer is open. main.js shows/hides this div. */
-  .mobile-drawer-scrim {
-    position: absolute;
-    inset: 0;
-    background: rgba(8, 10, 14, 0.55);
-    backdrop-filter: blur(2px);
-    z-index: 40;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.18s var(--ease);
-  }
   body[data-mobile-drawer] .mobile-drawer-scrim {
     opacity: 1;
     pointer-events: auto;
