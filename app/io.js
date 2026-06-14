@@ -5,10 +5,45 @@ import { STLExporter } from 'three/addons/exporters/STLExporter.js';
 import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
 import { state } from './state.js';
 import { TinkerShape } from './shape.js';
+import { RefGeom } from './ref_geom.js';
 import { selectShape } from './selection.js';
 import { clearHistory } from './history.js';
 import { isLicensed, revalidateLicense, getLicenseName } from './support_nag.js';
 import { toast } from './toast.js';
+
+// Reference geometry survives save / load. Format is the minimum needed to
+// reconstruct each kind: 3 points for PLANE_3P, two endpoints for AXIS_EDGE,
+// one point for MIDPOINT. Position arrays use [x, y, z] for JSON readability.
+function serializeRefGeom(rg) {
+  const out = { id: rg.id, kind: rg.kind, name: rg.name, visible: rg.visible };
+  if (rg.kind === 'PLANE_3P') out.points = rg.data.points.map((p) => [p.x, p.y, p.z]);
+  else if (rg.kind === 'AXIS_EDGE') {
+    out.from = [rg.data.from.x, rg.data.from.y, rg.data.from.z];
+    out.to = [rg.data.to.x, rg.data.to.y, rg.data.to.z];
+  } else if (rg.kind === 'MIDPOINT') {
+    out.point = [rg.data.point.x, rg.data.point.y, rg.data.point.z];
+  }
+  return out;
+}
+
+function deserializeRefGeom(rd) {
+  let data;
+  if (rd.kind === 'PLANE_3P') {
+    data = { points: rd.points.map(([x, y, z]) => new THREE.Vector3(x, y, z)) };
+  } else if (rd.kind === 'AXIS_EDGE') {
+    data = {
+      from: new THREE.Vector3(...rd.from),
+      to: new THREE.Vector3(...rd.to),
+    };
+  } else if (rd.kind === 'MIDPOINT') {
+    data = { point: new THREE.Vector3(...rd.point) };
+  } else {
+    return null;
+  }
+  const rg = new RefGeom(rd.kind, data, { id: rd.id, name: rd.name });
+  if (rd.visible === false) rg.setVisible(false);
+  return rg;
+}
 
 const stlExporter = new STLExporter();
 const objExporter = new OBJExporter();
@@ -95,11 +130,12 @@ export async function exportOBJ() {
 
 export function saveProject() {
   const data = {
-    version: 1,
+    version: 2,
     generator: 'BlockBuilder Studio',
     source: 'https://marjers.com',
     ts: Date.now(),
     shapes: [...state.shapes.values()].map(s => s.serialize()),
+    refGeoms: [...state.refGeoms.values()].map(serializeRefGeom),
     workplane: state.workplane,
     snapStep: state.snapStep,
   };
@@ -129,6 +165,11 @@ export function loadProject(file) {
         const shape = TinkerShape.deserialize(sd);
         state.scene.add(shape.mesh);
       }
+      // Reference geometry: dispose any existing refs, then re-create from
+      // serialised data. Older v1 project files won't have refGeoms; missing
+      // key just means no refs to restore.
+      for (const rg of [...state.refGeoms.values()]) rg.dispose();
+      for (const rd of data.refGeoms || []) deserializeRefGeom(rd);
       if (data.workplane) state.workplane = data.workplane;
       if (typeof data.snapStep === 'number') state.snapStep = data.snapStep;
       // Track in recents so the welcome modal lists it

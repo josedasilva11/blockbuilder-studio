@@ -23,6 +23,7 @@ import * as THREE from 'three';
 import { state, freshId } from './state.js';
 import { requestRender } from './scene.js';
 import { toast } from './toast.js';
+import { markDirty as markAutosaveDirty } from './autosave.js';
 
 const REF_COLOR = 0x6cd5ff;        // distinct cyan so it doesn't blend with solids
 const REF_COLOR_DIM = 0x3a89a8;
@@ -52,6 +53,7 @@ export class RefGeom {
     this.mesh = this._build();
     this.mesh.userData.refGeom = this;
     state.refGeoms.set(this.id, this);
+    markAutosaveDirty();
   }
 
   _build() {
@@ -79,6 +81,7 @@ export class RefGeom {
       });
     }
     state.refGeoms.delete(this.id);
+    markAutosaveDirty();
     requestRender();
   }
 }
