@@ -145,6 +145,9 @@ function toggleMobileDrawer(which) {
 
 function closeMobileDrawer() {
   delete document.body.dataset.mobileDrawer;
+  // Phone sheets share the same scrim. Close any open insert / props sheet.
+  delete document.body.dataset.phoneSheet;
+  document.querySelector('.sidebar')?.classList.remove('phone-sheet-anchored');
 }
 
 // Tablet (769-1024 px): the sidebar acts as a fly-out popover anchored next
@@ -155,6 +158,36 @@ function toggleTabletInsertPopover() {
   const open = sidebar.classList.toggle('tablet-insert-anchored');
   if (open) document.body.dataset.tabletInsert = 'open';
   else delete document.body.dataset.tabletInsert;
+}
+
+// Phone (=768 px): one of two bottom sheets at a time. 'insert' rehosts the
+// sidebar; 'props' shows the props-card. The scrim CSS gates on body
+// [data-phone-sheet], tap-on-scrim closes via the existing scrim handler.
+function togglePhoneSheet(which) {
+  const sidebar = document.querySelector('.sidebar');
+  const current = document.body.dataset.phoneSheet;
+  // Close all sheets.
+  if (sidebar) sidebar.classList.remove('phone-sheet-anchored');
+  delete document.body.dataset.phoneSheet;
+  if (current === which) return;     // toggle off
+  if (which === 'insert' && sidebar) {
+    sidebar.classList.add('phone-sheet-anchored');
+    // Auto-close the sheet on the first tile spawn so the user can see the
+    // shape they just placed without an extra tap. Re-open the sheet via the
+    // Insert dock button to add a second shape.
+    const closeOnSpawn = (ev) => {
+      if (ev.target.closest('.shape-tile')) {
+        sidebar.removeEventListener('click', closeOnSpawn, true);
+        // Small delay so the spawn click finishes its work first.
+        setTimeout(() => {
+          sidebar.classList.remove('phone-sheet-anchored');
+          if (document.body.dataset.phoneSheet === 'insert') delete document.body.dataset.phoneSheet;
+        }, 80);
+      }
+    };
+    sidebar.addEventListener('click', closeOnSpawn, true);
+  }
+  document.body.dataset.phoneSheet = which;
 }
 
 // Tablet-mode props-card sync: keep body[data-shape-selected] up to date so
@@ -185,17 +218,19 @@ function installTabletPropsCardSync() {
 function installPropsBodyHost() {
   const original = document.getElementById('props-body');
   const desktopHost = document.querySelector('.properties');
-  const tabletHost = document.getElementById('props-card-body');
-  if (!original || !desktopHost || !tabletHost) return;
-  const mql = window.matchMedia('(max-width: 1024px) and (min-width: 769px)');
+  const cardHost = document.getElementById('props-card-body');
+  if (!original || !desktopHost || !cardHost) return;
+  // Tablet AND phone share the props-card-body host; desktop uses the
+  // .properties aside. The card just gets restyled by media query.
+  const mqlMobile = window.matchMedia('(max-width: 1024px)');
   const apply = () => {
-    const wantTablet = mql.matches;
+    const wantCard = mqlMobile.matches;
     const currentParent = original.parentElement;
-    if (wantTablet && currentParent !== tabletHost) tabletHost.appendChild(original);
-    else if (!wantTablet && currentParent !== desktopHost) desktopHost.appendChild(original);
+    if (wantCard && currentParent !== cardHost) cardHost.appendChild(original);
+    else if (!wantCard && currentParent !== desktopHost) desktopHost.appendChild(original);
   };
   apply();
-  mql.addEventListener('change', apply);
+  mqlMobile.addEventListener('change', apply);
   window.addEventListener('resize', apply);
 }
 
@@ -271,6 +306,10 @@ function bindToolbar() {
       case 'ref-midpoint': startPickMidpoint(); break;
       case 'tablet-insert': toggleTabletInsertPopover(); break;
       case 'tablet-more': toast.info('Coming soon', { detail: 'Sketch, Align, Mirror, Reference geometry will land in a More menu next.' }); break;
+      case 'phone-insert': togglePhoneSheet('insert'); break;
+      case 'phone-props': togglePhoneSheet('props'); break;
+      case 'phone-shortcuts': openShortcutsPalette(); break;
+      case 'phone-more': toast.info('Coming soon', { detail: 'Cut, Hollow, Array, Workplane, Push/Pull, Ref geometry land in the More menu next.' }); break;
       case 'mobile-drawer-shapes': toggleMobileDrawer('shapes'); break;
       case 'mobile-drawer-properties': toggleMobileDrawer('properties'); break;
       case 'extrude':   startExtrude();   break;

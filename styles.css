@@ -2956,6 +2956,53 @@ summary:focus-visible,
   color: var(--text);
 }
 
+/* Phone bottom dock. Hidden at every width except inside the phone media
+   query below. Fixed at bottom, 6 large icons centered, ~64 px tall so
+   the canvas still has the entire vertical space above. */
+.tool-dock {
+  /* Hidden by default at desktop / tablet, visible inside the phone media
+     query below via display: flex. All other layout properties live here so
+     the cascade isn't fragmented. */
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 35;
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+  background: rgba(20, 23, 29, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  gap: 2px;
+  justify-content: space-around;
+}
+.dock-btn {
+  flex: 1 1 0;
+  min-height: 52px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 10px;
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+.dock-btn svg { width: 22px; height: 22px; color: inherit; }
+.dock-btn:hover, .dock-btn:active, .dock-btn.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
 /* Tablet rail + props card. Built into the DOM at all sizes but only made
    visible inside the tablet media query below. Sit on top of the canvas as
    floating chrome (position: absolute, never grid items). */
@@ -3113,76 +3160,83 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
     border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35; overflow: hidden; }
 }
 
-/* Phone, single column. Sidebar + properties become slide-in drawers anchored
-   to body[data-mobile-drawer]. Toolbar becomes a horizontally-scrollable strip
-   so 25+ buttons stay reachable without wrapping into 4 rows. */
+/* Phone (=768 px): Womp-style. Bottom dock with 6 large icons, canvas full
+   above. Insert + Properties are bottom-sheets that slide up from the dock,
+   never full-screen drawers. The old off-canvas drawer approach was wrong
+   (covered the canvas with 320 px panels while editing). */
 @media (max-width: 768px) {
   body { font-size: 13px; }
-  /* Toolbar: horizontal scroll, sticky to top. */
-  .toolbar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    padding: 6px 8px;
-    gap: 4px;
-    scrollbar-width: none;
-  }
-  .toolbar::-webkit-scrollbar { display: none; }
-  .toolbar button {
-    flex: 0 0 auto;
-    min-width: 56px;
-    min-height: 44px;          /* Apple HIG touch target */
-    padding: 4px 6px;
-    font-size: 10px;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .toolbar button svg { width: 22px; height: 22px; }
-  .toolbar button span { font-size: 9px; line-height: 1; }
-
-  /* Layout: 1 column, viewport eats the whole screen. */
+  .topbar .toolbar { display: none; }
+  .topbar .toolbar.mobile-only { display: none !important; }
   .layout {
     grid-template-columns: 1fr;
     grid-template-areas: "viewport";
     position: relative;
   }
+  /* Hide desktop and tablet chrome on phone. */
+  .layout > .sidebar:not(.phone-sheet-anchored) { display: none; }
+  .layout > .properties { display: none; }
+  .tool-rail { display: none !important; }
+  /* Dock activates. */
+  .tool-dock { display: flex !important; }
 
-  /* Sidebar + Properties become off-canvas drawers. By default they slide
-     off-screen; main.js toggles body[data-mobile-drawer] to bring one in.
-     Properties slides from the right, Sidebar from the left, so the user
-     can never see both at once. */
-  .sidebar, .properties {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: min(85vw, 320px);
-    z-index: 50;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    transition: transform 0.22s var(--ease);
-    will-change: transform;
+  /* Properties as a bottom-sheet anchored above the dock. body[data-shape-selected="1"]
+     OR explicit "edit" tap on the dock both bring it up. */
+  body[data-shape-selected="1"] .props-card,
+  body[data-phone-sheet="props"] .props-card {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    left: 6px;
+    right: 6px;
+    bottom: 76px;
+    width: auto;
+    max-height: 52dvh;
+    max-height: 52vh;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.55);
+    z-index: 36;
+    overflow: hidden;
   }
-  .sidebar { left: 0; transform: translateX(-100%); }
-  .properties { right: 0; transform: translateX(100%); }
-  body[data-mobile-drawer="shapes"] .sidebar { transform: translateX(0); }
-  body[data-mobile-drawer="properties"] .properties { transform: translateX(0); }
 
-  body[data-mobile-drawer] .mobile-drawer-scrim {
+  /* Insert sheet: the existing sidebar repurposed as a bottom-sheet. Same
+     tiles, same tap-to-spawn. */
+  body[data-phone-sheet="insert"] .sidebar.phone-sheet-anchored {
+    display: block;
+    position: fixed;
+    left: 6px;
+    right: 6px;
+    bottom: 76px;
+    width: auto;
+    max-height: 60dvh;
+    max-height: 60vh;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.55);
+    z-index: 36;
+    padding: 12px;
+    overflow-y: auto;
+  }
+
+  /* Scrim shows when ANY phone sheet is open (insert / props). */
+  body[data-phone-sheet] .mobile-drawer-scrim {
     opacity: 1;
     pointer-events: auto;
   }
 
-  /* Mobile-only buttons inserted into the toolbar to toggle the drawers. */
-  .mobile-only { display: inline-flex !important; }
-
-  /* Floating tool panels shrink and dock to the bottom on mobile so they
-     don't cover the canvas while you tap. */
+  /* Floating tool panels (Array, Cut, Hollow, AMR) dock above the bottom
+     dock so they don't sit BEHIND it. */
   .cut-panel, .hollow-panel, .array-panel, .amr-panel, .settings-panel {
     top: auto !important;
     right: 8px !important;
     left: 8px !important;
-    bottom: 8px !important;
+    bottom: 76px !important;
     width: auto !important;
-    max-height: 60vh;
+    max-height: 56dvh;
+    max-height: 56vh;
   }
 
   /* Welcome / unit modals fill the screen on phone. */
@@ -3195,8 +3249,6 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
 
   /* Properties slider rows get more vertical space (touch-friendly thumb). */
   .prop-row-scrub > input.prop-slider { height: 24px; }
-  /* Hide the "Studio" suffix on narrow brand area, the badge gets clipped to
-     "S1" otherwise. The "BlockBuilder" wordmark already conveys the brand. */
   .brand-studio { display: none !important; }
 }
 
