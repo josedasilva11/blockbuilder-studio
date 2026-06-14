@@ -382,6 +382,73 @@
     </button>
   </nav>
 
+  <!-- More menu: every secondary tool grouped by category. Mounted at all
+       sizes; CSS positions it as a popover on tablet (next to the rail) or
+       as a bottom-sheet on phone (above the dock). Each entry reuses the
+       data-action of its desktop equivalent so the same click handler fires. -->
+  <div class="more-menu" id="more-menu">
+    <div class="more-menu-head">
+      <span>More tools</span>
+      <button class="more-menu-close" data-action="more-close" aria-label="Close">×</button>
+    </div>
+    <div class="more-menu-body">
+      <div class="more-section">
+        <div class="more-section-title">CSG</div>
+        <div class="more-grid">
+          <button class="more-btn" data-action="intersect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg><span>Intersect</span></button>
+          <button class="more-btn" data-action="ungroup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 11 L13 13" stroke-dasharray="2 2"/></svg><span>Ungroup</span></button>
+          <button class="more-btn" data-action="bake"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18 L20 18 M6 14 L18 14 M8 10 L16 10 M10 6 L14 6"/></svg><span>Bake</span></button>
+        </div>
+      </div>
+      <div class="more-section">
+        <div class="more-section-title">Modify</div>
+        <div class="more-grid">
+          <button class="more-btn" data-action="cut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16 L20 8 M9 18 L4 20 M15 6 L20 4"/><circle cx="6" cy="17.5" r="2"/><circle cx="18" cy="6.5" r="2"/></svg><span>Cut</span></button>
+          <button class="more-btn" data-action="hollow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg><span>Hollow</span></button>
+          <button class="more-btn" data-action="array"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/></svg><span>Array</span></button>
+          <button class="more-btn" data-action="workplane"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z M12 12 L12 21 M3 7 L12 12 L21 7"/></svg><span>Workplane</span></button>
+          <button class="more-btn" data-action="pushpull"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14 L4 20 L14 20 L14 14 Z M9 14 L9 5 M9 5 L7 7 M9 5 L11 7"/></svg><span>Push/Pull</span></button>
+          <button class="more-btn" data-action="ruler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18 L18 3 L21 6 L6 21 Z"/></svg><span>Ruler</span></button>
+        </div>
+      </div>
+      <div class="more-section">
+        <div class="more-section-title">Reference geometry</div>
+        <div class="more-grid">
+          <button class="more-btn" data-action="ref-plane"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z" stroke-dasharray="3 2"/></svg><span>Ref Plane</span></button>
+          <button class="more-btn" data-action="ref-axis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21 L21 3" stroke-dasharray="2 2"/></svg><span>Ref Axis</span></button>
+          <button class="more-btn" data-action="ref-midpoint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12 L20 12"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/></svg><span>Midpoint</span></button>
+        </div>
+      </div>
+      <div class="more-section">
+        <div class="more-section-title">Sketch</div>
+        <div class="more-grid">
+          <button class="more-btn" data-action="extrude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18 L9 14 L14 19 L19 14 M5 18 L5 6 L9 2 L14 7 L19 2 L19 14"/></svg><span>Extrude</span></button>
+          <button class="more-btn" data-action="scribble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 C 5 11, 9 9, 12 14 C 15 19, 19 11, 21 7"/></svg><span>Scribble</span></button>
+          <button class="more-btn" data-action="revolve"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V21 M8 6 C 5 8, 5 16, 8 18 M16 6 C 19 8, 19 16, 16 18"/></svg><span>Revolve</span></button>
+        </div>
+      </div>
+      <div class="more-section">
+        <div class="more-section-title">Edit</div>
+        <div class="more-grid">
+          <button class="more-btn" data-action="align"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4 V20 M20 4 V20 M9 8 H15 V12 H9 Z M9 16 H17 V12"/></svg><span>Align</span></button>
+          <button class="more-btn" data-action="mirror"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V21 M9 8 L4 12 L9 16 Z M15 8 L20 12 L15 16 Z"/></svg><span>Mirror</span></button>
+          <button class="more-btn" data-action="drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4 H16 V14 H20 L12 22 L4 14 H8 Z"/></svg><span>Drop</span></button>
+          <button class="more-btn" data-action="hide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12 S6 5 12 5 S22 12 22 12 S18 19 12 19 S2 12 2 12 Z M3 3 L21 21"/></svg><span>Hide</span></button>
+          <button class="more-btn" data-action="duplicate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="14" height="14" rx="1.5"/><rect x="7" y="7" width="14" height="14" rx="1.5"/></svg><span>Duplicate</span></button>
+          <button class="more-btn more-btn-danger" data-action="delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7 L19 7 M9 7 V4 H15 V7 M7 7 V20 H17 V7 M10 11 V17 M14 11 V17"/></svg><span>Delete</span></button>
+        </div>
+      </div>
+      <div class="more-section">
+        <div class="more-section-title">History + I/O</div>
+        <div class="more-grid">
+          <button class="more-btn" data-action="redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14 L20 9 L15 4 M20 9 H10 a6 6 0 0 0 0 12 H15"/></svg><span>Redo</span></button>
+          <button class="more-btn" data-action="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3 H17 L21 7 V21 H3 V3 Z M7 3 V9 H15 V3 M8 13 H16 V21 H8 Z"/></svg><span>Save</span></button>
+          <button class="more-btn" data-action="export-stl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V14 M7 9 L12 14 L17 9 M5 21 H19"/></svg><span>Export STL</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Tablet floating properties card. #props-body is moved inside this on init
        when the viewport is in tablet range. -->
   <aside class="props-card" id="props-card" hidden>

@@ -160,6 +160,16 @@ function toggleTabletInsertPopover() {
   else delete document.body.dataset.tabletInsert;
 }
 
+// More menu: secondary tools popover. Toggles via body[data-more-menu].
+// Tapping any tool inside auto-closes the menu (the click bubbles up and the
+// switch-case in bindToolbar handles the action AND the close, since
+// data-more-menu is cleared at the end of every action below).
+function toggleMoreMenu() {
+  if (document.body.dataset.moreMenu === 'open') closeMoreMenu();
+  else document.body.dataset.moreMenu = 'open';
+}
+function closeMoreMenu() { delete document.body.dataset.moreMenu; }
+
 // Phone (=768 px): one of two bottom sheets at a time. 'insert' rehosts the
 // sidebar; 'props' shows the props-card. The scrim CSS gates on body
 // [data-phone-sheet], tap-on-scrim closes via the existing scrim handler.
@@ -257,6 +267,9 @@ function bindToolbar() {
     const btn = ev.target.closest('[data-action]');
     if (!btn) return;
     const action = btn.dataset.action;
+    // Auto-close the More menu after any action triggered from inside it,
+    // EXCEPT the menu's own close button (which calls closeMoreMenu itself).
+    const fromMoreMenu = btn.closest('.more-menu') !== null;
     switch (action) {
       case 'group': {
         const selection = getMultiSelection();
@@ -305,11 +318,12 @@ function bindToolbar() {
       case 'ref-axis': startPickAxisEdge(); break;
       case 'ref-midpoint': startPickMidpoint(); break;
       case 'tablet-insert': toggleTabletInsertPopover(); break;
-      case 'tablet-more': toast.info('Coming soon', { detail: 'Sketch, Align, Mirror, Reference geometry will land in a More menu next.' }); break;
+      case 'tablet-more': toggleMoreMenu(); break;
       case 'phone-insert': togglePhoneSheet('insert'); break;
       case 'phone-props': togglePhoneSheet('props'); break;
       case 'phone-shortcuts': openShortcutsPalette(); break;
-      case 'phone-more': toast.info('Coming soon', { detail: 'Cut, Hollow, Array, Workplane, Push/Pull, Ref geometry land in the More menu next.' }); break;
+      case 'phone-more': toggleMoreMenu(); break;
+      case 'more-close': closeMoreMenu(); break;
       case 'mobile-drawer-shapes': toggleMobileDrawer('shapes'); break;
       case 'mobile-drawer-properties': toggleMobileDrawer('properties'); break;
       case 'extrude':   startExtrude();   break;
@@ -328,6 +342,9 @@ function bindToolbar() {
       case 'export-obj': exportOBJ(); break;
       case 'export-step': downloadSTEP(); break;
       case 'import-mesh': pickAndImport(); break;
+    }
+    if (fromMoreMenu && action !== 'more-close' && action !== 'tablet-more' && action !== 'phone-more') {
+      closeMoreMenu();
     }
   });
 

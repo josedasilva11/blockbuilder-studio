@@ -3003,6 +3003,83 @@ summary:focus-visible,
   background: var(--accent-soft);
 }
 
+/* More menu: shared component between tablet (positioned next to rail) and
+   phone (bottom-sheet above dock). Hidden until body[data-more-menu="open"]. */
+.more-menu { display: none; }
+body[data-more-menu="open"] .more-menu {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  z-index: 38;
+  overflow: hidden;
+}
+.more-menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  font-weight: 600;
+  font-size: 13px;
+}
+.more-menu-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.more-menu-close:hover { color: var(--text); }
+.more-menu-body {
+  padding: 8px 12px 12px;
+  overflow-y: auto;
+}
+.more-section { margin-top: 12px; }
+.more-section:first-child { margin-top: 4px; }
+.more-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 6px;
+}
+.more-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.more-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 64px;
+  padding: 8px 4px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.more-btn svg { width: 20px; height: 20px; color: inherit; }
+.more-btn:hover, .more-btn:active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.more-btn-danger:hover { color: #ff5a4d; border-color: #ff5a4d; background: rgba(255, 90, 77, 0.12); }
+
 /* Tablet rail + props card. Built into the DOM at all sizes but only made
    visible inside the tablet media query below. Sit on top of the canvas as
    floating chrome (position: absolute, never grid items). */
@@ -3158,6 +3235,15 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
     max-height: calc(100vh - 88px); max-height: calc(100dvh - 88px);
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35; overflow: hidden; }
+  /* More menu sits next to the rail on tablet, like Shapr3D's secondary
+     fly-out. Width fixed so the grid stays at 3 columns. */
+  body[data-more-menu="open"] .more-menu {
+    position: fixed;
+    top: 64px;
+    left: 80px;
+    width: 320px;
+    max-height: calc(100dvh - 88px);
+  }
 }
 
 /* Phone (=768 px): Womp-style. Bottom dock with 6 large icons, canvas full
@@ -3199,6 +3285,16 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
     box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.55);
     z-index: 36;
     overflow: hidden;
+  }
+
+  /* More menu as bottom-sheet on phone, above the dock. */
+  body[data-more-menu="open"] .more-menu {
+    position: fixed;
+    left: 6px;
+    right: 6px;
+    bottom: 76px;
+    max-height: 60dvh;
+    max-height: 60vh;
   }
 
   /* Insert sheet: the existing sidebar repurposed as a bottom-sheet. Same
