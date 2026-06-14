@@ -317,6 +317,52 @@
     </div>
   </div>
 
+  <!-- Tablet-only rail (769-1024 px). Vertical icon-only toolbar, Shapr3D-style.
+       Each button data-action matches the desktop toolbar so the same click
+       handler works for both. -->
+  <aside class="tool-rail" id="tool-rail" aria-label="Primary tools">
+    <button class="rail-btn tip" data-action="tablet-insert" data-tip="Insert a shape (Box, Cylinder, Sphere, ...)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5 V19 M5 12 H19"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="group" data-tip="Group + boolean (Ctrl+G)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 11 L13 13"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="intersect" data-tip="Intersect (Ctrl+Shift+G)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="cut" data-tip="Slice along an axis">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16 L20 8 M9 18 L4 20 M15 6 L20 4"/><circle cx="6" cy="17.5" r="2"/><circle cx="18" cy="6.5" r="2"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="hollow" data-tip="Hollow inside, pick wall thickness">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="array" data-tip="Linear / circular array">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="workplane" data-tip="Set workplane from a face">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z M12 12 L12 21 M3 7 L12 12 L21 7"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="pushpull" data-tip="Push / Pull along face normal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14 L4 20 L14 20 L14 14 Z M9 14 L9 5 M9 5 L7 7 M9 5 L11 7"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="ruler" data-tip="Measure distance">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18 L18 3 L21 6 L6 21 Z"/></svg>
+    </button>
+    <button class="rail-btn tip" data-action="tablet-more" data-tip="More tools (Ref Plane, Sketch, Align, Mirror, ...)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="18" cy="12" r="1.5" fill="currentColor"/></svg>
+    </button>
+  </aside>
+
+  <!-- Tablet floating properties card. #props-body is moved inside this on init
+       when the viewport is in tablet range. -->
+  <aside class="props-card" id="props-card" hidden>
+    <div class="props-card-head">
+      <span>Properties</span>
+      <button class="props-card-close" aria-label="Close properties">×</button>
+    </div>
+    <div class="props-card-body" id="props-card-body"></div>
+  </aside>
+
   <main class="layout">
     <div class="mobile-drawer-scrim" id="mobile-drawer-scrim" aria-hidden="true"></div>
     <aside class="sidebar">

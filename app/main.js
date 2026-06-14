@@ -126,6 +126,8 @@ function main() {
   // payload) and runs in the background.
   setInterval(revalidateLicense, 10 * 60 * 1000);
   bindMobileDrawers();
+  installPropsBodyHost();
+  installTabletPropsCardSync();
 }
 
 // Mobile: Shapes (sidebar) and Properties slide in from the sides as drawers,
@@ -145,6 +147,58 @@ function closeMobileDrawer() {
   delete document.body.dataset.mobileDrawer;
 }
 
+// Tablet (769-1024 px): the sidebar acts as a fly-out popover anchored next
+// to the tool-rail. Toggle by adding/removing the anchor class + body flag.
+function toggleTabletInsertPopover() {
+  const sidebar = document.querySelector('.sidebar');
+  if (!sidebar) return;
+  const open = sidebar.classList.toggle('tablet-insert-anchored');
+  if (open) document.body.dataset.tabletInsert = 'open';
+  else delete document.body.dataset.tabletInsert;
+}
+
+// Tablet-mode props-card sync: keep body[data-shape-selected] up to date so
+// the floating card only appears when something is actually selected (matches
+// Shapr3D's "no chrome unless you need it" feel).
+function installTabletPropsCardSync() {
+  const update = () => {
+    if (state.selectedId) document.body.dataset.shapeSelected = '1';
+    else delete document.body.dataset.shapeSelected;
+  };
+  // Initial state.
+  update();
+  // Patch into the existing selection-change pipeline.
+  import('./selection.js').then(({ onSelectionChange }) => {
+    onSelectionChange(update);
+  });
+  // Close button on the floating card hides it (until next selection change).
+  const close = document.querySelector('.props-card-close');
+  if (close) close.addEventListener('click', () => {
+    delete document.body.dataset.shapeSelected;
+  });
+}
+
+// Move the existing #props-body element into the props-card-body so the same
+// render() pipeline (properties.js) works in both desktop and tablet modes.
+// The destination element wrap is decided by the current viewport width and
+// re-evaluated on resize.
+function installPropsBodyHost() {
+  const original = document.getElementById('props-body');
+  const desktopHost = document.querySelector('.properties');
+  const tabletHost = document.getElementById('props-card-body');
+  if (!original || !desktopHost || !tabletHost) return;
+  const mql = window.matchMedia('(max-width: 1024px) and (min-width: 769px)');
+  const apply = () => {
+    const wantTablet = mql.matches;
+    const currentParent = original.parentElement;
+    if (wantTablet && currentParent !== tabletHost) tabletHost.appendChild(original);
+    else if (!wantTablet && currentParent !== desktopHost) desktopHost.appendChild(original);
+  };
+  apply();
+  mql.addEventListener('change', apply);
+  window.addEventListener('resize', apply);
+}
+
 function bindMobileDrawers() {
   const scrim = document.getElementById('mobile-drawer-scrim');
   if (scrim) scrim.addEventListener('click', closeMobileDrawer);
@@ -161,7 +215,10 @@ function bindMobileDrawers() {
 }
 
 function bindToolbar() {
-  document.getElementById('toolbar').addEventListener('click', (ev) => {
+  // Listen on document level so the same data-action attributes work from
+  // both the desktop toolbar AND the tablet-mode tool-rail. Each button
+  // there has data-action="..." matching the desktop equivalent.
+  document.addEventListener('click', (ev) => {
     const btn = ev.target.closest('[data-action]');
     if (!btn) return;
     const action = btn.dataset.action;
@@ -212,6 +269,8 @@ function bindToolbar() {
       case 'ref-plane': startPickPlane3P(); break;
       case 'ref-axis': startPickAxisEdge(); break;
       case 'ref-midpoint': startPickMidpoint(); break;
+      case 'tablet-insert': toggleTabletInsertPopover(); break;
+      case 'tablet-more': toast.info('Coming soon', { detail: 'Sketch, Align, Mirror, Reference geometry will land in a More menu next.' }); break;
       case 'mobile-drawer-shapes': toggleMobileDrawer('shapes'); break;
       case 'mobile-drawer-properties': toggleMobileDrawer('properties'); break;
       case 'extrude':   startExtrude();   break;

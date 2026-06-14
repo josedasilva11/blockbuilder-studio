@@ -2956,6 +2956,116 @@ summary:focus-visible,
   color: var(--text);
 }
 
+/* Tablet rail + props card. Built into the DOM at all sizes but only made
+   visible inside the tablet media query below. Sit on top of the canvas as
+   floating chrome (position: absolute, never grid items). */
+.tool-rail {
+  display: none;
+}
+.tool-rail.is-active {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: fixed;
+  top: 64px;
+  left: 12px;
+  width: 56px;
+  padding: 8px 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  z-index: 35;
+}
+.rail-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease);
+  padding: 0;
+}
+.rail-btn:hover {
+  background: var(--bg-elev);
+  border-color: var(--border);
+}
+.rail-btn:hover, .rail-btn.active {
+  color: var(--accent);
+}
+.rail-btn.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.rail-btn svg { width: 22px; height: 22px; }
+
+.props-card { display: none; }
+.props-card.is-active {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 64px;
+  right: 12px;
+  width: 240px;
+  max-height: calc(100vh - 88px);
+  max-height: calc(100dvh - 88px);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  z-index: 35;
+  overflow: hidden;
+}
+.props-card.is-active[hidden] { display: none; }
+.props-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  font-weight: 600;
+  font-size: 12px;
+}
+.props-card-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.props-card-close:hover { color: var(--text); }
+.props-card-body {
+  padding: 12px 14px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+/* Tablet insert popover: when active, the existing sidebar is re-anchored
+   to float next to the tool-rail. Tap-to-spawn still uses sidebar.js's
+   click handlers; we just relocate the visual. */
+body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
+  display: block;
+  position: fixed;
+  top: 64px;
+  left: 80px;
+  width: 280px;
+  max-height: calc(100dvh - 88px);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  z-index: 34;
+  padding: 14px;
+  overflow-y: auto;
+}
+
 /* Mobile drawer scrim. Outside any media query because it must NOT be a grid
    item at any width, otherwise it eats the first column of `.layout` and
    pushes Sidebar / Properties out of place. Hidden by default; mobile CSS
@@ -2979,18 +3089,28 @@ summary:focus-visible,
    handles get a coarse-pointer hit-area boost (set inside handles.js too).
    ============================================================================ */
 
-/* Tablet, narrower side panels, smaller toolbar buttons, but the desktop
-   3-column grid still holds because there's room. */
-@media (max-width: 1024px) {
-  .layout { grid-template-columns: 200px 1fr 260px; }
-  .toolbar { padding: 6px 8px; gap: 4px; flex-wrap: wrap; }
-  .toolbar button {
-    min-width: 52px;
-    padding: 6px 6px;
-    font-size: 10px;
+/* Tablet (769-1024 px): Shapr3D-style. Vertical rail + floating props card,
+   canvas takes the whole screen behind. Desktop toolbar, sidebar and side
+   properties are hidden; the tablet insert popover repurposes the sidebar
+   DOM when active. */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .topbar .toolbar { display: none; }
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "viewport";
+    position: relative;
   }
-  .toolbar button svg { width: 18px; height: 18px; }
-  .sidebar, .properties { padding: 12px 10px; }
+  .layout > .sidebar:not(.tablet-insert-anchored) { display: none; }
+  .layout > .properties { display: none; }
+  .tool-rail { display: flex !important; flex-direction: column; gap: 6px;
+    position: fixed; top: 64px; left: 12px; width: 56px; padding: 8px 6px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35; }
+  body[data-shape-selected="1"] .props-card { display: flex !important;
+    flex-direction: column; position: fixed; top: 64px; right: 12px; width: 240px;
+    max-height: calc(100vh - 88px); max-height: calc(100dvh - 88px);
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35; overflow: hidden; }
 }
 
 /* Phone, single column. Sidebar + properties become slide-in drawers anchored
