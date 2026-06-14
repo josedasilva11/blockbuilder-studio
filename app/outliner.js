@@ -68,10 +68,15 @@ function renderRefRow(rg) {
   const hid = !rg.visible;
   const glyph = REF_GLYPH[rg.kind] || '◇';
   const name = escapeHtml(rg.name || rg.kind);
+  const useAsWp = rg.kind === 'PLANE_3P'
+    ? `<button class="ol-mini tip" data-ref-workplane="${rg.id}"
+         data-tip="Use this plane as the active workplane. New shapes spawn aligned to it.">⌂</button>`
+    : '';
   return `<div class="outliner-row outliner-row-ref${hid ? ' is-hidden' : ''}" data-ref-id="${rg.id}" style="padding-left:8px;">
     <span class="ol-spacer"></span>
     <span class="ol-glyph ol-glyph-ref">${glyph}</span>
-    <span class="ol-name" data-tip="${rg.kind.replace('_', ' ').toLowerCase()} reference — construction geometry, not printable, not exported">${name}</span>
+    <span class="ol-name" data-tip="${rg.kind.replace('_', ' ').toLowerCase()} reference, construction geometry, not printable, not exported">${name}</span>
+    ${useAsWp}
     <button class="ol-mini tip" data-ref-eye="${rg.id}"
       data-tip="${hid ? 'Show this reference.' : 'Hide this reference (stays in the scene but invisible).'}">${hid ? eyeOff() : eyeOn()}</button>
     <button class="ol-mini tip" data-ref-del="${rg.id}"
@@ -175,6 +180,21 @@ function onClick(ev) {
     const rg = state.refGeoms.get(refDel.dataset.refDel);
     if (rg) rg.dispose();
     _lastSig = '';
+    return;
+  }
+  const refWp = ev.target.closest('[data-ref-workplane]');
+  if (refWp) {
+    ev.stopPropagation();
+    const rg = state.refGeoms.get(refWp.dataset.refWorkplane);
+    if (rg && rg.kind === 'PLANE_3P') {
+      const [a, b, c] = rg.data.points;
+      const normal = b.clone().sub(a).cross(c.clone().sub(a)).normalize();
+      const centroid = a.clone().add(b).add(c).multiplyScalar(1 / 3);
+      // Dynamic import to keep outliner.js free of a workplane.js static dep
+      // (workplane.js imports state.js, outliner.js imports state.js, no cycle
+      // either way today, but static import keeps the surface tighter).
+      import('./workplane.js').then((wp) => wp.setOverride(centroid, normal));
+    }
     return;
   }
   const row = ev.target.closest('[data-id]');
