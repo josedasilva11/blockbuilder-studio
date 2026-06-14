@@ -581,6 +581,24 @@ function snapFaceMoveToFeature(axis, dWorld, sess) {
     targets.push((b.min[ax] + b.max[ax]) / 2);
     targets.push(b.max[ax]);
   }
+  // Reference geometry contributes coordinates on the dragged axis too.
+  // A MIDPOINT contributes one coord; an AXIS_EDGE contributes its endpoints
+  // and midpoint coord; a PLANE_3P contributes the coords of its 3 defining
+  // points (so dragging a face onto a plane snaps to whichever defining
+  // point's axial coord is closest, which is usually the one on the plane
+  // when the plane is axis-aligned).
+  for (const rg of (state.refGeoms?.values?.() ?? [])) {
+    if (!rg.visible) continue;
+    if (rg.kind === 'MIDPOINT') {
+      targets.push(rg.data.point[ax]);
+    } else if (rg.kind === 'AXIS_EDGE') {
+      targets.push(rg.data.from[ax]);
+      targets.push(rg.data.to[ax]);
+      targets.push((rg.data.from[ax] + rg.data.to[ax]) / 2);
+    } else if (rg.kind === 'PLANE_3P') {
+      for (const p of rg.data.points) targets.push(p[ax]);
+    }
+  }
   targets.push(0); // world origin on this axis
 
   const tol = Math.max(0.5, startSize * 0.02);

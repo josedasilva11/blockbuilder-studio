@@ -233,6 +233,34 @@ export function installPickHandler(canvas) {
           new THREE.Vector2(mx, my),              // centre
         );
       }
+      // Reference geometry contributes snap targets too. We project each ref's
+      // anchor points down to the workplane (Z = 0) so body-drag (which is a
+      // 2D operation in XY) can hit them. Refs that don't intersect the
+      // workplane meaningfully still contribute a projection; the user can
+      // see the result and decide if it's what they wanted.
+      for (const rg of state.refGeoms.values()) {
+        if (!rg.visible) continue;
+        if (rg.kind === 'MIDPOINT') {
+          const p = rg.data.point;
+          snapTargets.push(new THREE.Vector2(p.x, p.y));
+        } else if (rg.kind === 'AXIS_EDGE') {
+          // Endpoints + midpoint.
+          const a = rg.data.from, b = rg.data.to;
+          snapTargets.push(new THREE.Vector2(a.x, a.y));
+          snapTargets.push(new THREE.Vector2(b.x, b.y));
+          snapTargets.push(new THREE.Vector2((a.x + b.x) / 2, (a.y + b.y) / 2));
+        } else if (rg.kind === 'PLANE_3P') {
+          // Three defining points + centroid.
+          const [p1, p2, p3] = rg.data.points;
+          snapTargets.push(new THREE.Vector2(p1.x, p1.y));
+          snapTargets.push(new THREE.Vector2(p2.x, p2.y));
+          snapTargets.push(new THREE.Vector2(p3.x, p3.y));
+          snapTargets.push(new THREE.Vector2(
+            (p1.x + p2.x + p3.x) / 3,
+            (p1.y + p2.y + p3.y) / 3,
+          ));
+        }
+      }
       _bodyDrag = {
         shapes: groupShapes,
         initPositions: groupShapes.map(s => s.mesh.position.clone()),
