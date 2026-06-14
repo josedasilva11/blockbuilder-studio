@@ -3003,6 +3003,52 @@ summary:focus-visible,
   background: var(--accent-soft);
 }
 
+/* Long-press radial menu for touch screens. Appears at the press location
+   when a finger is held down on a shape for =500 ms. Tap an action; menu
+   closes. Tap outside; menu closes. Only spawned on (pointer: coarse). */
+.long-press-menu {
+  position: fixed;
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  z-index: 60;
+  animation: fadeIn 0.12s var(--ease);
+}
+.lpm-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 64px;
+  min-height: 56px;
+  padding: 6px 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.lpm-btn svg { width: 22px; height: 22px; color: inherit; }
+.lpm-btn:hover, .lpm-btn:active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.lpm-danger:hover, .lpm-danger:active {
+  color: #ff5a4d;
+  background: rgba(255, 90, 77, 0.12);
+  border-color: #ff5a4d;
+}
+
 /* More menu: shared component between tablet (positioned next to rail) and
    phone (bottom-sheet above dock). Hidden until body[data-more-menu="open"]. */
 .more-menu { display: none; }
