@@ -39,6 +39,9 @@ const SHORTCUTS = [
 
   // Tools
   { keys: ['Push/Pull toolbar'], group: 'Tools', label: 'Click any face, drag to extrude a prism along its normal (works on slanted faces)' },
+  { keys: ['Ref Plane toolbar'], group: 'Tools', label: 'Click 3 points to spawn a reference plane (construction, not printable)' },
+  { keys: ['Ref Axis toolbar'], group: 'Tools', label: 'Click any edge to spawn a dashed reference axis along it' },
+  { keys: ['Midpoint toolbar'], group: 'Tools', label: 'Click any edge to drop a midpoint marker on it' },
   { keys: ['Hover edge'], group: 'Tools', label: 'Show edge length label (any visible shape)' },
   { keys: ['Array, Skip instances'], group: 'Tools', label: 'Comma-separated 1-based indices to omit from the pattern' },
 

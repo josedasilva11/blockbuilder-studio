@@ -21,6 +21,7 @@ import { state } from './state.js';
 import { isWorkplanePickActive } from './workplane.js';
 import { isRulerActive } from './ruler.js';
 import { isPushPullActive } from './push_pull.js';
+import { isRefGeomActive } from './ref_geom.js';
 
 const EDGE_THRESHOLD_DEG = 1;       // angle below which an edge is "internal"
 const SCREEN_PIXEL_THRESHOLD = 24;  // max distance from cursor to edge midpoint
@@ -110,6 +111,7 @@ function shouldSkipFrame() {
     if (isWorkplanePickActive()) return true;
     if (isRulerActive()) return true;
     if (isPushPullActive()) return true;
+    if (isRefGeomActive()) return true;
   } catch {}
   if (document.querySelector('.cut-panel, .hollow-panel, .array-panel, .amr-panel')) return true;
   return false;

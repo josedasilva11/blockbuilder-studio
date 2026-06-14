@@ -11,6 +11,7 @@ export const state = {
   snapStep: 1,             // base units; 0 means off
   unit: 'mm',              // base unit label — chosen on first launch
   shapes: new Map(),       // id → TinkerShape (see Shape class)
+  refGeoms: new Map(),     // id → RefGeom (planes, axes, midpoints — construction geometry)
   selectedId: null,
   groupHostId: null,       // when inside an Edit Group, the host id
   nextId: 1,

@@ -121,6 +121,20 @@
         </button>
       </div>
       <div class="tool-group">
+        <button data-action="ref-plane" data-tip="REFERENCE PLANE — click 3 points on any shape(s) to spawn a translucent reference plane through them. Construction geometry, not printable. Esc cancels." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z" stroke-dasharray="3 2"/><circle cx="6" cy="9" r="1.4" fill="currentColor"/><circle cx="18" cy="9" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></svg>
+          <span>Ref Plane</span>
+        </button>
+        <button data-action="ref-axis" data-tip="REFERENCE AXIS — click any edge of a shape to spawn a dashed axis line along it. Useful for aligning array directions and rotations. Esc cancels." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21 L21 3" stroke-dasharray="2 2"/><circle cx="7" cy="17" r="1.4" fill="currentColor"/><circle cx="17" cy="7" r="1.4" fill="currentColor"/></svg>
+          <span>Ref Axis</span>
+        </button>
+        <button data-action="ref-midpoint" data-tip="MIDPOINT MARKER — click any edge of a shape to drop a small marker at its midpoint. Useful for centring shapes against a feature. Esc cancels." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12 L20 12"/><circle cx="4" cy="12" r="1.4" fill="currentColor"/><circle cx="20" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/></svg>
+          <span>Midpoint</span>
+        </button>
+      </div>
+      <div class="tool-group">
         <button data-action="extrude" data-tip="EXTRUDE SKETCH — click on the workplane to drop polygon corners, double-click or Enter to extrude into a 3D prism. Backspace undoes the last point; Esc cancels. Result is editable like any imported mesh." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18 L9 14 L14 19 L19 14 M5 18 L5 6 L9 2 L14 7 L19 2 L19 14"/></svg>
           <span>Extrude</span>

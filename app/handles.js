@@ -53,7 +53,10 @@ export function initHandles(canvas) {
   _dimPill = document.createElement('div');
   _dimPill.className = 'dim-pill';
   _dimPill.hidden = true;
-  _dimPill.innerHTML = `<input type="number" step="0.1" min="0.1" /><span class="suffix">mm</span>`;
+  // type=text not type=number: corner-handle drags show a "WIDTH x HEIGHT"
+  // string (two numbers + the multiplication symbol) which a number input
+  // can't parse, the warning storm broke the console.
+  _dimPill.innerHTML = `<input type="text" inputmode="decimal" autocomplete="off" /><span class="suffix">mm</span>`;
   document.body.appendChild(_dimPill);
   const input = _dimPill.querySelector('input');
   input.addEventListener('change', commitPillValue);

@@ -32,6 +32,7 @@ import { showArrayWidget } from './array.js';
 import { initRuler, toggleRuler, isRulerActive } from './ruler.js';
 import { initWorkplane, toggleWorkplane } from './workplane.js';
 import { initPushPull, togglePushPull, isPushPullActive } from './push_pull.js';
+import { initRefGeom, startPickPlane3P, startPickAxisEdge, startPickMidpoint } from './ref_geom.js';
 import { initSketch, startExtrude, startRevolve, startScribble } from './sketch.js';
 import { pushHistory, undo, redo, clearHistory } from './history.js';
 import { initSettings, getSetting, setSetting, onSettingChange } from './settings.js';
@@ -73,6 +74,7 @@ function main() {
   initRuler(canvas);
   initWorkplane(canvas);
   initPushPull(canvas);
+  initRefGeom(canvas);
   initSketch(canvas);
 
   const cubeWrap = document.getElementById('viewcube-wrap');
@@ -207,6 +209,9 @@ function bindToolbar() {
       case 'ruler': toggleRuler(); document.querySelector('[data-action="ruler"]').classList.toggle('active', isRulerActive()); break;
       case 'workplane': toggleWorkplane(); break;
       case 'pushpull': togglePushPull(); break;
+      case 'ref-plane': startPickPlane3P(); break;
+      case 'ref-axis': startPickAxisEdge(); break;
+      case 'ref-midpoint': startPickMidpoint(); break;
       case 'mobile-drawer-shapes': toggleMobileDrawer('shapes'); break;
       case 'mobile-drawer-properties': toggleMobileDrawer('properties'); break;
       case 'extrude':   startExtrude();   break;
