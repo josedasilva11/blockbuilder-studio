@@ -2005,8 +2005,8 @@ footer {
   <div class="inner">
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>v0.6.0 just shipped</span>
-      <h2>Nine new things<br><span class="serif">testers asked for.</span></h2>
-      <p>Three rounds of polish from the private beta cohort, all in v0.6. Each item is direct-modelling friendly, no parametric-history baggage.</p>
+      <h2>Ten new things<br><span class="serif">testers asked for.</span></h2>
+      <p>Four rounds of polish from the private beta cohort, all in v0.6. Each item is direct-modelling friendly, no parametric-history baggage.</p>
     </div>
 
     <div class="whatsnew-grid fade-up">
@@ -2055,6 +2055,11 @@ footer {
         <h3>Shortcuts palette + quickstart</h3>
         <p><code>Ctrl+K</code> opens a searchable list of every shortcut. First-launch scene shows a 4-step walkthrough instead of an empty card.</p>
       </div>
+      <div class="wn-card">
+        <div class="wn-num">10</div>
+        <h3>Reference geometry</h3>
+        <p>Three new pickers: <strong>Ref Plane</strong> (3 points), <strong>Ref Axis</strong> (along any edge), <strong>Midpoint</strong> marker. Cyan construction entities, not printable. Body-drag and resize handles snap to them. PLANE_3P rows in the Outliner can be set as the active workplane in one click, perfect for building on an arbitrary tilted face.</p>
+      </div>
     </div>
 
     <p class="whatsnew-roadmap-intro fade-up">
@@ -2062,7 +2067,7 @@ footer {
     </p>
     <ul class="whatsnew-roadmap fade-up">
       <li><strong>Push / Pull v2.</strong> Today's version spawns a new prism on a clicked face. The next step is true face-translation: move the picked face polygon along its normal so the original mesh deforms in place. Needs a proper half-edge representation under the hood.</li>
-      <li><strong>Reference geometry.</strong> Plane through 3 points, axis along edge, midpoint marker. Pickable construction entities other tools snap to.</li>
+      <li><strong>Reference geometry v2.</strong> Edit a ref's defining points after creation, undo on ref add / delete, full-plane snap (not just defining points).</li>
       <li><strong>Sketch constraints</strong> (parallel, perpendicular, equal, tangent). Light parametric inside the Sketch tool only.</li>
       <li><strong>Equations in property values.</strong> <code>width = 2 * wall + 4</code>. Parametric-light without a history timeline.</li>
       <li><strong>Modifier stack per shape.</strong> Stackable, reorderable, non-destructive Array / Mirror / Bevel / Hollow. The right way to do "almost parametric".</li>
