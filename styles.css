@@ -695,6 +695,21 @@ kbd {
 
 .tab-body[hidden] { display: none !important; }
 
+.ol-section-head {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 12px 8px 4px;
+}
+.ol-glyph-ref {
+  color: #6cd5ff;
+}
+.outliner-row-ref {
+  font-size: 11px;
+  color: var(--text-mid);
+}
 #outliner-body {
   display: flex;
   flex-direction: column;

@@ -40,19 +40,43 @@ function refresh() {
   }
   const topLevel = items.filter(s => !childToParent.has(s.id));
 
+  const refs = [...(state.refGeoms?.values?.() ?? [])];
+
   // Stable signature so we only repaint on real changes
   const sig = items.map(s =>
     `${s.id}|${s.mesh.visible}|${s.isHole ? 1 : 0}|${selectedSet.has(s.id) ? 1 : 0}|${s.displayName?.() ?? s.kind}|${s.csgChildren?.length ?? 0}|${_expanded.get(s.id) !== false ? 1 : 0}`
-  ).join(',');
+  ).join(',') + '#' + refs.map(r => `${r.id}|${r.kind}|${r.visible ? 1 : 0}|${r.name}`).join(',');
   if (sig === _lastSig) return;
   _lastSig = sig;
 
-  if (items.length === 0) {
+  if (items.length === 0 && refs.length === 0) {
     _body.innerHTML = `<p class="hint">No shapes yet.<br>Drag one from the left to begin.</p>`;
     return;
   }
 
-  _body.innerHTML = topLevel.map(s => renderRow(s, 0, selectedSet)).join('');
+  let html = topLevel.map(s => renderRow(s, 0, selectedSet)).join('');
+  if (refs.length > 0) {
+    html += `<div class="ol-section-head">Reference geometry</div>`;
+    html += refs.map(renderRefRow).join('');
+  }
+  _body.innerHTML = html;
+}
+
+const REF_GLYPH = { PLANE_3P: '▱', AXIS_EDGE: '⤢', MIDPOINT: '•' };
+
+function renderRefRow(rg) {
+  const hid = !rg.visible;
+  const glyph = REF_GLYPH[rg.kind] || '◇';
+  const name = escapeHtml(rg.name || rg.kind);
+  return `<div class="outliner-row outliner-row-ref${hid ? ' is-hidden' : ''}" data-ref-id="${rg.id}" style="padding-left:8px;">
+    <span class="ol-spacer"></span>
+    <span class="ol-glyph ol-glyph-ref">${glyph}</span>
+    <span class="ol-name" data-tip="${rg.kind.replace('_', ' ').toLowerCase()} reference — construction geometry, not printable, not exported">${name}</span>
+    <button class="ol-mini tip" data-ref-eye="${rg.id}"
+      data-tip="${hid ? 'Show this reference.' : 'Hide this reference (stays in the scene but invisible).'}">${hid ? eyeOff() : eyeOn()}</button>
+    <button class="ol-mini tip" data-ref-del="${rg.id}"
+      data-tip="Delete this reference. There is no undo for refs yet.">×</button>
+  </div>`;
 }
 
 function renderRow(shape, depth, selectedSet) {
@@ -133,6 +157,23 @@ function onClick(ev) {
       s.mesh.visible = !s.mesh.visible;
       requestRender();
     }
+    _lastSig = '';
+    return;
+  }
+  // Reference geometry row buttons.
+  const refEye = ev.target.closest('[data-ref-eye]');
+  if (refEye) {
+    ev.stopPropagation();
+    const rg = state.refGeoms.get(refEye.dataset.refEye);
+    if (rg) rg.setVisible(!rg.visible);
+    _lastSig = '';
+    return;
+  }
+  const refDel = ev.target.closest('[data-ref-del]');
+  if (refDel) {
+    ev.stopPropagation();
+    const rg = state.refGeoms.get(refDel.dataset.refDel);
+    if (rg) rg.dispose();
     _lastSig = '';
     return;
   }
