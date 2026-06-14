@@ -851,6 +851,27 @@ kbd {
   width: 100%;
   accent-color: var(--accent);
 }
+
+/* Param row with a scrubbable slider beneath the text input. The label sits
+   in column 1; the text input sits in column 2; the range slider spans both
+   columns on a new row so it gets the full panel width. */
+.prop-row-scrub {
+  grid-template-columns: 88px 1fr;
+  row-gap: 4px;
+}
+.prop-row-scrub label { grid-column: 1; grid-row: 1; }
+.prop-row-scrub > input[type="text"] { grid-column: 2; grid-row: 1; }
+.prop-row-scrub > input.prop-slider {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 18px;
+  margin: 0;
+  cursor: ew-resize;
+}
+.prop-row-scrub > input.prop-slider:focus {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
 .prop-row input[type="number"], .prop-row input[type="text"] {
   font: inherit;
   border: 1px solid var(--border-soft);
@@ -1270,7 +1291,62 @@ html.no-tooltips #tooltip { display: none !important; }
   color: var(--text);
   font-size: 12px;
   animation: fadeIn 0.15s var(--ease);
+  /* Cap height to the viewport with a 16px gap top + bottom, then scroll the
+     overflow. Otherwise long settings (themes + viewport + units + license,
+     etc.) push off-screen on shorter windows / laptops. dvh is the iOS-safe
+     unit (vh in iOS Safari includes the URL bar area); vh declared first as
+     fallback for older browsers that don't understand dvh. */
+  max-height: calc(100vh - 76px);
+  max-height: calc(100dvh - 76px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
+/* Webkit scrollbar matched to the panel chrome. */
+.settings-panel::-webkit-scrollbar { width: 10px; }
+.settings-panel::-webkit-scrollbar-track { background: transparent; }
+.settings-panel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--panel);
+}
+.settings-panel::-webkit-scrollbar-thumb:hover { background: var(--border-soft); }
+
+/* Same vertical-overflow treatment for every floating tool panel. Each one
+   sits at top: 120px (or similar), so cap to viewport-minus-margin and let
+   the inner content scroll. Without this, the Array panel with all its rows
+   (mode, axis, count, spacing, angle, radius, skip, actions) can push the
+   Create button below the visible window on a 768 px laptop. */
+.cut-panel,
+.hollow-panel,
+.array-panel,
+.amr-panel {
+  max-height: calc(100vh - 136px);
+  max-height: calc(100dvh - 136px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.cut-panel::-webkit-scrollbar,
+.hollow-panel::-webkit-scrollbar,
+.array-panel::-webkit-scrollbar,
+.amr-panel::-webkit-scrollbar { width: 10px; }
+.cut-panel::-webkit-scrollbar-track,
+.hollow-panel::-webkit-scrollbar-track,
+.array-panel::-webkit-scrollbar-track,
+.amr-panel::-webkit-scrollbar-track { background: transparent; }
+.cut-panel::-webkit-scrollbar-thumb,
+.hollow-panel::-webkit-scrollbar-thumb,
+.array-panel::-webkit-scrollbar-thumb,
+.amr-panel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--panel);
+}
+.cut-panel::-webkit-scrollbar-thumb:hover,
+.hollow-panel::-webkit-scrollbar-thumb:hover,
+.array-panel::-webkit-scrollbar-thumb:hover,
+.amr-panel::-webkit-scrollbar-thumb:hover { background: var(--border-soft); }
 .settings-panel[hidden] { display: none; }
 .settings-header {
   display: flex;
@@ -1807,6 +1883,41 @@ html.no-tooltips #tooltip { display: none !important; }
 /* Permanent About card pinned at the bottom of the Properties aside */
 .properties { display: flex; flex-direction: column; }
 .properties #props-body { flex: 1 1 auto; overflow-y: auto; }
+/* Compact mode: when a shape is selected the About card collapses to a tiny
+   one-line strip so the property rows actually have room to breathe (full
+   form takes ~225 px of a 369 px panel, leaving the body squashed). The card
+   keeps the Marjers attribution + coffee CTA visible but folded. */
+.props-about.compact {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.props-about.compact .props-about-head,
+.props-about.compact > p { display: none; }
+.props-about.compact::before {
+  content: 'Built by Marjers';
+  color: var(--text-dim);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+}
+.props-about.compact .props-about-actions {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.props-about.compact .props-about-cta { display: none; }
+.props-about.compact .props-about-coffee {
+  font-size: 10px;
+  padding: 2px 8px;
+}
 .props-about {
   flex: 0 0 auto;
   margin-top: 14px;
@@ -2795,4 +2906,141 @@ summary:focus-visible,
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 10px;
   color: var(--text);
+}
+
+/* ============================================================================
+   RESPONSIVE: tablet (=1024 px) + phone (=768 px).
+   The desktop layout is a fixed 240px / 1fr / 300px grid. On narrow screens
+   we tighten the side panels, then collapse them into off-canvas drawers
+   toggled from the toolbar. Toolbar wraps to a horizontal scroller. Custom
+   handles get a coarse-pointer hit-area boost (set inside handles.js too).
+   ============================================================================ */
+
+/* Tablet, narrower side panels, smaller toolbar buttons, but the desktop
+   3-column grid still holds because there's room. */
+@media (max-width: 1024px) {
+  .layout { grid-template-columns: 200px 1fr 260px; }
+  .toolbar { padding: 6px 8px; gap: 4px; flex-wrap: wrap; }
+  .toolbar button {
+    min-width: 52px;
+    padding: 6px 6px;
+    font-size: 10px;
+  }
+  .toolbar button svg { width: 18px; height: 18px; }
+  .sidebar, .properties { padding: 12px 10px; }
+}
+
+/* Phone, single column. Sidebar + properties become slide-in drawers anchored
+   to body[data-mobile-drawer]. Toolbar becomes a horizontally-scrollable strip
+   so 25+ buttons stay reachable without wrapping into 4 rows. */
+@media (max-width: 768px) {
+  body { font-size: 13px; }
+  /* Toolbar: horizontal scroll, sticky to top. */
+  .toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 6px 8px;
+    gap: 4px;
+    scrollbar-width: none;
+  }
+  .toolbar::-webkit-scrollbar { display: none; }
+  .toolbar button {
+    flex: 0 0 auto;
+    min-width: 56px;
+    min-height: 44px;          /* Apple HIG touch target */
+    padding: 4px 6px;
+    font-size: 10px;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .toolbar button svg { width: 22px; height: 22px; }
+  .toolbar button span { font-size: 9px; line-height: 1; }
+
+  /* Layout: 1 column, viewport eats the whole screen. */
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "viewport";
+    position: relative;
+  }
+
+  /* Sidebar + Properties become off-canvas drawers. By default they slide
+     off-screen; main.js toggles body[data-mobile-drawer] to bring one in.
+     Properties slides from the right, Sidebar from the left, so the user
+     can never see both at once. */
+  .sidebar, .properties {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: min(85vw, 320px);
+    z-index: 50;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    transition: transform 0.22s var(--ease);
+    will-change: transform;
+  }
+  .sidebar { left: 0; transform: translateX(-100%); }
+  .properties { right: 0; transform: translateX(100%); }
+  body[data-mobile-drawer="shapes"] .sidebar { transform: translateX(0); }
+  body[data-mobile-drawer="properties"] .properties { transform: translateX(0); }
+
+  /* Scrim behind whichever drawer is open. main.js shows/hides this div. */
+  .mobile-drawer-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 10, 14, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s var(--ease);
+  }
+  body[data-mobile-drawer] .mobile-drawer-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Mobile-only buttons inserted into the toolbar to toggle the drawers. */
+  .mobile-only { display: inline-flex !important; }
+
+  /* Floating tool panels shrink and dock to the bottom on mobile so they
+     don't cover the canvas while you tap. */
+  .cut-panel, .hollow-panel, .array-panel, .amr-panel, .settings-panel {
+    top: auto !important;
+    right: 8px !important;
+    left: 8px !important;
+    bottom: 8px !important;
+    width: auto !important;
+    max-height: 60vh;
+  }
+
+  /* Welcome / unit modals fill the screen on phone. */
+  .welcome-modal, .unit-modal {
+    width: calc(100vw - 24px) !important;
+    max-width: none !important;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  /* Properties slider rows get more vertical space (touch-friendly thumb). */
+  .prop-row-scrub > input.prop-slider { height: 24px; }
+  /* Hide the "Studio" suffix on narrow brand area, the badge gets clipped to
+     "S1" otherwise. The "BlockBuilder" wordmark already conveys the brand. */
+  .brand-studio { display: none !important; }
+}
+
+/* Show mobile-only buttons only when mobile media query is active. */
+.mobile-only { display: none; }
+
+/* On any coarse pointer (touch screens, even on wider tablets), bump the
+   handle widgets in the viewport so a fingertip can hit them. The HTML
+   overlay handles read this via getComputedStyle on a probe element. */
+@media (pointer: coarse) {
+  :root { --handle-touch-scale: 1.6; }
+  /* Bigger custom resize / face handles (handles.js renders them as plain
+     divs, so a CSS scale boost works without code changes IF the script
+     reads --handle-touch-scale; see handles.js TOUCH_SCALE constant). */
+  .handle-square, .handle-arc { transform-origin: center; }
+}
+@media (pointer: fine) {
+  :root { --handle-touch-scale: 1; }
 }

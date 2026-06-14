@@ -42,6 +42,10 @@ function createWindow() {
   });
 
   win.once('ready-to-show', () => {
+    // Open maximised (covers the work area, leaves taskbar visible). Press
+    // F11 / View > Toggle Full Screen for borderless full-screen. Width /
+    // height above are the fallback if the user un-maximises later.
+    win.maximize();
     win.show();
     if (isDev) win.webContents.openDevTools({ mode: 'detach' });
   });

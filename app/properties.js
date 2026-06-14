@@ -61,6 +61,36 @@ const PARAM_TIPS = {
 };
 const PARAM_STEP = { segments: 1, minor_segments: 1, sides: 1, fillet_segments: 1 };
 
+// Slider range hints per param. Min is the value below which geometry degenerates;
+// max is what the slider tops out at by default. If the current value exceeds
+// max, the slider auto-extends to value * 1.5 so the live thumb stays usable.
+// All sizes are in the active unit (mm by default).
+const PARAM_RANGE = {
+  width:           { min: 0.5, max: 200, step: 0.5 },
+  depth:           { min: 0.5, max: 200, step: 0.5 },
+  height:          { min: 0.5, max: 200, step: 0.5 },
+  radius:          { min: 0.1, max: 100, step: 0.5 },
+  radius_top:      { min: 0,   max: 100, step: 0.5 },
+  inner_radius:    { min: 0,   max: 100, step: 0.5 },
+  minor_radius:    { min: 0.1, max: 50,  step: 0.25 },
+  chamfer:         { min: 0,   max: 50,  step: 0.1 },
+  fillet:          { min: 0,   max: 50,  step: 0.1 },
+  segments:        { min: 3,   max: 128, step: 1 },
+  minor_segments:  { min: 3,   max: 64,  step: 1 },
+  sides:           { min: 3,   max: 32,  step: 1 },
+  fillet_segments: { min: 1,   max: 32,  step: 1 },
+};
+
+function rangeFor(key, currentValue) {
+  const r = PARAM_RANGE[key];
+  if (!r) return null;
+  // Extend max if current value already exceeds it, so the slider thumb
+  // stays inside the track (Tinkercad does this too).
+  let max = r.max;
+  if (Number.isFinite(currentValue) && currentValue > max) max = Math.ceil(currentValue * 1.5);
+  return { min: r.min, max, step: r.step };
+}
+
 const SCALED_PARAMS = new Set(['width', 'depth', 'height', 'radius', 'inner_radius', 'minor_radius', 'radius_top']);
 const PARAM_AXIS = {
   width: 'x', depth: 'y', height: 'z',
@@ -97,7 +127,15 @@ function refreshLiveValues() {
   for (const key in _inputs) {
     const el = _inputs[key];
     if (!el || document.activeElement === el) continue;
-    el.value = effectiveDim(s, key).toFixed(2);
+    const v = effectiveDim(s, key);
+    el.value = v.toFixed(2);
+    // Keep the paired slider in sync too (gizmo drags, undo, etc).
+    const slider = el.parentElement?.querySelector('input.prop-slider');
+    if (slider && document.activeElement !== slider) {
+      const r = rangeFor(key, v);
+      if (r && parseFloat(slider.max) !== r.max) slider.max = r.max;
+      slider.value = v;
+    }
   }
   if (_posInputs) {
     ['x', 'y', 'z'].forEach((ax, i) => {
@@ -137,6 +175,11 @@ function render(shape) {
   _body.innerHTML = '';
   _inputs = {};
   _posInputs = null;
+  // Collapse the About card to a single-line strip whenever a shape is being
+  // edited, so the property rows actually have vertical room. Expanded form
+  // returns when nothing is selected (the panel has nothing else to show).
+  const aboutEl = document.querySelector('.props-about');
+  if (aboutEl) aboutEl.classList.toggle('compact', !!shape);
   if (!shape) {
     _body.innerHTML = `<div class="hint card">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8 V12 M12 16 H12.01"/></svg>
@@ -176,22 +219,56 @@ function render(shape) {
   if (def?.params) {
     for (const key of def.params) {
       const row = document.createElement('div');
-      row.className = 'prop-row';
+      row.className = 'prop-row prop-row-scrub';
       const id = `prop-${shape.id}-${key}`;
-      const step = PARAM_STEP[key] ?? 0.1;
       const suffix = SCALED_PARAMS.has(key) ? ` (${state.unit})` : '';
       const tip = PARAM_TIPS[key] || `Edit ${PARAM_LABELS[key] || key}. Change is undoable with Ctrl+Z.`;
+      const current = effectiveDim(shape, key);
+      const range = rangeFor(key, current);
+      const sliderHtml = range
+        ? `<input type="range" class="prop-slider" min="${range.min}" max="${range.max}" step="${range.step}" value="${current}" aria-label="${PARAM_LABELS[key] || key} slider" />`
+        : '';
       row.innerHTML = `
         <label for="${id}" class="tip" data-tip="${tip}">${PARAM_LABELS[key] || key}${suffix}</label>
-        <input id="${id}" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${effectiveDim(shape, key).toFixed(2)}" title="Accepts plain numbers or expressions like 2*12+4, sqrt(50), max(10, 8). Press Enter to evaluate." />
+        <input id="${id}" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${current.toFixed(2)}" title="Accepts plain numbers or expressions like 2*12+4, sqrt(50), max(10, 8). Press Enter to evaluate. Drag the slider for a live preview." />
+        ${sliderHtml}
       `;
-      const input = row.querySelector('input');
+      const input = row.querySelector('input[type="text"]');
+      const slider = row.querySelector('input.prop-slider');
       input.addEventListener('change', () => {
         const v = readNumberInput(input);
         if (v === null) { input.value = effectiveDim(shape, key).toFixed(2); return; }
         pushHistory();
         applyParam(shape, key, v);
+        if (slider) {
+          // Extend slider max if the typed value exceeded it.
+          const r = rangeFor(key, v);
+          if (r) { slider.min = r.min; slider.max = r.max; slider.step = r.step; }
+          slider.value = v;
+        }
       });
+      if (slider) {
+        let scrubbing = false;
+        slider.addEventListener('pointerdown', () => {
+          // Push history once at the start of the drag, not on every input event.
+          if (!scrubbing) { scrubbing = true; pushHistory(); }
+        });
+        const finish = () => { scrubbing = false; };
+        slider.addEventListener('pointerup', finish);
+        slider.addEventListener('pointercancel', finish);
+        slider.addEventListener('input', () => {
+          const v = parseFloat(slider.value);
+          if (!Number.isFinite(v)) return;
+          // Live preview: apply param every input event. _rebuildGeometry is
+          // cheap for primitives; the existing render-on-demand loop limits
+          // GPU work to whatever frames the browser can paint.
+          applyParam(shape, key, v);
+          input.value = v.toFixed(2);
+        });
+        // Keyboard-only changes (arrow keys on the slider) bypass pointerdown
+        // and never reset `scrubbing`, but each emits an input event. Fine.
+        // The user pays one history slot per arrow press; acceptable.
+      }
       _inputs[key] = input;
       _body.appendChild(row);
     }

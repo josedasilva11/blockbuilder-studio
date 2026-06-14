@@ -1,0 +1,36 @@
+{
+  "name": "BlockBuilder Studio",
+  "short_name": "BlockBuilder",
+  "description": "Offline 3D modelling for the printer. 13 primitives, full CSG, STL/OBJ/STEP export. Runs locally.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "orientation": "any",
+  "theme_color": "#14171d",
+  "background_color": "#0e1117",
+  "lang": "en",
+  "categories": ["productivity", "graphics", "utilities"],
+  "icons": [
+    { "src": "build/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "build/icon-256.png", "sizes": "192x192 256x256", "type": "image/png", "purpose": "any" },
+    { "src": "build/icon-1024.png", "sizes": "512x512 1024x1024", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    {
+      "name": "New project",
+      "short_name": "New",
+      "url": "/?new=1"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "model/stl": [".stl"],
+        "application/json": [".json"]
+      }
+    }
+  ]
+}

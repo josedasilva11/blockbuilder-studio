@@ -34,8 +34,13 @@ const SHORTCUTS = [
   { keys: ['G'], group: 'Edit', label: 'Hide gizmo' },
 
   // CSG
-  { keys: ['Ctrl', 'G'], group: 'CSG', label: 'Group (union + subtract) — reversible until Bake' },
-  { keys: ['Ctrl', 'Shift', 'G'], group: 'CSG', label: 'Intersect — keep common volume' },
+  { keys: ['Ctrl', 'G'], group: 'CSG', label: 'Group (union + subtract), reversible until Bake' },
+  { keys: ['Ctrl', 'Shift', 'G'], group: 'CSG', label: 'Intersect, keep only common volume' },
+
+  // Tools
+  { keys: ['Push/Pull toolbar'], group: 'Tools', label: 'Click any face, drag to extrude a prism along its normal (works on slanted faces)' },
+  { keys: ['Hover edge'], group: 'Tools', label: 'Show edge length label (any visible shape)' },
+  { keys: ['Array, Skip instances'], group: 'Tools', label: 'Comma-separated 1-based indices to omit from the pattern' },
 
   // History
   { keys: ['Ctrl', 'Z'], group: 'History', label: 'Undo' },

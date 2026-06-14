@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="theme-color" content="#14171d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BlockBuilder" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="build/icon-256.png" />
   <title>BlockBuilder Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -56,6 +63,16 @@
     </a>
 
     <div class="toolbar" id="toolbar">
+      <div class="tool-group mobile-only">
+        <button data-action="mobile-drawer-shapes" class="tip" data-tip="Open the shape library (mobile only)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+          <span>Shapes</span>
+        </button>
+        <button data-action="mobile-drawer-properties" class="tip" data-tip="Open the properties panel (mobile only)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6 H14 M4 12 H20 M4 18 H10"/><circle cx="17" cy="6" r="1.5"/><circle cx="13" cy="18" r="1.5"/></svg>
+          <span>Props</span>
+        </button>
+      </div>
       <div class="tool-group">
         <button data-action="group" data-tip="Group + combine with CSG: holes carve, solids merge (Ctrl+G). Reversible until Bake." class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 11 L13 13"/></svg>
@@ -97,6 +114,10 @@
         <button data-action="workplane" data-tip="Click a face to make it the active workplane for new shapes" class="tip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z M12 12 L12 21 M3 7 L12 12 L21 7"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
           <span>Workplane</span>
+        </button>
+        <button data-action="pushpull" data-tip="PUSH / PULL — click any face (including slanted ones), then drag to extrude a prism outward along that face's normal. Drop a tab on a 30 deg slope in one gesture. Esc cancels." class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14 L4 20 L14 20 L14 14 Z M9 14 L9 9 M9 9 L6 9 M9 9 L12 9 M9 9 L9 5 M9 5 L7 7 M9 5 L11 7"/></svg>
+          <span>Push/Pull</span>
         </button>
       </div>
       <div class="tool-group">
@@ -283,6 +304,7 @@
   </div>
 
   <main class="layout">
+    <div class="mobile-drawer-scrim" id="mobile-drawer-scrim" aria-hidden="true"></div>
     <aside class="sidebar">
       <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -449,5 +471,16 @@
   <div class="tooltip" id="tooltip" hidden></div>
 
   <script type="module" src="app/main.js?v=2"></script>
+  <script>
+    // Register the service worker for the PWA build. Skipped under file://
+    // (Electron) and when the SW isn't supported (Safari < 11.1, etc.).
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch((err) => {
+          console.warn('Service worker registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>

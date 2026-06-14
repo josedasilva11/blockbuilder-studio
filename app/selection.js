@@ -67,8 +67,21 @@ function showSnapMarker(worldPos2D) {
   el.style.top  = ((-v.y * 0.5 + 0.5) * rect.height + rect.top) + 'px';
   el.style.display = 'block';
 }
-function hideSnapMarker() {
+export function hideSnapMarker() {
   if (_snapMarkerEl) _snapMarkerEl.style.display = 'none';
+}
+
+// Public variant that takes a full world-space Vector3 (handles.js uses this
+// during resize snap, where the snap point is not constrained to Z=0).
+export function showSnapMarker3D(worldVec3) {
+  const el = getSnapMarker();
+  if (!worldVec3 || !state.camera || !state.renderer) { el.style.display = 'none'; return; }
+  const v = worldVec3.clone().project(state.camera);
+  if (v.z >= 1) { el.style.display = 'none'; return; }
+  const rect = state.renderer.domElement.getBoundingClientRect();
+  el.style.left = ((v.x * 0.5 + 0.5) * rect.width + rect.left) + 'px';
+  el.style.top  = ((-v.y * 0.5 + 0.5) * rect.height + rect.top) + 'px';
+  el.style.display = 'block';
 }
 
 export function onSelectionChange(fn) {

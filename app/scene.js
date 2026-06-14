@@ -40,7 +40,16 @@ export function initScene(canvas) {
   // Default to 1.5 — invisible quality loss vs 2.0 on most displays, but only
   // ~56 % of the fragment shader work. The Quality setting in the UI bumps
   // this up or down at runtime via setRendererPixelRatio().
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  // Cap pixelRatio. On a 3x retina phone, 1.5 means 4.5x effective fragments
+  // (still 2x what desktop fine-pointer gets). For coarse pointers (touch) we
+  // cap harder to 1.25 because the GPU is usually integrated and overdraw on
+  // beveled primitives spikes badly otherwise.
+  const isCoarse = (() => {
+    try { return window.matchMedia && window.matchMedia('(pointer: coarse)').matches; }
+    catch { return false; }
+  })();
+  const dprCap = isCoarse ? 1.25 : 1.5;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, dprCap));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;

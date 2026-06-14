@@ -23,6 +23,7 @@ import { maybeShowUnitPicker, applyUnitToUi, showUnitPicker } from './unit_picke
 import { showWelcome, addRecent } from './welcome.js';
 import { showAlignWidget, showMirrorWidget, closeAll as closeAmr } from './align_mirror.js';
 import { updateDimOverlay, setDimOverlayEnabled } from './dim_overlay.js';
+import { installEdgeHover } from './edge_hover.js';
 import { installShortcutsPaletteKeybind, openShortcutsPalette } from './shortcuts_palette.js';
 import { showCutWidget } from './cut.js';
 import { initModelsSection } from './models.js';
@@ -30,6 +31,7 @@ import { showHollowWidget } from './hollow.js';
 import { showArrayWidget } from './array.js';
 import { initRuler, toggleRuler, isRulerActive } from './ruler.js';
 import { initWorkplane, toggleWorkplane } from './workplane.js';
+import { initPushPull, togglePushPull, isPushPullActive } from './push_pull.js';
 import { initSketch, startExtrude, startRevolve, startScribble } from './sketch.js';
 import { pushHistory, undo, redo, clearHistory } from './history.js';
 import { initSettings, getSetting, setSetting, onSettingChange } from './settings.js';
@@ -44,6 +46,7 @@ function main() {
   // The render loop in scene.js calls state._updateDimOverlay() each frame
   // it actually renders. Setting it here keeps scene.js free of UI imports.
   state._updateDimOverlay = updateDimOverlay;
+  installEdgeHover(canvas);
   installShortcutsPaletteKeybind();
   initGizmos();
   installPickHandler(canvas);
@@ -69,6 +72,7 @@ function main() {
   initModelsSection();
   initRuler(canvas);
   initWorkplane(canvas);
+  initPushPull(canvas);
   initSketch(canvas);
 
   const cubeWrap = document.getElementById('viewcube-wrap');
@@ -119,6 +123,39 @@ function main() {
   // flip the licence on" trick. Cheap (just one ECDSA verify on a ~120-byte
   // payload) and runs in the background.
   setInterval(revalidateLicense, 10 * 60 * 1000);
+  bindMobileDrawers();
+}
+
+// Mobile: Shapes (sidebar) and Properties slide in from the sides as drawers,
+// triggered by the two .mobile-only buttons in the toolbar. The same scrim
+// closes either drawer; Esc and clicking the scrim both clear the state.
+// Drawer state lives on body[data-mobile-drawer]; CSS handles the transform.
+function toggleMobileDrawer(which) {
+  const current = document.body.dataset.mobileDrawer;
+  if (current === which) {
+    delete document.body.dataset.mobileDrawer;
+  } else {
+    document.body.dataset.mobileDrawer = which;
+  }
+}
+
+function closeMobileDrawer() {
+  delete document.body.dataset.mobileDrawer;
+}
+
+function bindMobileDrawers() {
+  const scrim = document.getElementById('mobile-drawer-scrim');
+  if (scrim) scrim.addEventListener('click', closeMobileDrawer);
+  // Esc closes whichever drawer is open. Don't swallow if the user is in an
+  // input, modal, or any other typing context.
+  window.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'Escape') return;
+    if (ev.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(ev.target.tagName)) return;
+    if (document.body.dataset.mobileDrawer) closeMobileDrawer();
+  });
+  // Tapping inside the drawer's content should NOT close it; the scrim
+  // sits behind the drawer and only catches taps that miss it, so this is
+  // handled by stacking order alone (drawer z-index 50 > scrim z-index 40).
 }
 
 function bindToolbar() {
@@ -169,6 +206,9 @@ function bindToolbar() {
       case 'array': showArrayWidget(); break;
       case 'ruler': toggleRuler(); document.querySelector('[data-action="ruler"]').classList.toggle('active', isRulerActive()); break;
       case 'workplane': toggleWorkplane(); break;
+      case 'pushpull': togglePushPull(); break;
+      case 'mobile-drawer-shapes': toggleMobileDrawer('shapes'); break;
+      case 'mobile-drawer-properties': toggleMobileDrawer('properties'); break;
       case 'extrude':   startExtrude();   break;
       case 'revolve':   startRevolve();   break;
       case 'scribble':  startScribble();  break;

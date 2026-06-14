@@ -2005,8 +2005,8 @@ footer {
   <div class="inner">
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>v0.6.0 just shipped</span>
-      <h2>Three new things<br><span class="serif">testers asked for.</span></h2>
-      <p>The first batch of polish from the private beta cohort. Each item is direct-modelling friendly, no parametric-history baggage.</p>
+      <h2>Nine new things<br><span class="serif">testers asked for.</span></h2>
+      <p>Three rounds of polish from the private beta cohort, all in v0.6. Each item is direct-modelling friendly, no parametric-history baggage.</p>
     </div>
 
     <div class="whatsnew-grid fade-up">
@@ -2022,27 +2022,47 @@ footer {
       </div>
       <div class="wn-card">
         <div class="wn-num">03</div>
-        <h3>Edge-midpoint snap</h3>
-        <p>Body-drag now snaps to <strong>midpoints</strong> of neighbouring shapes, not just corners and centres. A lime ring marks the active snap point. Centring a hole on a bracket's midline takes one drag, no math. <code>Ctrl</code> bypasses.</p>
+        <h3>Edge-hover dimensions</h3>
+        <p>Move the cursor near any feature edge. A small label pops up at the midpoint with the edge's exact length. Filters out the hidden triangulation diagonal a Box's quad face has, only edges you can actually see.</p>
       </div>
       <div class="wn-card">
         <div class="wn-num">04</div>
-        <h3>Math in any number field</h3>
-        <p>Type <code>2*12+4</code>, <code>(40-6)/2</code>, <code>sqrt(50)</code>, or <code>max(10, 8)</code> into any width / position / size input. Press Enter, it evaluates. Same field where you typed <code>30</code> can now hold the math that got you there.</p>
+        <h3>Push / Pull on any face</h3>
+        <p>Click a face, including slanted ones, then drag away from it. A new prism extrudes outward along that face's normal, depth set by mouse travel. The 30° wall finally gets its tab in one gesture.</p>
       </div>
       <div class="wn-card">
         <div class="wn-num">05</div>
-        <h3>New brand mark</h3>
-        <p>Three staggered isometric cubes replace the single wireframe one. Cleaner, more on-brand, and reads at every size from favicon to App Store icon.</p>
+        <h3>Pattern v2: Skip instances</h3>
+        <p>Array tool gains a "Skip instances" field. Type <code>3, 7, 9</code> and those copies drop out of the pattern. Hex grids with a missing centre, masonry with feature gaps, no more duplicate-then-delete cycles.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">06</div>
+        <h3>Resize handles snap to neighbours</h3>
+        <p>The white face squares used to snap only to the grid. Now they also snap to neighbour shapes' bounding-box edges, mid-planes, and the world origin. Line two parts up by dragging until they click into place.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">07</div>
+        <h3>Chamfer + Fillet on 10 primitives</h3>
+        <p>Box, Cylinder, Cone, Tube, Polygon, Star, Heart, Wedge, Roof, Pyramid all gain <code>Chamfer</code> and <code>Fillet</code> parameters. Sphere / Torus / Dome have no sharp edges, so nothing to bevel.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">08</div>
+        <h3>Math in any number field</h3>
+        <p>Type <code>2*12+4</code>, <code>(40-6)/2</code>, <code>sqrt(50)</code>, or <code>max(10, 8)</code> into any width / position / size input. Press Enter, it evaluates.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">09</div>
+        <h3>Shortcuts palette + quickstart</h3>
+        <p><code>Ctrl+K</code> opens a searchable list of every shortcut. First-launch scene shows a 4-step walkthrough instead of an empty card.</p>
       </div>
     </div>
 
     <p class="whatsnew-roadmap-intro fade-up">
-      <strong>Coming next</strong> (working order). Each one ships as its own update when ready — no big-bang rewrites.
+      <strong>Coming next</strong> (working order). Each one ships as its own update when ready, no big-bang rewrites.
     </p>
     <ul class="whatsnew-roadmap fade-up">
-      <li><strong>Chamfer + Fillet for all 10 bevellable primitives</strong> shipped: Box, Cylinder, Cone, Tube, Polygon, Star, Heart, Wedge, Roof, Pyramid. (Sphere, Torus, Dome have no sharp edges; nothing to bevel.) Set the <code>Chamfer</code> or <code>Fillet</code> property; <code>fillet_segments</code> controls arc smoothness. Coverage varies by topology: Box gets full 12-edge bevel; Cylinder / Cone / Tube / Polygon / Star / Heart bevel the rim (top + bottom edges around perimeter); Wedge + Roof bevel only the front/back face perimeters; Pyramid bevels the N base edges (lateral edges going up to apex stay sharp by design).</li>
-      <li><strong>Push / Pull face.</strong> Drag a face to extrude or inset. Replaces the "make a box, mark as hole, group" dance for pockets.</li>
+      <li><strong>Push / Pull v2.</strong> Today's version spawns a new prism on a clicked face. The next step is true face-translation: move the picked face polygon along its normal so the original mesh deforms in place. Needs a proper half-edge representation under the hood.</li>
+      <li><strong>Reference geometry.</strong> Plane through 3 points, axis along edge, midpoint marker. Pickable construction entities other tools snap to.</li>
       <li><strong>Sketch constraints</strong> (parallel, perpendicular, equal, tangent). Light parametric inside the Sketch tool only.</li>
       <li><strong>Equations in property values.</strong> <code>width = 2 * wall + 4</code>. Parametric-light without a history timeline.</li>
       <li><strong>Modifier stack per shape.</strong> Stackable, reorderable, non-destructive Array / Mirror / Bevel / Hollow. The right way to do "almost parametric".</li>

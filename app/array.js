@@ -19,6 +19,25 @@ let _count = 4;
 let _spacing = 20;
 let _totalAngle = 360;
 let _radius = 20;
+let _skipText = '';
+
+// Parse a comma / space-separated list of 1-based indices into a Set. Anything
+// non-numeric or out of range is silently dropped; an empty string returns an
+// empty Set. Examples:
+//   ''           -> Set()
+//   '3'          -> Set([3])
+//   '3,7,9'      -> Set([3, 7, 9])
+//   '3 5  9'     -> Set([3, 5, 9])
+//   '3,5,foo,9'  -> Set([3, 5, 9])
+function parseSkipList(text) {
+  const out = new Set();
+  if (!text) return out;
+  for (const tok of String(text).split(/[\s,]+/)) {
+    const n = parseInt(tok, 10);
+    if (Number.isFinite(n) && n >= 1) out.add(n);
+  }
+  return out;
+}
 
 export function showArrayWidget() {
   const s = state.shapes.get(state.selectedId);
@@ -69,6 +88,10 @@ function buildPanel() {
       <label data-tip="Distance from the rotation axis. Defaults to the source shape's current distance from the world origin — move the source away from (0,0,0) before clicking Array, or override the radius here." class="tip">Radius (${state.unit})</label>
       <input type="number" class="array-radius" step="0.5" value="20" />
     </div>
+    <div class="array-row">
+      <label data-tip="Comma-separated 1-based indices to omit from the pattern. Index 0 is the source shape (always kept). Useful for hex grids missing the centre, masonry patterns, etc. Examples: '3' skips instance 3; '3, 7, 9' skips three; leave empty for no skip." class="tip">Skip instances</label>
+      <input type="text" class="array-skip" placeholder="e.g. 3, 7, 9" value="${_skipText}" autocomplete="off" />
+    </div>
     <div class="array-actions">
       <button class="array-cancel">Cancel</button>
       <button class="array-confirm primary">Create</button>
@@ -110,6 +133,9 @@ function buildPanel() {
     const v = parseFloat(e.target.value);
     if (Number.isFinite(v) && v >= 0) _radius = v;
     else e.target.value = _radius.toFixed(2);
+  });
+  _panel.querySelector('.array-skip').addEventListener('change', (e) => {
+    _skipText = e.target.value;
   });
   _panel.querySelector('.array-close').addEventListener('click', close);
   _panel.querySelector('.array-cancel').addEventListener('click', close);
@@ -164,8 +190,13 @@ function performArray() {
     srcData.position = src.mesh.position.toArray();
   }
 
+  const skip = parseSkipList(_skipText);
   const newShapes = [];
+  let skippedCount = 0;
   for (let i = 1; i < _count; i++) {
+    // Skip this instance if its 1-based index is in the skip list. We start
+    // i=1 because i=0 is the source itself (never duplicated, never skipped).
+    if (skip.has(i)) { skippedCount++; continue; }
     const data = JSON.parse(JSON.stringify(srcData));
     delete data.id;
     const copy = TinkerShape.deserialize(data);
@@ -192,5 +223,8 @@ function performArray() {
   selectShape(src.id);
   for (const c of newShapes) selectShape(c.id, { additive: true });
   requestRender();
+  if (skippedCount > 0) {
+    toast.ok(`Array created (${newShapes.length} copies, ${skippedCount} skipped)`);
+  }
   close();
 }

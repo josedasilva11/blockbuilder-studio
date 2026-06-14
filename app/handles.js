@@ -18,9 +18,22 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { beginTxn, endTxn } from './history.js';
 import { requestRender, beginContinuousRender, endContinuousRender } from './scene.js';
+import { showSnapMarker3D, hideSnapMarker } from './selection.js';
 
 const SQUARE_COLOR = '#ffffff';
 const SQUARE_BORDER = '#2a2f3e';
+
+// Touch / pen / etc: coarse pointer means fingertip-sized hit targets. The
+// sprites are NDC-sized (sizeAttenuation off) so this multiplier directly
+// inflates the visible square. The CSS file mirrors this scale via a
+// --handle-touch-scale custom property; that one only matters for any
+// non-WebGL handle overlays.
+const TOUCH_SCALE = (() => {
+  try {
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return 1.6;
+  } catch {}
+  return 1;
+})();
 
 let _group = null;
 let _shapes = [];        // currently attached selection (1 or more)
@@ -245,7 +258,8 @@ function addArrow(pos) {
 function makeSpriteFrom(tex, size) {
   const mat = new THREE.SpriteMaterial({ map: tex, sizeAttenuation: false, depthTest: false, transparent: true });
   const sprite = new THREE.Sprite(mat);
-  sprite.scale.set(size, size, 1);
+  const s = size * TOUCH_SCALE;
+  sprite.scale.set(s, s, 1);
   return sprite;
 }
 
@@ -398,6 +412,22 @@ function onPointerDown(ev) {
         pos: s.mesh.position.clone(),
         scale: s.mesh.scale.clone(),
       })),
+      // Cache neighbour AABBs once for feature-snap. setFromObject inside
+      // each pointermove was 3-5 ms on a 50-shape scene; computing here means
+      // a one-time hit at drag start (shapes don't transform mid-drag except
+      // for the selection itself, which is excluded by id).
+      neighbourBoxes: (() => {
+        const selSet = new Set(_shapes.map(s => s.id));
+        const out = [];
+        const tmp = new THREE.Box3();
+        for (const s of state.shapes.values()) {
+          if (selSet.has(s.id) || !s.mesh || !s.mesh.visible || !s.mesh.parent) continue;
+          tmp.setFromObject(s.mesh);
+          if (!Number.isFinite(tmp.min.x)) continue;
+          out.push({ min: tmp.min.clone(), max: tmp.max.clone() });
+        }
+        return out;
+      })(),
     };
     showPillAt(handle, currentDimForHandle(_dragSession));
   }
@@ -479,7 +509,7 @@ function onPointerMove(ev) {
       axis === 'Y' ? sign.Y : 0,
       axis === 'Z' ? sign.Z : 0,
     );
-    const dWorld = worldDeltaForScreen(dxPx, dyPx, dirWorld, _dragSession.handle.position);
+    let dWorld = worldDeltaForScreen(dxPx, dyPx, dirWorld, _dragSession.handle.position);
     if (uniform) {
       const start = _dragSession.startSize[axis];
       const ratio = Math.max(0.01, (start + dWorld) / start);
@@ -487,6 +517,14 @@ function onPointerMove(ev) {
       applyGroupResize('Y', _dragSession.startSize.Y * (ratio - 1), snapping, symmetric);
       applyGroupResize('Z', _dragSession.startSize.Z * (ratio - 1), snapping, symmetric);
     } else {
+      // Feature snap: if the moving face is about to land within tolerance
+      // of a neighbour shape's bounding-box face / centre / world origin,
+      // pull it onto that target exactly. Only fires when global snap is on
+      // (state.snapStep > 0) and Ctrl isn't held. Symmetric drags skip it
+      // because both faces move and the snap target is ambiguous.
+      if (snapping && !symmetric) {
+        dWorld = snapFaceMoveToFeature(axis, dWorld, _dragSession);
+      }
       applyGroupResize(axis, dWorld, snapping, symmetric);
     }
   } else if (kind === 'corner') {
@@ -510,6 +548,56 @@ function onPointerMove(ev) {
   rebuild();
   setPillValue(currentDimForHandle(_dragSession));
   updatePillPosition();
+}
+
+/**
+ * Pull the moving face onto a neighbour feature plane (AABB min / mid / max
+ * of any non-selected visible shape, or the world origin) if the predicted
+ * new face position is within tolerance. Returns the adjusted dWorld.
+ *
+ * Why: lets the user resize a shape until its edge lines up with another
+ * shape's edge without needing to enter a number. Same body-drag-snap idea,
+ * extended to the resize handles. Tolerance scales with current size so it
+ * works at any zoom level.
+ */
+function snapFaceMoveToFeature(axis, dWorld, sess) {
+  const ax = axis.toLowerCase();
+  const startSize = sess.startSize[axis];
+  const newSize = startSize + dWorld;
+  if (newSize <= 0.1) return dWorld;
+  const sgn = sess.sign[axis] ?? 0;
+  if (sgn === 0) return dWorld;
+
+  const startCentreAx = sess.startCentre[ax] ?? 0;
+  const movingFacePos = startCentreAx + sgn * newSize / 2;
+
+  const boxes = sess.neighbourBoxes || [];
+  const targets = [];
+  for (const b of boxes) {
+    targets.push(b.min[ax]);
+    targets.push((b.min[ax] + b.max[ax]) / 2);
+    targets.push(b.max[ax]);
+  }
+  targets.push(0); // world origin on this axis
+
+  const tol = Math.max(0.5, startSize * 0.02);
+  let best = null;
+  let bestDist = Infinity;
+  for (const t of targets) {
+    const d = Math.abs(t - movingFacePos);
+    if (d < tol && d < bestDist) { best = t; bestDist = d; }
+  }
+  if (best === null) { hideSnapMarker(); return dWorld; }
+
+  const snappedNewSize = 2 * sgn * (best - startCentreAx);
+  if (snappedNewSize <= 0.1) { hideSnapMarker(); return dWorld; }
+  // Lime ring marker at the snap point so the user sees what aligned. Project
+  // the moving face's centre onto the snap plane (axis = best, other axes
+  // come from startCentre to keep the marker near the selection).
+  const marker = sess.startCentre.clone();
+  marker[ax] = best;
+  showSnapMarker3D(marker);
+  return snappedNewSize - startSize;
 }
 
 /**
@@ -546,6 +634,7 @@ function onPointerUp(ev) {
   try { _canvas.releasePointerCapture(ev.pointerId); } catch {}
   _dragSession = null;
   hidePill();
+  hideSnapMarker();
   rebuild(); // re-position handles after rotation/transform
   endTxn();
   endContinuousRender();
