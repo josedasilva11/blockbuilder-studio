@@ -577,6 +577,133 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   .whatsnew-grid { grid-template-columns: 1fr; }
 }
 
+/* === Devices section ===================================================== */
+.devices { background: radial-gradient(ellipse at 50% 0%, rgba(196,240,79,0.06) 0%, transparent 60%); }
+.devices-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  min-height: 580px;
+  margin: 30px 0 24px;
+  perspective: 1600px;
+}
+.device { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.device-caption {
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: var(--text-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tablet bezel: rounded charcoal frame with minimal bezel, no notch. */
+.device-frame-tablet {
+  position: relative;
+  width: 360px;
+  padding: 18px 14px;
+  background: linear-gradient(155deg, #2a2d36 0%, #14171d 60%, #0e1117 100%);
+  border-radius: 36px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 0 0 1px rgba(255,255,255,0.03),
+    0 30px 60px rgba(0,0,0,0.55),
+    0 10px 30px rgba(0,0,0,0.35);
+  transform: rotate(-4deg) translateY(8px);
+  transition: transform 0.4s var(--ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.device-frame-tablet:hover { transform: rotate(-2deg) translateY(0); }
+.device-frame-tablet img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  background: #0e1117;
+}
+.device-frame-tablet .device-cam {
+  position: absolute;
+  top: 8px; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #2a2d36;
+  border: 1px solid #1a1d24;
+  z-index: 2;
+}
+
+/* Phone bezel: tighter rounded corners, dynamic-island-ish notch + bottom pill. */
+.device-frame-phone {
+  position: relative;
+  width: 200px;
+  padding: 10px 8px 12px;
+  background: linear-gradient(155deg, #1f222a 0%, #0e1117 70%, #060709 100%);
+  border-radius: 36px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.04),
+    0 30px 60px rgba(0,0,0,0.55),
+    0 10px 30px rgba(0,0,0,0.35);
+  transform: rotate(7deg) translateY(-12px);
+  transition: transform 0.4s var(--ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.device-frame-phone:hover { transform: rotate(3deg) translateY(-18px); }
+.device-frame-phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 26px;
+  background: #0e1117;
+}
+.device-frame-phone .device-notch {
+  position: absolute;
+  top: 18px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 22px;
+  background: #06070a;
+  border-radius: 18px;
+  z-index: 2;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.device-frame-phone .device-pill {
+  position: absolute;
+  bottom: 6px; left: 50%; transform: translateX(-50%);
+  width: 64px; height: 4px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 2px;
+}
+
+.devices-cta { text-align: center; margin-top: 30px; }
+.devices-cta-link {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--accent, #c4f04f);
+  color: #0a0c10;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.devices-cta-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(196,240,79,0.3);
+}
+.devices-cta-note {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+@media (max-width: 720px) {
+  .devices-stage {
+    flex-direction: column;
+    gap: 20px;
+    min-height: 0;
+    margin: 20px 0 18px;
+  }
+  .device-frame-tablet { width: 280px; transform: rotate(-2deg); }
+  .device-frame-phone { width: 170px; transform: rotate(3deg); }
+}
+
 /* === Feature bento ======================================================= */
 .bento {
   display: grid;
@@ -2427,6 +2554,42 @@ footer {
 
     <p class="support-why fade-up">
       <strong>Why ask at all?</strong> BlockBuilder Studio is built by one person on evenings and weekends. No VC money, no analytics-funded sale of your data, no upsells. The €12 licence and the coffees are how it stays alive without becoming WinRAR (you know the dialog). Pick whichever feels right for how you use it.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Devices section: same app, every screen
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section devices" id="devices">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>One app, every screen</span>
+      <h2>On your desk.<br><span class="serif">On your iPad.</span><br>On the bus on your phone.</h2>
+      <p>Same project, same tools, same STL out the other end. No account, no cloud sync, no compromises per device.</p>
+    </div>
+
+    <div class="devices-stage fade-up">
+      <div class="device tablet">
+        <div class="device-frame device-frame-tablet">
+          <span class="device-cam"></span>
+          <img src="img/mockup-tablet.png" alt="BlockBuilder Studio on iPad. Vertical tool rail on the left, 3D canvas centre with a filleted box, sphere and red cylinder. Properties card on the right with width / height / fillet sliders." />
+        </div>
+        <span class="device-caption">iPad &amp; Android tablets &middot; rail UI</span>
+      </div>
+      <div class="device phone">
+        <div class="device-frame device-frame-phone">
+          <span class="device-notch"></span>
+          <img src="img/mockup-phone.png" alt="BlockBuilder Studio on iPhone. Top brand bar, 3D canvas with three filleted shapes, bottom dock with Insert / Undo / Group / Edit / Help / More." />
+          <span class="device-pill"></span>
+        </div>
+        <span class="device-caption">iPhone &amp; Android &middot; dock UI</span>
+      </div>
+    </div>
+
+    <p class="devices-cta fade-up">
+      <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener" class="devices-cta-link">Open in your browser, on any device &rarr;</a>
+      <span class="devices-cta-note">Works offline after the first visit. Add to Home Screen for a real app icon.</span>
     </p>
   </div>
 </section>
