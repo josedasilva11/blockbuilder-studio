@@ -157,10 +157,34 @@ function toggleTabletInsertPopover() {
 // switch-case in bindToolbar handles the action AND the close, since
 // data-more-menu is cleared at the end of every action below).
 function toggleMoreMenu() {
-  if (document.body.dataset.moreMenu === 'open') closeMoreMenu();
-  else document.body.dataset.moreMenu = 'open';
+  if (document.body.dataset.moreMenu === 'open') { closeMoreMenu(); return; }
+  document.body.dataset.moreMenu = 'open';
+  // Re-host the outliner-body inside the More menu so the user sees their
+  // shape list as a "Layers" section. The element keeps its ID, outliner.js
+  // continues polling it. On close we move it back to the sidebar.
+  const outliner = document.getElementById('outliner-body');
+  const moreHost = document.getElementById('more-outliner-host');
+  if (outliner && moreHost && outliner.parentElement !== moreHost) {
+    moreHost.dataset.originalParent = outliner.parentElement?.id || '';
+    const empty = moreHost.querySelector('.more-outliner-empty');
+    if (empty) empty.remove();
+    moreHost.appendChild(outliner);
+  }
 }
-function closeMoreMenu() { delete document.body.dataset.moreMenu; }
+function closeMoreMenu() {
+  delete document.body.dataset.moreMenu;
+  // Restore outliner-body back to the sidebar so the Insert popover still
+  // shows it. The sidebar's static Outliner heading sits in DOM regardless;
+  // we append the body element back to its original parent.
+  const outliner = document.getElementById('outliner-body');
+  const moreHost = document.getElementById('more-outliner-host');
+  if (outliner && moreHost && outliner.parentElement === moreHost) {
+    const originalId = moreHost.dataset.originalParent;
+    const original = originalId ? document.getElementById(originalId) : null;
+    const fallback = document.querySelector('.sidebar');
+    (original || fallback)?.appendChild(outliner);
+  }
+}
 
 // Phone (=768 px): one of two bottom sheets at a time. 'insert' rehosts the
 // sidebar; 'props' shows the props-card. The scrim CSS gates on body

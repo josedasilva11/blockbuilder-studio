@@ -3125,6 +3125,18 @@ body[data-more-menu="open"] .more-menu {
   background: var(--accent-soft);
 }
 .more-btn-danger:hover { color: #ff5a4d; border-color: #ff5a4d; background: rgba(255, 90, 77, 0.12); }
+.more-outliner-host {
+  background: var(--bg-elev);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 4px;
+  max-height: 28dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.more-outliner-empty { font-size: 11px; color: var(--text-dim); margin: 8px 6px; }
 
 /* Tablet rail + props card. Built into the DOM at all sizes but only made
    visible inside the tablet media query below. Sit on top of the canvas as
