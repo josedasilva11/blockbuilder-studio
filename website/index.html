@@ -581,20 +581,95 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .devices { background: radial-gradient(ellipse at 50% 0%, rgba(196,240,79,0.06) 0%, transparent 60%); }
 .devices-stage {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  min-height: 580px;
-  margin: 30px 0 24px;
-  perspective: 1600px;
+  height: 680px;
+  margin: 40px 0 24px;
+  perspective: 1800px;
 }
-.device { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.device {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
 .device-caption {
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.3px;
   color: var(--text-mid);
   font-variant-numeric: tabular-nums;
+}
+
+/* Stacked depth layout: monitor centre back, tablet front-left, phone front-right. */
+.device.monitor {
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+.device.tablet {
+  left: 8%;
+  top: 200px;
+  z-index: 2;
+}
+.device.phone {
+  right: 8%;
+  top: 260px;
+  z-index: 3;
+}
+
+/* Desktop monitor bezel: wide thin black frame, subtle stand below. */
+.device-frame-monitor {
+  position: relative;
+  width: 620px;
+  padding: 14px 14px 16px;
+  background: linear-gradient(180deg, #0a0c10 0%, #14171d 50%, #0a0c10 100%);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 0 0 1px rgba(255,255,255,0.03),
+    0 36px 80px rgba(0,0,0,0.6),
+    0 14px 40px rgba(0,0,0,0.4);
+  transform: rotate(0deg) translateY(0);
+}
+.device-frame-monitor::before {
+  /* Top branding strip (would hold a logo on a real monitor) */
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 2px;
+  background: rgba(196, 240, 79, 0.45);
+  border-radius: 1px;
+}
+.device-frame-monitor img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: #0e1117;
+}
+.device-stand {
+  width: 140px;
+  height: 12px;
+  margin-top: -2px;
+  background: linear-gradient(180deg, #14171d, #0a0c10);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  position: relative;
+}
+.device-stand::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 6px;
+  background: linear-gradient(180deg, #1f222a, #0a0c10);
+  border-radius: 4px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.45);
 }
 
 /* Tablet bezel: rounded charcoal frame with minimal bezel, no notch. */
@@ -693,13 +768,23 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
   color: var(--text-mid);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1100px) {
+  /* Below the breakpoint the absolute-positioned stack collides. Switch to a
+     vertical column with each device fully visible above the next. */
   .devices-stage {
+    height: auto;
+    display: flex;
     flex-direction: column;
-    gap: 20px;
-    min-height: 0;
+    align-items: center;
+    gap: 32px;
     margin: 20px 0 18px;
   }
+  .device.monitor, .device.tablet, .device.phone {
+    position: static;
+    transform: none;
+    left: auto; right: auto; top: auto;
+  }
+  .device-frame-monitor { width: min(540px, 92vw); transform: rotate(0); }
   .device-frame-tablet { width: 280px; transform: rotate(-2deg); }
   .device-frame-phone { width: 170px; transform: rotate(3deg); }
 }
@@ -2570,6 +2655,13 @@ footer {
     </div>
 
     <div class="devices-stage fade-up">
+      <div class="device monitor">
+        <div class="device-frame device-frame-monitor">
+          <img src="img/mockup-desktop.png" alt="BlockBuilder Studio on a 1440 px desktop. Toolbar across the top, shape library on the left, 3D canvas centre with a filleted base plate, cylinder, sphere and wedge. Properties panel with sliders on the right." />
+        </div>
+        <div class="device-stand"></div>
+        <span class="device-caption">Desktop &middot; Windows / macOS / Linux</span>
+      </div>
       <div class="device tablet">
         <div class="device-frame device-frame-tablet">
           <span class="device-cam"></span>
