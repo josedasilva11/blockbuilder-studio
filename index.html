@@ -493,15 +493,24 @@
           <path d="M20 32 L40 22 L60 32 L60 52 L40 62 L20 52 Z" fill="url(#empty-lg)" stroke="#b8e63a" stroke-width="1.2" stroke-dasharray="3 3"/>
           <path d="M20 32 L40 42 L60 32 M40 42 L40 62" stroke="#b8e63a" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
         </svg>
-        <h3>Drag a shape to start</h3>
-        <p>Pick from the left toolbar, drop it on the workplane. Click any shape to edit dimensions and colour.</p>
-        <ul class="empty-state-tips">
+        <h3 class="pointer-fine">Drag a shape to start</h3>
+        <h3 class="pointer-coarse">Tap a shape to start</h3>
+        <p class="pointer-fine">Pick from the left toolbar, drop it on the workplane. Click any shape to edit dimensions and colour.</p>
+        <p class="pointer-coarse">Tap the + button below, pick a shape from the sheet, edit its sliders in the Edit panel.</p>
+        <ul class="empty-state-tips pointer-fine">
           <li><span class="empty-tip-num">1</span><span>Drag a primitive (box, cylinder, sphere…) from the left.</span></li>
           <li><span class="empty-tip-num">2</span><span>Drag the body to move. Use the white handles to resize. Right-click + drag orbits the camera.</span></li>
           <li><span class="empty-tip-num">3</span><span>Add a second shape, mark it as <strong>Hole</strong> in Properties, select both, <kbd>Ctrl</kbd>+<kbd>G</kbd> to combine.</span></li>
           <li><span class="empty-tip-num">4</span><span>Export STL when ready. Save the project with <kbd>Ctrl</kbd>+<kbd>S</kbd>.</span></li>
         </ul>
-        <p class="empty-state-hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> any time for the full keyboard shortcut list. Hover any toolbar control for an inline explanation.</p>
+        <ul class="empty-state-tips pointer-coarse">
+          <li><span class="empty-tip-num">1</span><span>Tap <strong>+ Insert</strong> in the dock, pick any primitive (box, cylinder, sphere). It lands at the camera focus.</span></li>
+          <li><span class="empty-tip-num">2</span><span>Drag the shape body to move it. Two fingers rotate the camera, pinch to zoom.</span></li>
+          <li><span class="empty-tip-num">3</span><span>Hold a finger on a shape for half a second to bring up Duplicate / Hide / Group / Delete.</span></li>
+          <li><span class="empty-tip-num">4</span><span>Tap <strong>Edit</strong> in the dock to adjust width / depth / height / fillet with sliders. Tap <strong>More</strong> for all the other tools.</span></li>
+        </ul>
+        <p class="empty-state-hint pointer-fine">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> any time for the full keyboard shortcut list. Hover any toolbar control for an inline explanation.</p>
+        <p class="empty-state-hint pointer-coarse">Tap the <strong>Help</strong> button in the dock for a full list of shortcuts and tools.</p>
         <p class="empty-state-author">Made by <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a> · custom 3D / web work at <a href="https://marjers.com" target="_blank" rel="noopener">marjers.com</a></p>
       </div>
 

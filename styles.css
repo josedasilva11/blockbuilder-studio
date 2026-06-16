@@ -3275,7 +3275,16 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   .tool-rail { display: flex !important; flex-direction: column; gap: 6px;
     position: fixed; top: 64px; left: 12px; width: 56px; padding: 8px 6px;
     background: var(--panel); border: 1px solid var(--border);
-    border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35; }
+    border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35;
+    /* Cap height + scroll so the 10-button rail still fits on landscape
+       phones (844x390) where the viewport is only ~310 px of vertical room.
+       Scrollbar hidden, the user just scrolls the rail with a finger. */
+    max-height: calc(100vh - 88px);
+    max-height: calc(100dvh - 88px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .tool-rail::-webkit-scrollbar { display: none; }
   body[data-shape-selected="1"] .props-card { display: flex !important;
     flex-direction: column; position: fixed; top: 64px; right: 12px; width: 240px;
     max-height: calc(100vh - 88px); max-height: calc(100dvh - 88px);
@@ -3399,6 +3408,16 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   /* Properties slider rows get more vertical space (touch-friendly thumb). */
   .prop-row-scrub > input.prop-slider { height: 24px; }
   .brand-studio { display: none !important; }
+}
+
+/* Pointer-aware copy swap. Quickstart card has duplicated text labelled
+   .pointer-fine (mouse) vs .pointer-coarse (touch); show only the relevant
+   one so phone users don't read "drag from the left toolbar" when there is
+   no left toolbar. */
+.pointer-coarse { display: none; }
+@media (pointer: coarse) {
+  .pointer-fine { display: none; }
+  .pointer-coarse { display: revert; }
 }
 
 /* On any coarse pointer (touch screens, even on wider tablets), bump the
