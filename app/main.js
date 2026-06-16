@@ -34,7 +34,6 @@ import { initWorkplane, toggleWorkplane } from './workplane.js';
 import { initPushPull, togglePushPull, isPushPullActive } from './push_pull.js';
 import { initRefGeom, startPickPlane3P, startPickAxisEdge, startPickMidpoint } from './ref_geom.js';
 import { installLongPressMenu } from './long_press_menu.js';
-import { initIap } from './iap.js';
 import { initSketch, startExtrude, startRevolve, startScribble } from './sketch.js';
 import { pushHistory, undo, redo, clearHistory } from './history.js';
 import { initSettings, getSetting, setSetting, onSettingChange } from './settings.js';
@@ -131,8 +130,6 @@ function main() {
   bindMobileDrawers();
   installPropsBodyHost();
   installTabletPropsCardSync();
-  // Native IAP only fires on Capacitor iOS / Android, no-op everywhere else.
-  initIap();
 }
 
 // Scrim shared by the tablet insert popover, tablet props card, phone sheets,

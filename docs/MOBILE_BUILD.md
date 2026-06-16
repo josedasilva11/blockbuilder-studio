@@ -7,7 +7,12 @@ What's in this repo:
 - `assets/icon.png` — 1024x1024 source for `@capacitor/assets generate`.
 - `codemagic.yaml` — two workflows: `android-release` (AAB → Play internal) and `ios-release` (IPA → TestFlight).
 - `android/app/blockbuilder-upload.keystore` — GITIGNORED. Generate locally OR Codemagic uploads it once and references it.
-- `app/iap.js` — RevenueCat shim, no-op on web/desktop, fires on Capacitor native.
+
+## Monetisation model
+
+**Mobile + tablet apps are paid up-front, EUR 4.99.** No IAP, no subscription, no RevenueCat. Paying for the download IS the licence. Apple / Google handle all the billing, refunds (14-day window), receipts, and family sharing if the user has it on. Desktop stays free with the soft reminder + EUR 12 commercial licence via Lemon Squeezy on blockbuilder.studio.
+
+The reminder dialog is hard-coded off when the app runs inside Capacitor native, since "you bought the app, here's a nag screen" is hostile.
 
 ## One-time setup (Marjers only)
 
@@ -17,47 +22,21 @@ What's in this repo:
 2. My Apps → New App → iOS, English, name "BlockBuilder Studio", bundle ID `pt.marjers.blockbuilder` (create the bundle in https://developer.apple.com/account/resources/identifiers first), SKU `bbstudio01`, full access.
 3. App Information → Category: Graphics & Design (primary), Productivity (secondary).
 4. App Privacy → start questionnaire, answer NO to all "Do you collect data" questions, NO to tracking. (Matches the no-analytics reality.)
-5. Pricing and Availability → Free.
-6. In-App Purchases → New → Non-consumable.
-   - Reference name: `BlockBuilder Commercial Lifetime`
-   - Product ID: `pt.marjers.blockbuilder.commercial.lifetime`
-   - Price: Tier 15 (EUR 14.99)
-   - Display name (PT): `Licença comercial vitalícia`
-   - Description (PT): `Direitos comerciais, sem lembrete, todas as actualizações para esta conta.`
-   - Same in EN.
-7. Generate App Store Connect API key (App Store Connect → Users and Access → Keys → App Manager role). Download the `.p8`, note Issuer ID and Key ID. These go into Codemagic as integration `BlockBuilderASC`.
+5. Pricing and Availability → Price Schedule → Tier 5 (EUR 4.99). Available in all territories.
+6. Generate App Store Connect API key (App Store Connect → Users and Access → Keys → App Manager role). Download the `.p8`, note Issuer ID and Key ID. These go into Codemagic as integration `BlockBuilderASC`.
+
+(No In-App Purchases to create. The desktop's commercial licence sits behind Lemon Squeezy on blockbuilder.studio; the mobile / tablet purchase IS the commercial licence on those platforms.)
 
 ### Google Play Console
 
 1. Login to https://play.google.com/console.
 2. All apps → Create app → name "BlockBuilder Studio", default language Portuguese (Portugal), app, free.
 3. App content → fill Privacy Policy URL (https://blockbuilder.studio/privacy), Data safety (no data collected), App access (no login), Ads (no ads), Target audience (13+), News app (no), COVID-19 (no), Financial features (no).
-4. Pricing & distribution → free, select countries.
+4. Pricing & distribution → set the app PAID, price EUR 4.99, select countries (recommend all). Confirm the paid-app cutoff: Play requires a Merchant account linked, set that up at https://play.google.com/console/payments-settings if not already done.
 5. Set up your store listing → paste copy from `docs/STORE_LISTING.md`, upload icon 512x512, feature graphic 1024x500, screenshots (see "Generate screenshots" below).
-6. Monetisation → Products → In-app products → Create product.
-   - Product ID: `pt.marjers.blockbuilder.commercial.lifetime` (MUST match Apple)
-   - Name: `BlockBuilder Commercial Lifetime`
-   - Description: same as Apple
-   - Price: EUR 14.99
-   - Activate.
-7. Create a Service Account for the Play Developer API (see https://docs.codemagic.io/yaml-publishing/google-play/), download the JSON, save as `gcloud-service-account.json`. Goes into Codemagic group `google_play` as `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS`.
+6. Create a Service Account for the Play Developer API (see https://docs.codemagic.io/yaml-publishing/google-play/), download the JSON, save as `gcloud-service-account.json`. Goes into Codemagic group `google_play` as `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS`.
 
-### RevenueCat
-
-1. Sign up at https://app.revenuecat.com.
-2. Create project "BlockBuilder Studio".
-3. Add iOS app, bundle `pt.marjers.blockbuilder`, paste ASC public key.
-4. Add Android app, package `pt.marjers.blockbuilder`, upload Play service account JSON.
-5. Create product `pt.marjers.blockbuilder.commercial.lifetime` on both apps.
-6. Create entitlement `commercial`, attach the product to it on both stores.
-7. Create offering `default`, package `lifetime` referencing the product on both apps.
-8. Settings → API Keys → copy the iOS and Android public SDK keys.
-9. In `app/iap.js`, replace the placeholders OR inject via bundler:
-   ```js
-   globalThis.__RC_IOS_API_KEY__     = 'appl_xxxxxxxxxxxxxxxxxxx';
-   globalThis.__RC_ANDROID_API_KEY__ = 'goog_xxxxxxxxxxxxxxxxxxx';
-   ```
-   Easiest: add to `pwa-stage/iap-keys.js` and reference it from `index.html` before `app/main.js`.
+(No in-app products to configure. The base app price IS the product.)
 
 ### Codemagic
 
@@ -116,5 +95,5 @@ Apple and Google both require a hosted Privacy Policy URL. Create `website/priva
 - Apple Developer Program: USD 99 / year
 - Google Play Console: USD 25 one-time
 - Codemagic: free for 500 build minutes / month (plenty for one app on one workflow)
-- RevenueCat: free under USD 2,500 MTR
 - Lemon Squeezy (web only, not for stores): 5% + transaction fee on each sale
+- Apple / Google take 30 % of each app sale (15 % if revenue stays under USD 1 M / year, via the Small Business Program / Play tier).

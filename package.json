@@ -35,7 +35,6 @@
     "@capacitor/ios": "^8.4.0",
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/share": "^8.0.1",
-    "@revenuecat/purchases-capacitor": "^13.1.7",
     "electron": "^32.2.5",
     "electron-builder": "^25.1.8"
   },

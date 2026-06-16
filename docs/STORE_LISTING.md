@@ -143,13 +143,14 @@ Built by Marjers · blockbuilder.studio
 
 ## Pricing
 
-App is **free**. Single In-App Purchase:
+App is **paid up-front, EUR 4.99**, no IAP, no subscription. Paid-app model on both stores.
 
-| Product ID                                            | Type    | Price    | Entitlement   |
-|-------------------------------------------------------|---------|----------|---------------|
-| `pt.marjers.blockbuilder.commercial.lifetime`         | non-consumable | EUR 14.99 | `commercial`  |
+- **Apple App Store**: Tier 5 (EUR 4.99). App Store Connect → Pricing and Availability → Price Schedule → Tier 5.
+- **Google Play**: 4.99 EUR. Play Console → Monetisation → Products → set base price.
 
-Create this product manually in App Store Connect AND Google Play Console with the same ID before submitting for review. RevenueCat dashboard then links them under a single entitlement `commercial`.
+After Apple's / Google's 30 % cut: ~EUR 3.49 / sale to Marjers. (Reduced to ~EUR 4.24 after the Apple Small Business Program kicks in at year 2, or via Google's first-year reduced-rate tier.)
+
+No In-App Purchase products to create. The desktop's commercial licence sits behind the existing Lemon Squeezy / Stripe flow on blockbuilder.studio; the mobile / tablet purchase IS the commercial licence for those platforms.
 
 ## Privacy
 

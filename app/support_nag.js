@@ -113,9 +113,20 @@ export function clearLicense() {
   _licenseValid = false;
 }
 
+// Detect Capacitor native (iOS / Android). The mobile + tablet apps are
+// paid up-front, the user owns the app already by virtue of having
+// downloaded it, no nag needed.
+function isCapacitorNative() {
+  return typeof window !== 'undefined'
+    && window.Capacitor
+    && typeof window.Capacitor.isNativePlatform === 'function'
+    && window.Capacitor.isNativePlatform();
+}
+
 // Decide whether to show the nag this session.
 export function shouldShowNag() {
   if (BETA_MODE) return false;  // beta testers have keys; no upsell during beta
+  if (isCapacitorNative()) return false;  // mobile/tablet are paid apps
   if (isLicensed()) return false;
   const launches = parseInt(localStorage.getItem(KEY_COUNT) || '0', 10);
   const dismisses = parseInt(localStorage.getItem(KEY_DISMISS) || '0', 10);
