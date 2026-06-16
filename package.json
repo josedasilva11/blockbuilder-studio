@@ -18,9 +18,24 @@
     "dist:installer": "electron-builder --win nsis",
     "dist:all": "electron-builder --win nsis portable",
     "dist:mac": "electron-builder --mac",
-    "dist:linux": "electron-builder --linux AppImage"
+    "dist:linux": "electron-builder --linux AppImage",
+    "pwa:stage": "node scripts/stage-pwa.mjs",
+    "cap:sync": "npm run pwa:stage && cap sync",
+    "cap:open:android": "npm run pwa:stage && cap sync android && cap open android",
+    "cap:open:ios": "npm run pwa:stage && cap sync ios && cap open ios",
+    "cap:assets": "cap assets generate --android --ios"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/ios": "^8.4.0",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/share": "^8.0.1",
+    "@revenuecat/purchases-capacitor": "^13.1.7",
     "electron": "^32.2.5",
     "electron-builder": "^25.1.8"
   },
@@ -55,8 +70,18 @@
     ],
     "win": {
       "target": [
-        { "target": "portable", "arch": ["x64"] },
-        { "target": "nsis",     "arch": ["x64"] }
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "icon": "build/icon.ico",
       "artifactName": "${productName}-${version}-${arch}-${ext}.exe",
@@ -76,7 +101,9 @@
       "include": "build/installer.nsh"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "category": "Graphics",
       "icon": "build/icon.png",
       "maintainer": "geral@marjers.com",
@@ -85,7 +112,9 @@
       "description": "Drag-and-drop desktop 3D editor with CSG, STL/OBJ/STEP import-export, sketches, ruler. No account required."
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "category": "public.app-category.graphics-design",
       "icon": "build/icon.png",
       "hardenedRuntime": true,

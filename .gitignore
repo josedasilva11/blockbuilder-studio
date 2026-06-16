@@ -27,3 +27,23 @@ website/.cache/
 .claude/
 .cursor/
 .aider/
+
+# Capacitor + native projects. The android/ and ios/ source DOES go in git
+# (so Codemagic can clone + build), but build outputs and local-only files
+# do not. Signing material is NEVER committed.
+android/.gradle/
+android/.idea/
+android/local.properties
+android/app/build/
+android/app/release/
+android/build/
+android/**/google-services.json
+ios/App/Pods/
+ios/App/Podfile.lock
+ios/build/
+ios/DerivedData/
+android/app/*.keystore
+android/app/*.jks
+keystore.properties
+pwa-stage/
+.last-build-id

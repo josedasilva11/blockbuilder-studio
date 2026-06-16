@@ -1,0 +1,133 @@
+workflows:
+  # ──────────────────────────────────────────────────────────────────────────
+  # Android release: builds an .aab signed with the upload keystore, ships to
+  # Google Play internal testing track via the Play Developer API.
+  #
+  # Required Codemagic setup (one-time, in dashboard):
+  #   - File: upload android/app/blockbuilder-upload.keystore as
+  #     reference 'BlockBuilderKeystore' with passwords + alias.
+  #   - Group: 'google_play' containing variable GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+  #     (JSON content of the service account with Play Developer API access).
+  # ──────────────────────────────────────────────────────────────────────────
+  android-release:
+    name: Android release (AAB to Play internal)
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      android_signing:
+        - BlockBuilderKeystore
+      groups:
+        - google_play
+      vars:
+        PACKAGE_NAME: pt.marjers.blockbuilder
+      node: 22.7.0
+      java: 17
+    scripts:
+      - name: Install Node deps
+        script: |
+          npm ci || npm install
+      - name: Stage PWA bundle
+        script: |
+          rm -rf pwa-stage
+          mkdir pwa-stage
+          cp -r app vendor build pwa-stage/
+          cp index.html sw.js manifest.webmanifest styles.css pwa-stage/
+      - name: Capacitor sync
+        script: |
+          npx cap sync android
+      - name: Build AAB
+        script: |
+          cd android
+          ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/**/*.aab
+      - android/app/build/outputs/**/mapping.txt
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
+      email:
+        recipients:
+          - geral@marjers.com
+        notify:
+          success: true
+          failure: true
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # iOS release: builds an .ipa signed with the Apple Distribution profile,
+  # ships to TestFlight via App Store Connect API.
+  #
+  # Required Codemagic setup:
+  #   - Integration: App Store Connect API key as 'BlockBuilderASC' (Issuer ID,
+  #     Key ID, .p8 file).
+  #   - App in App Store Connect with bundle pt.marjers.blockbuilder created
+  #     manually first (the API can't create app records).
+  # ──────────────────────────────────────────────────────────────────────────
+  ios-release:
+    name: iOS release (IPA to TestFlight)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: BlockBuilderASC
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: pt.marjers.blockbuilder
+      vars:
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+        BUNDLE_ID: pt.marjers.blockbuilder
+      node: 22.7.0
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install Node deps
+        script: |
+          npm ci || npm install
+      - name: Stage PWA bundle
+        script: |
+          rm -rf pwa-stage
+          mkdir pwa-stage
+          cp -r app vendor build pwa-stage/
+          cp index.html sw.js manifest.webmanifest styles.css pwa-stage/
+      - name: Capacitor sync
+        script: |
+          npx cap sync ios
+      - name: Pod install
+        script: |
+          cd ios/App
+          pod install
+      - name: Set up signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          cd ios/App
+          LATEST=$(app-store-connect get-latest-app-store-build-number "$BUNDLE_ID" 2>/dev/null || echo 0)
+          NEXT=$(( LATEST + 1 ))
+          agvtool new-version -all $NEXT
+      - name: Build IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app.dSYM.zip
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - Marjers internal
+      email:
+        recipients:
+          - geral@marjers.com
+        notify:
+          success: true
+          failure: true
