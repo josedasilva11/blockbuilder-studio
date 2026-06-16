@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pricing · BlockBuilder Studio</title>
+<meta name="description" content="BlockBuilder Studio pricing. Free forever for personal use, EUR 12 lifetime commercial licence, optional coffee tip. No subscription, no account, every feature unlocked at every tier." />
+<link rel="canonical" href="https://blockbuilder.studio/pricing" />
+<meta property="og:title" content="BlockBuilder Studio pricing, free forever, EUR 12 commercial licence" />
+<meta property="og:description" content="Personal use is free. Commercial licence is EUR 12 once, lifetime, every machine you own. No subscription." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://blockbuilder.studio/pricing" />
+<meta property="og:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="theme-color" content="#0a0c10" />
+<link rel="icon" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" />
+<style>
+  :root {
+    --bg:        #0a0c10;
+    --bg-elev:   #11141b;
+    --panel:     #161a23;
+    --panel-soft:#1c2030;
+    --border:    #232838;
+    --border-soft: #1c1f2a;
+    --text:      #f0f3f6;
+    --text-mid:  #b6bcc5;
+    --text-dim:  #7a8395;
+    --accent:    #c4f04f;
+    --accent-soft: rgba(196,240,79,0.15);
+    --lime:      #c4f04f;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.6 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Sticky nav matching index.html */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 12, 16, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-in {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.2px;
+  }
+  .brand-link svg { width: 28px; height: 28px; }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--lime); padding: 3px 6px; background: var(--accent-soft); border-radius: 4px; }
+  .nav-links { margin-left: auto; display: flex; gap: 24px; }
+  .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-actions { display: flex; gap: 10px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s, background 0.15s;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #0a0c10; }
+  .btn-primary:hover { background: #d9ff5a; transform: translateY(-1px); text-decoration: none; }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--bg-elev); border-color: var(--text-dim); text-decoration: none; }
+  .btn-lg { padding: 13px 22px; font-size: 14px; width: 100%; justify-content: center; }
+  .btn-coffee { background: linear-gradient(135deg, #ffdd00, #ff9900); color: #0a0c10; }
+  .btn-coffee:hover { transform: translateY(-1px); text-decoration: none; }
+
+  /* Hero */
+  .hero {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 80px 28px 30px;
+    text-align: center;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 16px;
+  }
+  .eyebrow .dot { width: 8px; height: 8px; background: var(--lime); border-radius: 50%; box-shadow: 0 0 0 4px rgba(196,240,79,0.18); }
+  .hero h1 {
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -1.8px;
+    font-weight: 700;
+    margin: 0 0 18px;
+  }
+  .hero h1 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--lime); letter-spacing: -1.4px; }
+  .hero p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-mid);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* Tiers */
+  .tiers {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .tier {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .tier.popular {
+    border-color: var(--accent);
+    background:
+      linear-gradient(180deg, rgba(196,240,79,0.06) 0%, transparent 100%),
+      var(--panel);
+    position: relative;
+  }
+  .tier.popular::before {
+    content: 'Most popular';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #0a0c10;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .tier-name { font-size: 14px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-mid); }
+  .tier.popular .tier-name { color: var(--accent); }
+  .tier-tag { display: flex; align-items: baseline; gap: 4px; margin: 4px 0; }
+  .tier-currency { font-size: 22px; color: var(--text-mid); font-weight: 500; }
+  .tier-amount { font-size: 52px; font-weight: 800; line-height: 1; letter-spacing: -2px; color: var(--text); }
+  .tier-unit { font-size: 13px; color: var(--text-dim); margin-left: 8px; }
+  .tier-sub { font-size: 14px; color: var(--text-mid); margin: 0 0 8px; line-height: 1.55; }
+  .tier ul { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+  .tier li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: var(--text); }
+  .tier li svg { flex-shrink: 0; width: 16px; height: 16px; color: var(--accent); margin-top: 3px; }
+  .tier li.muted { color: var(--text-dim); }
+  .tier li.muted svg { color: var(--text-dim); }
+
+  /* Beta notice */
+  .beta-banner {
+    max-width: 1180px;
+    margin: 0 auto 0;
+    padding: 18px 24px;
+    background: rgba(196,240,79,0.08);
+    border: 1px solid rgba(196,240,79,0.25);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.55;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .beta-banner svg { flex-shrink: 0; width: 22px; height: 22px; color: var(--lime); }
+  .beta-banner strong { color: var(--lime); }
+  .beta-banner a { color: var(--lime); }
+
+  /* FAQ */
+  .faq-wrap {
+    max-width: 880px;
+    margin: 60px auto;
+    padding: 0 28px;
+  }
+  .faq-wrap h2 {
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -1.2px;
+    margin: 0 0 6px;
+  }
+  .faq-wrap h2 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; color: var(--lime); font-weight: 400; }
+  .faq-wrap > p { color: var(--text-mid); margin: 0 0 30px; }
+  details {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+  }
+  details[open] { border-color: var(--accent); }
+  summary {
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    padding-right: 30px;
+    color: var(--text);
+  }
+  summary::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: -2px;
+    color: var(--text-dim);
+    font-size: 22px;
+    line-height: 1;
+    transition: transform 0.2s;
+  }
+  details[open] summary::after { content: '−'; color: var(--accent); }
+  details .answer { padding-top: 14px; color: var(--text-mid); font-size: 15px; line-height: 1.65; }
+  details .answer p { margin: 0 0 12px; }
+  details .answer p:last-child { margin: 0; }
+
+  /* Final CTA */
+  .final-cta {
+    max-width: 880px;
+    margin: 60px auto 80px;
+    padding: 50px 40px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--panel-soft) 0%, var(--panel) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .final-cta h3 { font-size: 28px; margin: 0 0 10px; letter-spacing: -0.6px; }
+  .final-cta p { color: var(--text-mid); margin: 0 0 22px; }
+  .final-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 28px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .footer a { color: var(--text-mid); }
+
+  @media (max-width: 880px) {
+    .tiers { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 40px; letter-spacing: -1.2px; }
+    .faq-wrap h2 { font-size: 28px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand-link">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="none" stroke="#c4f04f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+          <path d="M14 22 L14 36 L26 42 L26 28"/>
+          <path d="M38 22 L38 36 L26 42"/>
+          <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+          <path d="M28 30 L28 44 L40 50 L40 36"/>
+          <path d="M52 30 L52 44 L40 50"/>
+          <path d="M34 12 L42 8 L50 12 L42 16 Z" fill="#c4f04f" fill-opacity="0.18"/>
+          <path d="M34 12 L34 20 L42 24 L42 16"/>
+          <path d="M50 12 L50 20 L42 24"/>
+        </g>
+      </svg>
+      <span><strong>Block</strong>Builder</span>
+      <span class="brand-tag">STUDIO</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/#devices">Devices</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener" class="btn btn-ghost">Try in browser</a>
+      <a href="/#download" class="btn btn-primary">Download free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="eyebrow"><span class="dot"></span>Pricing &amp; licence</span>
+  <h1>Free forever.<br><span class="serif">Twelve euros, lifetime, only if you sell.</span></h1>
+  <p>One person built this. Personal use stays free always, no time limit, no feature lockout, no ads. The commercial licence is for people who use BlockBuilder to ship work clients pay for.</p>
+</section>
+
+<div style="max-width: 1180px; margin: 0 auto; padding: 0 28px;">
+  <div class="beta-banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8 V12 M12 16 H12.01"/></svg>
+    <div>
+      <strong>Private beta.</strong> Payments are paused until v0.6.0 launches publicly. For now, download the beta build free, the licence dialog accepts a placeholder key. To pre-order the commercial licence and get a key the day issuance flips on, email <a href="mailto:geral@marjers.com">geral@marjers.com</a>.
+    </div>
+  </div>
+</div>
+
+<section class="tiers">
+  <div class="tier">
+    <div class="tier-name">Personal</div>
+    <div class="tier-tag">
+      <span class="tier-currency">€</span>
+      <span class="tier-amount">0</span>
+      <span class="tier-unit">forever</span>
+    </div>
+    <p class="tier-sub">Hobby, learning, home prints, school, anything that doesn't get someone else paid.</p>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Every feature unlocked, no tier-gated tools</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Unlimited STL · OBJ · STEP exports</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Free updates while v0.x lasts (and beyond, see FAQ)</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Offline desktop binary + browser PWA</li>
+      <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12 L19 12"/></svg>Soft reminder dialog every 25 launches</li>
+    </ul>
+    <a href="/#download" class="btn btn-ghost btn-lg">Download free</a>
+  </div>
+
+  <div class="tier">
+    <div class="tier-name">Coffee tip</div>
+    <div class="tier-tag">
+      <span class="tier-currency">€</span>
+      <span class="tier-amount">3+</span>
+      <span class="tier-unit">any amount</span>
+    </div>
+    <p class="tier-sub">For personal users who want to chip in. No commercial rights, just a thank-you that keeps the project alive.</p>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Pick any amount (€3, €5, €10, you choose)</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Funds new features and bug fixes directly</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>One-time, no subscription, no account needed</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Honest thanks, not a licence change</li>
+    </ul>
+    <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener" class="btn btn-coffee btn-lg">Buy me a coffee</a>
+  </div>
+
+  <div class="tier popular">
+    <div class="tier-name">Commercial</div>
+    <div class="tier-tag">
+      <span class="tier-currency">€</span>
+      <span class="tier-amount">12</span>
+      <span class="tier-unit">once, lifetime</span>
+    </div>
+    <p class="tier-sub">If you sell prints, freelance, or use BlockBuilder for any paid work. One-time payment, never expires.</p>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Commercial-use rights</strong>, sell prints, freelance, agency</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Silences the in-app soft reminder</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Every machine you own, lifetime updates</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg>Priority email support, 48 h reply window</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12 L10 17 L19 7"/></svg><strong>Funds the next features</strong>, same as coffee, bigger pour</li>
+    </ul>
+    <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20commercial%20licence%20pre-order" class="btn btn-primary btn-lg">Pre-order, €12</a>
+  </div>
+</section>
+
+<section class="faq-wrap">
+  <h2>Licence <span class="serif">questions, answered.</span></h2>
+  <p>If something here isn't clear, email <a href="mailto:geral@marjers.com">geral@marjers.com</a>, replies usually within 48 hours.</p>
+
+  <details>
+    <summary>What counts as "commercial use"?</summary>
+    <div class="answer">
+      <p>Anything where money changes hands because of the model. Selling prints on Etsy / MakerWorld. Freelance gigs where you ship STLs to a paying client. Engineering work where the STL ends up in a billable deliverable. Classroom is fine as long as no fees are charged for the model itself.</p>
+      <p>If you're not sure, ask. I'd rather you ship than wonder.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Is the personal licence really free forever?</summary>
+    <div class="answer">
+      <p>Yes. No time limit, no expiration, no upgrade trap, no nag screen you can't dismiss. The soft reminder dialog shows every 25 launches and goes away with a click. Commercial licence silences it; everyone else just clicks dismiss.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Does €12 cover future updates?</summary>
+    <div class="answer">
+      <p>Yes, every v0.x update is included. Once v1.0 ships, the v1.x line is also included. v2.0 onward is a new licence at a then-current price, but the licence you bought today never expires and your existing app keeps working.</p>
+      <p>In practice this means: if you buy now at v0.6 you'll get every release through to roughly mid-2027 (v1.x line) for the €12 you paid today.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Per-user, per-machine, or per-seat?</summary>
+    <div class="answer">
+      <p>Per-person. Your €12 licence works on every machine YOU personally use, desktop, laptop, work PC, home PC. If a colleague uses BlockBuilder commercially, they need their own.</p>
+      <p>For agencies / teams: just buy one licence per person who'll use it. No seat math, no admin portal, no audit.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Refunds?</summary>
+    <div class="answer">
+      <p>14 days, no questions, full refund. Email <a href="mailto:geral@marjers.com">geral@marjers.com</a> with the order ID and it's done same day. EU consumer law applies; the right is irrespective of country.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Why not a subscription?</summary>
+    <div class="answer">
+      <p>You pay once. Software you bought stays software you own. No recurring billing, no "we lowered prices so renew", no "billing failed, app disabled". The web app and the desktop binary both work offline forever, regardless of whether I'm still around to maintain them.</p>
+    </div>
+  </details>
+  <details>
+    <summary>How does the licence file work?</summary>
+    <div class="answer">
+      <p>After payment you get a key like <code>BBS2.aBc123...</code> by email. Paste it into Settings &rarr; Licence inside the app. It's a signed ECDSA P-256 token verified offline by the app, no phone-home, no internet check at startup. Lose it? Email and I'll resend.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Can I get an invoice / VAT number?</summary>
+    <div class="answer">
+      <p>Yes. The checkout (Lemon Squeezy) issues a tax-compliant invoice automatically and supports EU VAT-ID exempt purchases for businesses. Forward the receipt to your accountant; it has everything they need.</p>
+    </div>
+  </details>
+  <details>
+    <summary>The buy button says "Pre-order, €12". Why?</summary>
+    <div class="answer">
+      <p>Until v0.6.0 launches publicly, payments are paused server-side (the worker that issues licence keys is gated with an <code>ISSUANCE_ENABLED=false</code> kill switch). Pre-order emails sit in a queue; when payments turn on, all pre-orders get their key in the same hour.</p>
+      <p>You can use the free build today and decide later. Nothing locks you out of the personal-use path.</p>
+    </div>
+  </details>
+  <details>
+    <summary>What if Marjers stops maintaining the project?</summary>
+    <div class="answer">
+      <p>The desktop binary you downloaded keeps working forever, no online activation required. The web PWA stops getting updates but keeps running from your browser's cache if you'd previously installed it. The code is closed-source today but in the event the project is abandoned for &gt;12 months, the plan is to publish the source under a permissive licence.</p>
+    </div>
+  </details>
+</section>
+
+<section class="final-cta">
+  <h3>Start free. Pay later, only if it earns its keep.</h3>
+  <p>Download the free build today. If you find yourself reaching for it in paid work, come back and buy the licence then.</p>
+  <div class="final-cta-row">
+    <a href="/#download" class="btn btn-primary btn-lg" style="width: auto;">Download free</a>
+    <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener" class="btn btn-ghost btn-lg" style="width: auto;">Try in browser</a>
+  </div>
+</section>
+
+<footer class="footer">
+  &copy; 2026 Marjers &middot; <a href="/">blockbuilder.studio</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/changelog.html">Changelog</a> &middot; <a href="mailto:geral@marjers.com">Contact</a>
+</footer>
+
+</body>
+</html>

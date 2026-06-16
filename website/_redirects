@@ -7,6 +7,11 @@
 /download/linux    https://github.com/marjers/blockbuilder-studio/releases/latest/download/BlockBuilderStudio.AppImage   302
 /download          /#download                                                                                            302
 
+# Pretty URLs (rewrite, not redirect, so /pricing serves pricing.html
+# without a trailing .html in the address bar).
+/pricing   /pricing.html  200
+/app       https://blockbuilder-app.pages.dev/  302
+
 # Vanity links
 /donate    https://marjers.com/support     302
 /buy       https://marjers.com/blockbuilder 302
