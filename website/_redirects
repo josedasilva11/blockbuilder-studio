@@ -10,6 +10,7 @@
 # Pretty URLs (rewrite, not redirect, so /pricing serves pricing.html
 # without a trailing .html in the address bar).
 /pricing   /pricing.html  200
+/privacy   /privacy.html  200
 /app       https://blockbuilder-app.pages.dev/  302
 
 # Vanity links

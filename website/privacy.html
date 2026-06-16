@@ -1,86 +1,237 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Privacy · BlockBuilder Studio</title>
-<meta name="description" content="BlockBuilder Studio privacy policy. Zero telemetry, zero analytics, zero tracking. Your files stay on your disk." />
+<title>Política de privacidade · BlockBuilder Studio</title>
+<meta name="description" content="A BlockBuilder Studio não recolhe dados pessoais, não tem analytics, não tem sincronização com a cloud, não tem contas de utilizador. Os ficheiros vivem no teu dispositivo." />
 <link rel="canonical" href="https://blockbuilder.studio/privacy" />
+<meta property="og:title" content="Política de privacidade · BlockBuilder Studio" />
+<meta property="og:description" content="Não recolhemos dados. Nada. Esta política explica porquê e como funciona." />
+<meta property="og:url" content="https://blockbuilder.studio/privacy" />
+<meta property="og:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="theme-color" content="#0a0c10" />
 <link rel="icon" href="/favicon.svg" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" />
 <style>
-  :root { --bg:#0a0c10; --panel:#161a23; --border:#232838; --text:#eef0f5; --text-mid:#aab2c4; --text-dim:#6b7388; --accent:#c4f04f; }
+  :root { --bg:#0a0c10; --bg-elev:#11141b; --panel:#161a23; --border:#232838; --border-soft:#1c1f2a; --text:#f0f3f6; --text-mid:#b6bcc5; --text-dim:#7a8395; --accent:#c4f04f; --accent-soft:rgba(196,240,79,0.15); }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
-  body { font: 16px/1.65 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { font: 16px/1.65 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .nav-bar { padding: 16px 24px; border-bottom: 1px solid var(--border); }
-  .nav-bar a { color: var(--text-mid); font-weight: 600; }
-  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 100px; }
-  h1 { font-size: 38px; margin: 0 0 6px; letter-spacing: -0.5px; }
-  .updated { color: var(--text-dim); font-size: 13px; margin: 0 0 40px; }
-  h2 { font-size: 20px; margin: 36px 0 10px; font-weight: 700; }
-  h3 { font-size: 15px; margin: 22px 0 6px; color: var(--text); }
-  p, ul { color: var(--text-mid); }
-  ul { padding-left: 22px; }
-  li { margin-bottom: 6px; }
-  strong { color: var(--text); }
-  code { background: var(--panel); padding: 1px 6px; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 13px; }
-  .tldr { padding: 18px 22px; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; margin: 28px 0; font-size: 15px; color: var(--text); }
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,12,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-in { max-width: 1180px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; gap: 24px; }
+  .brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 17px; letter-spacing: -0.2px; }
+  .brand-link svg { width: 28px; height: 28px; }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent); padding: 3px 6px; background: var(--accent-soft); border-radius: 4px; }
+  .nav-links { margin-left: auto; display: flex; gap: 24px; }
+  .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 28px 80px; }
+  h1 { font-size: 44px; line-height: 1.1; letter-spacing: -1.2px; margin: 0 0 8px; }
+  h1 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--accent); }
+  .meta { color: var(--text-dim); font-size: 13px; letter-spacing: 0.4px; margin-bottom: 30px; }
+  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 30px; }
+  .lang-toggle a { padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-mid); text-decoration: none; transition: 0.15s; }
+  .lang-toggle a.active { background: var(--accent); color: #0a0c10; }
+  .lang-toggle a:not(.active):hover { color: var(--text); text-decoration: none; }
+  .summary { background: var(--accent-soft); border: 1px solid rgba(196,240,79,0.35); border-radius: 12px; padding: 18px 22px; margin-bottom: 36px; color: var(--text); font-size: 15px; line-height: 1.55; }
+  .summary strong { color: var(--accent); }
+  h2 { font-size: 22px; line-height: 1.2; letter-spacing: -0.4px; margin: 36px 0 10px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  p, ul { color: var(--text-mid); margin: 0 0 12px; }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  strong { color: var(--text); font-weight: 600; }
+  code { background: var(--bg-elev); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: var(--text); }
+  .footer { border-top: 1px solid var(--border); padding: 30px 28px; text-align: center; color: var(--text-dim); font-size: 13px; }
+  .footer a { color: var(--text-mid); }
+  .lang-en { display: none; }
+  html[data-lang="en"] .lang-pt { display: none; }
+  html[data-lang="en"] .lang-en { display: block; }
 </style>
 </head>
 <body>
 
-<div class="nav-bar"><a href="/">← BlockBuilder Studio</a></div>
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand-link">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="none" stroke="#c4f04f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+          <path d="M14 22 L14 36 L26 42 L26 28"/>
+          <path d="M38 22 L38 36 L26 42"/>
+          <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+          <path d="M28 30 L28 44 L40 50 L40 36"/>
+          <path d="M52 30 L52 44 L40 50"/>
+        </g>
+      </svg>
+      <span><strong>Block</strong>Builder</span>
+      <span class="brand-tag">STUDIO</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/changelog.html">Changelog</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+</nav>
 
-<div class="container">
-  <h1>Privacy policy</h1>
-  <p class="updated">Last updated: 22 May 2026</p>
+<div class="wrap">
 
-  <div class="tldr">
-    <strong>TL;DR</strong>, The app makes zero network requests. The website has zero analytics, zero cookies, zero third-party trackers. We collect your email if you buy a licence (for receipt + key delivery) or subscribe to the newsletter (for release notes). That's it.
+  <div class="lang-toggle">
+    <a href="#" data-lang="pt" class="active">PT</a>
+    <a href="#" data-lang="en">EN</a>
   </div>
 
-  <h2>What we do not collect</h2>
-  <ul>
-    <li><strong>No telemetry</strong> in the desktop app. It does not phone home, not on launch, not on any action, not on close.</li>
-    <li><strong>No analytics</strong> on this website. No Google Analytics, no Meta pixel, no Plausible, no anything.</li>
-    <li><strong>No cookies</strong> set by this website, beyond what your browser sets locally for things like dark-mode preference (these never leave your machine).</li>
-    <li><strong>No fingerprinting</strong>, no IP logging beyond standard CDN-level logs that Cloudflare retains for 24h.</li>
-  </ul>
+  <div class="lang-pt">
+    <h1>Política de <span class="serif">privacidade.</span></h1>
+    <p class="meta">Última actualização: 16 de Junho de 2026 &middot; Versão 1.0</p>
 
-  <h2>What we do collect</h2>
-  <h3>If you buy a commercial licence</h3>
-  <p>Lemon Squeezy is the payment processor. They collect your name, email, billing address, and payment method to process the transaction and the EU VAT MOSS filing. We receive your name and email from Lemon Squeezy via webhook, use them to:</p>
-  <ul>
-    <li>Sign your unique licence key (your email is included in the signed payload, this is how the app verifies the key offline).</li>
-    <li>Email the key to you via Resend (transactional email provider).</li>
-    <li>Honour any future support request you make about the purchase.</li>
-  </ul>
-  <p>We do not add you to any marketing list, do not share your information with anyone, do not analyse your usage. The key validation happens entirely on your machine, Marjers cannot tell when or how often you use the app.</p>
+    <div class="summary">
+      <strong>Resumo:</strong> a BlockBuilder Studio não recolhe os teus dados. Não tem analytics, não tem rastreio, não tem contas de utilizador, não tem sincronização com a cloud. Os teus projectos vivem só no dispositivo onde foram criados.
+    </div>
 
-  <h3>If you subscribe to the newsletter</h3>
-  <p>Email goes to Buttondown. You'll receive release notes when there's a new BlockBuilder Studio version. One-click unsubscribe. We don't email you anything else.</p>
+    <h2>Quem somos</h2>
+    <p>A BlockBuilder Studio é um projecto pessoal mantido por <strong>Marjers</strong> (José Pedro da Silva, Braga, Portugal). Contacto: <a href="mailto:geral@marjers.com">geral@marjers.com</a>.</p>
 
-  <h3>If you email us</h3>
-  <p>The email you send and the address you send it from are retained as long as the conversation is active, plus a reasonable archive period (12 months).</p>
+    <h2>Que dados recolhemos</h2>
+    <p><strong>Nenhuns.</strong> A app não recolhe, transmite ou armazena dados pessoais teus em servidores nossos:</p>
+    <ul>
+      <li>Sem analytics (não usamos Google Analytics, Plausible, Mixpanel ou equivalente).</li>
+      <li>Sem rastreio entre apps ou entre sessões.</li>
+      <li>Sem cookies que identifiquem o utilizador, na app desktop nem na PWA.</li>
+      <li>Sem login, sem registo, sem perfil de utilizador.</li>
+      <li>Sem upload automático dos teus projectos para a cloud.</li>
+    </ul>
+    <p>A app é totalmente funcional offline.</p>
 
-  <h2>Where data lives</h2>
-  <ul>
-    <li>Lemon Squeezy stores your purchase record on their servers (US + EU).</li>
-    <li>Resend stores the transactional email log (EU).</li>
-    <li>Buttondown stores the newsletter subscriber list (US).</li>
-    <li>Cloudflare serves this website and proxies licence webhooks (global CDN).</li>
-    <li>Your project files (<code>.json</code>, <code>.stl</code>, <code>.obj</code>, <code>.step</code>) live exclusively on your machine. The app never uploads them.</li>
-  </ul>
+    <h2>Dados que ficam no teu dispositivo</h2>
+    <p>Para a app funcionar, alguma informação é gravada localmente, mas nunca sai do dispositivo:</p>
+    <ul>
+      <li><strong>Autosave do projecto activo</strong>: IndexedDB do browser (PWA) ou <code>%APPDATA%\BlockBuilder Studio\</code> (desktop).</li>
+      <li><strong>Preferências da app</strong>: tema, unidade (mm/cm/inch), snap step. Em localStorage.</li>
+      <li><strong>Contador de lançamentos</strong> (apenas desktop): para o lembrete suave. Apaga ao desinstalar.</li>
+      <li><strong>Ficheiro de licença</strong> (desktop, após compra comercial): chave ECDSA P-256 assinada, validada offline.</li>
+    </ul>
 
-  <h2>Your rights (GDPR)</h2>
-  <p>If you're in the EU/EEA, you have the right to access, correct, export, and delete the personal data we hold about you. Write to <a href="mailto:geral@marjers.com">geral@marjers.com</a> and we'll handle it within 30 days. We can also issue a fresh licence key if you've lost the email containing yours.</p>
+    <h2>Quando contactas terceiros via app</h2>
+    <ul>
+      <li><strong>Compra da licença comercial desktop</strong> (EUR 12): processada por <strong>Lemon Squeezy</strong>. <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Política deles</a>. A BlockBuilder recebe apenas nome + email para emitir a chave.</li>
+      <li><strong>Compra no iPhone, iPad ou Android</strong> (EUR 4,99): processada pela <strong>Apple</strong> ou <strong>Google</strong>. <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple</a>, <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google</a>. A BlockBuilder não recebe dados pessoais do comprador, apenas estatísticas agregadas.</li>
+      <li><strong>Exportação de modelos</strong> (STL/OBJ/STEP): ficheiro gravado localmente, partilha é uma acção tua.</li>
+      <li><strong>Buy me a coffee</strong>: gorjeta opcional, Buy Me a Coffee Ltd. <a href="https://www.buymeacoffee.com/privacy-policy" target="_blank" rel="noopener">Política deles</a>.</li>
+    </ul>
 
-  <h2>Contact</h2>
-  <p>Marjers, sole-trader business operating from Portugal. Questions about this policy: <a href="mailto:geral@marjers.com">geral@marjers.com</a>.</p>
+    <h2>O site blockbuilder.studio</h2>
+    <p>Alojado em Cloudflare Pages. A Cloudflare regista logs técnicos (IP, user agent, URL) durante 24 horas para detectar ataques. A BlockBuilder não acede a estes logs. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare Privacy</a>.</p>
+    <p>O site não usa cookies de tracking, pixels do Facebook, anúncios ou A/B testing.</p>
+
+    <h2>Crianças</h2>
+    <p>Apropriada para todas as idades (4+ na App Store, Everyone na Play Store). Como não recolhemos dados, não há necessidade especial de protecções para menores.</p>
+
+    <h2>Os teus direitos sob o RGPD</h2>
+    <p>Garantimos os direitos de acesso, rectificação, eliminação, oposição e portabilidade. Como não há dados em nossa posse, podes apagar localmente (limpar cache do browser ou desinstalar). Confirmação escrita por email: <a href="mailto:geral@marjers.com">geral@marjers.com</a>. Resposta em 48 horas úteis.</p>
+
+    <h2>Autoridade de controlo</h2>
+    <p>Reclamações à CNPD em <a href="https://www.cnpd.pt" target="_blank" rel="noopener">cnpd.pt</a>.</p>
+
+    <h2>Alterações</h2>
+    <p>Mudanças materiais (recolher dados, mudar processador de pagamentos, adicionar tracking) serão notificadas 30 dias antes no rodapé do site. Histórico em <a href="https://github.com/josedasilva11/blockbuilder-studio/commits/master/website/privacy.html" target="_blank" rel="noopener">GitHub</a>.</p>
+
+    <h2>Contacto</h2>
+    <p><a href="mailto:geral@marjers.com">geral@marjers.com</a>. Replico em 48 horas úteis.</p>
+  </div>
+
+  <div class="lang-en">
+    <h1>Privacy <span class="serif">policy.</span></h1>
+    <p class="meta">Last updated: 16 June 2026 &middot; Version 1.0</p>
+
+    <div class="summary">
+      <strong>TL;DR:</strong> BlockBuilder Studio does not collect your data. No analytics, no tracking, no user accounts, no cloud sync. Your projects live only on the device they were created on.
+    </div>
+
+    <h2>Who we are</h2>
+    <p>BlockBuilder Studio is a personal project maintained by <strong>Marjers</strong> (José Pedro da Silva, Braga, Portugal). Contact: <a href="mailto:geral@marjers.com">geral@marjers.com</a>.</p>
+
+    <h2>What data we collect</h2>
+    <p><strong>None.</strong> The app does not collect, transmit or store your personal data on any server we operate:</p>
+    <ul>
+      <li>No analytics (no Google Analytics, Plausible, Mixpanel, or equivalent).</li>
+      <li>No cross-app or cross-session tracking.</li>
+      <li>No identifying cookies on desktop or PWA.</li>
+      <li>No login, no registration, no user profile.</li>
+      <li>No automatic upload of your projects to the cloud.</li>
+    </ul>
+    <p>The app is fully functional offline.</p>
+
+    <h2>Data that stays on your device</h2>
+    <ul>
+      <li><strong>Active project autosave</strong>: browser IndexedDB (PWA) or <code>%APPDATA%\BlockBuilder Studio\</code> (desktop).</li>
+      <li><strong>App preferences</strong>: theme, unit, snap step. localStorage.</li>
+      <li><strong>Launch counter</strong> (desktop only): for the soft reminder. Deletes on uninstall.</li>
+      <li><strong>Licence file</strong> (desktop, after commercial purchase): ECDSA P-256 signed key, validated offline.</li>
+    </ul>
+
+    <h2>When you interact with third parties</h2>
+    <ul>
+      <li><strong>Desktop commercial purchase</strong> (EUR 12): processed by <strong>Lemon Squeezy</strong>. <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Their policy</a>. BlockBuilder receives only your name + email to issue the key.</li>
+      <li><strong>iPhone, iPad, or Android purchase</strong> (EUR 4.99): processed by <strong>Apple</strong> or <strong>Google</strong>. <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple</a>, <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google</a>. BlockBuilder receives no personal data from the buyer, only aggregate sales stats.</li>
+      <li><strong>Model export</strong> (STL/OBJ/STEP): file saved locally; any sharing is your action.</li>
+      <li><strong>Buy me a coffee</strong>: optional tip. <a href="https://www.buymeacoffee.com/privacy-policy" target="_blank" rel="noopener">Their policy</a>.</li>
+    </ul>
+
+    <h2>The blockbuilder.studio website</h2>
+    <p>Hosted on Cloudflare Pages. Cloudflare logs basic technical info (IP, user agent, URL) for 24 hours to detect attacks. BlockBuilder does not access these logs. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare Privacy</a>.</p>
+    <p>No tracking cookies, no Facebook pixel, no ads, no A/B testing.</p>
+
+    <h2>Children</h2>
+    <p>Suitable for all ages (4+ on App Store, Everyone on Google Play). No special protections needed because we collect no data.</p>
+
+    <h2>Your rights under GDPR</h2>
+    <p>Rights of access, rectification, erasure, objection, and portability. With no data in our possession, you can erase locally (clear browser cache or uninstall). Written confirmation by email: <a href="mailto:geral@marjers.com">geral@marjers.com</a>. Reply within 48 business hours.</p>
+
+    <h2>Supervisory authority</h2>
+    <p>Complaints to the Portuguese CNPD at <a href="https://www.cnpd.pt" target="_blank" rel="noopener">cnpd.pt</a>.</p>
+
+    <h2>Changes</h2>
+    <p>Material changes (starting to collect data, switching payment processor, adding tracking) will be notified 30 days in advance at the site footer. Full history on <a href="https://github.com/josedasilva11/blockbuilder-studio/commits/master/website/privacy.html" target="_blank" rel="noopener">GitHub</a>.</p>
+
+    <h2>Contact</h2>
+    <p><a href="mailto:geral@marjers.com">geral@marjers.com</a>. Reply within 48 business hours.</p>
+  </div>
+
 </div>
+
+<footer class="footer">
+  &copy; 2026 Marjers &middot; <a href="/">blockbuilder.studio</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/changelog.html">Changelog</a> &middot; <a href="mailto:geral@marjers.com">Contact</a>
+</footer>
+
+<script>
+  (function () {
+    const html = document.documentElement;
+    const stored = localStorage.getItem('bb.privacy.lang');
+    const browser = (navigator.language || 'pt').slice(0, 2).toLowerCase();
+    const initial = stored || (browser === 'en' ? 'en' : 'pt');
+    apply(initial);
+    document.querySelectorAll('.lang-toggle a').forEach((a) => {
+      a.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        apply(a.dataset.lang);
+      });
+    });
+    function apply(lang) {
+      html.setAttribute('data-lang', lang);
+      html.setAttribute('lang', lang);
+      document.querySelectorAll('.lang-toggle a').forEach((a) => a.classList.toggle('active', a.dataset.lang === lang));
+      try { localStorage.setItem('bb.privacy.lang', lang); } catch {}
+    }
+  })();
+</script>
 
 </body>
 </html>
