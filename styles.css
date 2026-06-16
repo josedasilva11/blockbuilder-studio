@@ -3408,6 +3408,17 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   /* Properties slider rows get more vertical space (touch-friendly thumb). */
   .prop-row-scrub > input.prop-slider { height: 24px; }
   .brand-studio { display: none !important; }
+  /* Help fab would sit ON TOP of the bottom dock and steal taps. The Help
+     entry in the dock replaces it. */
+  .help-fab { display: none !important; }
+  /* Memory pill is informational, hide it on phone to free topbar space. */
+  #mem-indicator { display: none !important; }
+  /* Top bar shrink. */
+  .topbar { padding: 4px 8px; }
+  .brand { font-size: 13px; }
+  .brand-mark { width: 22px; height: 22px; }
+  .topbar-iconbtn { width: 36px; height: 36px; }
+  .topbar-iconbtn svg { width: 18px; height: 18px; }
 }
 
 /* Pointer-aware copy swap. Quickstart card has duplicated text labelled
