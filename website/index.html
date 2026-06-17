@@ -31,29 +31,8 @@
 <body data-mode="beta">
 
 <!-- ════════════════════════════════════════════════════════════════════════
-     BETA banner. Visible only when <body data-mode="beta">. Remove the
-     data-mode attribute on <body> (or change to "live") to hide. See LAUNCH.md
-     ════════════════════════════════════════════════════════════════════════ -->
-<div class="beta-banner" role="status">
-  <strong>BETA</strong>
-  <span>BlockBuilder Studio is in private beta. Payments are paused while we shake out bugs.</span>
-  <a href="mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access">Request access →</a>
-</div>
-
-
-<!-- ════════════════════════════════════════════════════════════════════════
-     Release banner
-     ════════════════════════════════════════════════════════════════════════ -->
-<div class="banner">
-  <span class="pulse"></span>
-  <strong>BlockBuilder v0.6.0</strong> just shipped
-  <span class="sep">·</span>
-  Faster CSG, AP203 STEP export, dark/light theme polish
-  <a href="/changelog" class="banner-cta">Changelog →</a>
-</div>
-
-<!-- ════════════════════════════════════════════════════════════════════════
-     Navigation
+     Navigation. Sticky at top:0. Sits ABOVE every banner so the menu is
+     always reachable. Banners live below the nav and scroll away naturally.
      ════════════════════════════════════════════════════════════════════════ -->
 <nav class="nav">
   <div class="nav-in">
@@ -90,6 +69,28 @@
     </div>
   </div>
 </nav>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     BETA banner. Visible only when <body data-mode="beta">. Sits BELOW the
+     sticky nav and scrolls away. Remove the data-mode attribute on <body>
+     (or change to "live") to hide. See LAUNCH.md
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="beta-banner" role="status">
+  <strong>BETA</strong>
+  <span>BlockBuilder Studio is in private beta. Payments are paused while we shake out bugs.</span>
+  <a href="mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access">Request access →</a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Release banner
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="banner">
+  <span class="pulse"></span>
+  <strong>BlockBuilder v0.6.0</strong> just shipped
+  <span class="sep">·</span>
+  Faster CSG, AP203 STEP export, dark/light theme polish
+  <a href="/changelog" class="banner-cta">Changelog →</a>
+</div>
 
 <!-- ════════════════════════════════════════════════════════════════════════
      Hero, headline + voxel scene
@@ -1087,7 +1088,7 @@ if (document.body.dataset.mode === 'beta') {
     if (!btn) return;
     let ticking = false;
     function update() {
-      btn.classList.toggle('is-visible', window.scrollY > 600);
+      btn.classList.toggle('is-visible', window.scrollY > 400);
       ticking = false;
     }
     window.addEventListener('scroll', () => {

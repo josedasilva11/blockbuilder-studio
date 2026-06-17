@@ -437,7 +437,7 @@ if (document.body.dataset.mode === 'beta') {
     if (!btn) return;
     let ticking = false;
     function update() {
-      btn.classList.toggle('is-visible', window.scrollY > 600);
+      btn.classList.toggle('is-visible', window.scrollY > 400);
       ticking = false;
     }
     window.addEventListener('scroll', () => {
