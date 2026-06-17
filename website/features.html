@@ -428,5 +428,25 @@ if (document.body.dataset.mode === 'beta') {
 }
 </script>
 
+<button id="back-to-top" class="back-to-top" aria-label="Back to top" type="button">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19 V5 M5 12 L12 5 L19 12"/></svg>
+</button>
+<script>
+  (function () {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    let ticking = false;
+    function update() {
+      btn.classList.toggle('is-visible', window.scrollY > 600);
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    update();
+  })();
+</script>
+
 </body>
 </html>

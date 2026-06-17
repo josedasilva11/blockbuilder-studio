@@ -1839,6 +1839,44 @@ footer {
 }
 
 /* ════════════════════════════════════════════════════════════════════════
+   Back-to-top button. Hidden by default, fades in once the user has
+   scrolled past 600 px. Floating bottom-right, above any other floating
+   chrome. Click scrolls smoothly to the top.
+   ════════════════════════════════════════════════════════════════════════ */
+.back-to-top {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0a0c10;
+  border: 1px solid rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), background 0.15s;
+  z-index: 80;
+  padding: 0;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.back-to-top:hover { background: #d9ff5a; transform: translateY(-2px); }
+.back-to-top svg { width: 22px; height: 22px; }
+@media (max-width: 600px) {
+  .back-to-top { right: 14px; bottom: 14px; width: 42px; height: 42px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
    BETA MODE — controlled by [data-mode="beta"] on <body>. Strip these rules
    (and the attribute) to flip to live. See LAUNCH.md for the exact diff.
    ════════════════════════════════════════════════════════════════════════ */
@@ -1855,9 +1893,11 @@ footer {
   font-weight: 600;
   text-align: center;
   border-bottom: 1px solid rgba(0,0,0,0.2);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  /* Static (not sticky). Sticky beta banners cover the sticky nav, which
+     is worse UX than the banner scrolling away. Users still see it on the
+     first paint, then it goes away when they scroll past. */
+  position: relative;
+  z-index: 1;
 }
 [data-mode="beta"] .beta-banner strong {
   background: #0a0c10;
