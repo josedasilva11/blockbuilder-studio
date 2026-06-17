@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Install · BlockBuilder Studio</title>
+<meta name="description" content="How to install BlockBuilder Studio on Windows, macOS, Linux desktop and how to install the PWA in your browser. Mobile and tablet apps coming to the App Store and Play Store." />
+<link rel="canonical" href="https://blockbuilder.studio/install" />
+<meta property="og:title" content="Install BlockBuilder Studio on every device" />
+<meta property="og:description" content="Desktop binary, browser PWA, Add to Home Screen, App Store, Play Store. Pick your path." />
+<meta property="og:url" content="https://blockbuilder.studio/install" />
+<meta property="og:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="theme-color" content="#0a0c10" />
+<link rel="icon" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" />
+<style>
+  :root {
+    --bg:#0a0c10; --bg-elev:#11141b; --panel:#161a23; --panel-soft:#1c2030;
+    --border:#232838; --border-soft:#1c1f2a;
+    --text:#f0f3f6; --text-mid:#b6bcc5; --text-dim:#7a8395;
+    --accent:#c4f04f; --accent-soft:rgba(196,240,79,0.15);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.6 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,12,16,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-in { max-width: 1180px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; gap: 24px; }
+  .brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 17px; letter-spacing: -0.2px; }
+  .brand-link svg { width: 28px; height: 28px; }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent); padding: 3px 6px; background: var(--accent-soft); border-radius: 4px; }
+  .nav-links { margin-left: auto; display: flex; gap: 24px; }
+  .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-links a.active { color: var(--accent); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 18px; border-radius: 9px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    transition: transform 0.15s, background 0.15s;
+    border: 1px solid transparent; cursor: pointer; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #0a0c10; }
+  .btn-primary:hover { background: #d9ff5a; transform: translateY(-1px); text-decoration: none; }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--bg-elev); border-color: var(--text-dim); text-decoration: none; }
+  .btn svg { width: 16px; height: 16px; }
+
+  .hero { max-width: 880px; margin: 0 auto; padding: 60px 28px 24px; text-align: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .eyebrow .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 4px var(--accent-soft); }
+  h1 { font-size: 52px; line-height: 1.05; letter-spacing: -1.6px; font-weight: 700; margin: 0 0 14px; }
+  h1 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--accent); }
+  .hero p { color: var(--text-mid); font-size: 17px; line-height: 1.55; max-width: 580px; margin: 0 auto; }
+
+  .platforms {
+    max-width: 1180px; margin: 30px auto;
+    padding: 0 28px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  }
+  .platform {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 26px 24px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .platform-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-soft); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+  }
+  .platform-icon svg { width: 24px; height: 24px; }
+  .platform h2 { font-size: 22px; margin: 0; letter-spacing: -0.4px; }
+  .platform .sub { color: var(--text-mid); font-size: 14px; margin: 0 0 6px; }
+  .platform .status { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--accent); }
+  .platform .status.soon { color: #f7c948; }
+
+  .step-block {
+    max-width: 880px; margin: 50px auto;
+    padding: 0 28px;
+  }
+  .step-block h2 { font-size: 30px; letter-spacing: -0.8px; margin: 0 0 6px; }
+  .step-block h2 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; color: var(--accent); }
+  .step-block > .meta { color: var(--text-dim); font-size: 13px; margin-bottom: 22px; }
+  .steps {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px 26px;
+    counter-reset: step;
+  }
+  .steps > li {
+    list-style: none;
+    margin: 14px 0;
+    padding-left: 44px;
+    position: relative;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .steps > li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute; left: 0; top: 0;
+    width: 28px; height: 28px;
+    background: var(--accent); color: #0a0c10;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+  }
+  .steps > li strong { color: var(--accent); }
+  .steps > li code { background: var(--bg-elev); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: var(--text); }
+  .steps > li small { display: block; color: var(--text-mid); font-size: 13px; margin-top: 4px; }
+
+  .tip {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: var(--accent-soft);
+    border: 1px solid rgba(196,240,79,0.3);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .tip strong { color: var(--accent); }
+
+  .footer { border-top: 1px solid var(--border); padding: 30px 28px; text-align: center; color: var(--text-dim); font-size: 13px; }
+  .footer a { color: var(--text-mid); }
+
+  @media (max-width: 720px) {
+    .platforms { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand-link">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="none" stroke="#c4f04f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+          <path d="M14 22 L14 36 L26 42 L26 28"/>
+          <path d="M38 22 L38 36 L26 42"/>
+          <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+          <path d="M28 30 L28 44 L40 50 L40 36"/>
+          <path d="M52 30 L52 44 L40 50"/>
+        </g>
+      </svg>
+      <span><strong>Block</strong>Builder</span>
+      <span class="brand-tag">STUDIO</span>
+    </a>
+    <div class="nav-links">
+      <a href="/features">Features</a>
+      <a href="/tutorials">Tutorials</a>
+      <a href="/install" class="active">Install</a>
+      <a href="/pricing">Pricing &amp; FAQ</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="eyebrow"><span class="dot"></span>Install</span>
+  <h1>Pick your platform.<br><span class="serif">It runs everywhere.</span></h1>
+  <p>BlockBuilder Studio ships as an offline desktop binary, a browser PWA, and a paid app on iPhone / iPad / Android. Same project file across all of them.</p>
+</section>
+
+<div class="platforms">
+  <div class="platform">
+    <div class="platform-icon">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 L10.5 4.5 L10.5 11.5 L3 11.5 Z M11.5 4.4 L21 3 L21 11.5 L11.5 11.5 Z M3 12.5 L10.5 12.5 L10.5 19.5 L3 18.5 Z M11.5 12.5 L21 12.5 L21 21 L11.5 19.6 Z"/></svg>
+    </div>
+    <span class="status">Available now</span>
+    <h2>Desktop</h2>
+    <p class="sub">Windows 10 / 11, macOS 12+, Linux (any glibc 2.31+). Fully offline.</p>
+    <a href="#desktop" class="btn btn-primary">Install on desktop</a>
+  </div>
+
+  <div class="platform">
+    <div class="platform-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 a14 14 0 0 1 0 18 M12 3 a14 14 0 0 0 0 18 M3 12 H21"/></svg>
+    </div>
+    <span class="status">Available now</span>
+    <h2>Web PWA</h2>
+    <p class="sub">Any browser (Chrome, Safari, Edge, Firefox). Works offline after first visit.</p>
+    <a href="#pwa" class="btn btn-primary">Install in browser</a>
+  </div>
+
+  <div class="platform">
+    <div class="platform-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2.5"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>
+    </div>
+    <span class="status soon">Coming soon</span>
+    <h2>iPhone, iPad, Android</h2>
+    <p class="sub">Paid app, EUR 4.99 once, via App Store and Play Store. TestFlight + internal testing rolling out.</p>
+    <a href="#mobile" class="btn btn-ghost">Notify me at launch</a>
+  </div>
+</div>
+
+<section class="step-block" id="desktop">
+  <h2><span class="serif">Desktop:</span> Windows / macOS / Linux</h2>
+  <p class="meta">Offline binary. No installer for the portable zip. Five clicks to running.</p>
+  <ol class="steps">
+    <li><strong>Download</strong> the build for your OS from the <a href="/#download">downloads section</a> of the landing page. About 105 MB.</li>
+    <li><strong>Right-click the zip, Extract All</strong> (Windows) or open the .dmg / .AppImage (macOS / Linux). Pick any folder with write access; the app is fully portable.</li>
+    <li><strong>Open the extracted folder</strong> and double-click <code>BlockBuilder Studio.exe</code> (Windows), <code>BlockBuilder Studio.app</code> (macOS), or the AppImage (Linux).</li>
+    <li><strong>Windows SmartScreen</strong> will say "Microsoft Defender SmartScreen prevented an unrecognized app...". Click <strong>More info</strong>, then <strong>Run anyway</strong>. The binary is signed under Azure Trusted Signing but Defender takes a few releases to learn new publishers.</li>
+    <li><strong>First launch</strong> shows a Unit picker (mm / cm / inches). Pick once; changeable later in Settings.<small>That is the whole install. No account, no email, no licence prompt until you do paid work.</small></li>
+  </ol>
+  <div class="tip">
+    <strong>macOS Gatekeeper:</strong> if you see "BlockBuilder Studio cannot be opened because the developer cannot be verified", System Settings &rarr; Privacy &amp; Security &rarr; scroll to the bottom &rarr; <strong>Open Anyway</strong>. Apple notarisation is queued for the v0.7 release.
+  </div>
+</section>
+
+<section class="step-block" id="pwa">
+  <h2><span class="serif">Web:</span> install as a PWA</h2>
+  <p class="meta">Runs in the browser tab, but also installable as a standalone app with its own icon. Works offline after the first visit (service worker pre-caches everything).</p>
+  <ol class="steps">
+    <li><strong>Open</strong> <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> in any modern browser.</li>
+    <li><strong>Chrome / Edge:</strong> a small install icon appears in the address bar after a few seconds. Click it &rarr; <strong>Install</strong>. The app opens in a frameless window with a Start menu / Dock entry.</li>
+    <li><strong>Safari (macOS):</strong> File &rarr; Share &rarr; <strong>Add to Dock</strong>. The app behaves as a regular app from there.</li>
+    <li><strong>Firefox:</strong> currently only the in-tab path (no install button). It still works fully offline once visited; just bookmark it.</li>
+    <li><strong>Disconnect from the internet.</strong> Reload. The app still opens; the service worker serves the entire bundle from cache. Proof.<small>Updates download silently in the background on subsequent visits. The notification toast tells you when a new version is ready to reload.</small></li>
+  </ol>
+  <div class="tip">
+    <strong>Storage on your device:</strong> the PWA bundle is roughly 7 MB, plus whatever your project autosaves occupy in IndexedDB. Clearing browser data wipes both; export your <code>.json</code> projects if you plan to do that.
+  </div>
+</section>
+
+<section class="step-block" id="mobile-add-to-home">
+  <h2><span class="serif">Mobile shortcut:</span> Add to Home Screen</h2>
+  <p class="meta">Skip the App Store + Play Store path entirely by saving the PWA as a Home Screen icon. Same code, same data, free.</p>
+  <ol class="steps">
+    <li><strong>iPhone / iPad (Safari):</strong> open <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> &rarr; tap the Share button (square with up-arrow) &rarr; <strong>Add to Home Screen</strong>. The icon appears like any native app. Tapping it opens fullscreen without browser chrome.</li>
+    <li><strong>Android (Chrome):</strong> open the same URL &rarr; menu 3-dots &rarr; <strong>Add to Home screen</strong> (or <strong>Install app</strong> on newer Chromes). Same behaviour.</li>
+    <li><strong>Once added,</strong> the PWA detects native (no browser chrome), shows the bottom dock + bottom-sheet layout, and works fully offline.</li>
+  </ol>
+  <div class="tip">
+    <strong>Why pay for the App Store version</strong> when this is free? The store apps will get a few platform-tied features the PWA can't reach (native Files integration on iOS, deeper Android background processing), plus you avoid Apple's iCloud limits on Add-to-Home storage. For most users the PWA path is plenty.
+  </div>
+</section>
+
+<section class="step-block" id="mobile">
+  <h2><span class="serif">App Store + Play Store:</span> paid app, coming soon</h2>
+  <p class="meta">EUR 4.99 up-front, single purchase, no subscription. TestFlight + Play Internal Testing are rolling out before public release.</p>
+  <ol class="steps">
+    <li><strong>iPhone / iPad:</strong> bundle ID <code>pt.marjers.blockbuilder</code>. Internal testing through TestFlight; reach out to <a href="mailto:geral@marjers.com">geral@marjers.com</a> to be added.</li>
+    <li><strong>Android phone / tablet:</strong> same bundle ID. Internal testing through Play Console; opt-in link will appear here once the first AAB is approved.</li>
+    <li><strong>Public release:</strong> aimed at the back of summer 2026 along with the v0.6.0 desktop binary going stable. Email <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20mobile%20launch%20notify">geral@marjers.com</a> to be notified the day it lists.</li>
+  </ol>
+  <div class="tip">
+    <strong>Apple Family Sharing</strong> and <strong>Google Play Family Library</strong> are both honoured. One purchase covers everyone in your family group.
+  </div>
+</section>
+
+<footer class="footer">
+  &copy; 2026 Marjers &middot; <a href="/">blockbuilder.studio</a> &middot; <a href="/features">Features</a> &middot; <a href="/tutorials">Tutorials</a> &middot; <a href="/install">Install</a> &middot; <a href="/pricing">Pricing &amp; FAQ</a> &middot; <a href="/changelog.html">Changelog</a> &middot; <a href="/privacy">Privacy</a>
+</footer>
+
+</body>
+</html>
