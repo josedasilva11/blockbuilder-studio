@@ -153,6 +153,7 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .nav-links { display: flex; gap: 28px; margin-left: 28px; font-size: 14px; }
 .nav-links a { color: var(--text-mid); transition: color 0.15s; }
 .nav-links a:hover { color: var(--text); }
+.nav-sep { color: var(--text-dim); opacity: 0.45; user-select: none; font-weight: 400; margin: 0 -10px; pointer-events: none; }
 .nav-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
 
 /* === Buttons ============================================================= */

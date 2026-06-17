@@ -47,7 +47,7 @@
     font-size: 9px;
     letter-spacing: 0.18em;
     font-weight: 700;
-    background: var(--lime);
+    background: var(--accent);
     color: #0a0c10;
     padding: 2px 6px;
     border-radius: 3px;
@@ -240,6 +240,7 @@
   @media (max-width: 600px) {
     .nav-actions .btn-ghost { display: none; }
   }
+  .nav-sep { color: var(--text-dim); opacity: 0.45; user-select: none; font-weight: 400; margin: 0 -10px; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -266,7 +267,7 @@
     <div class="nav-links">
       <a href="/features">Features</a>
       <a href="/tutorials" class="active">Tutorials</a>
-      <a href="/install">Install</a>
+      <a href="/install">Install</a><span class="nav-sep" aria-hidden="true">.</span>
       <a href="/pricing">Pricing &amp; FAQ</a>
       <a href="/changelog.html">Changelog</a>
     </div>
@@ -308,7 +309,7 @@
 </div>
 
 <footer class="footer">
-  &copy; 2026 Marjers &middot; <a href="/">blockbuilder.studio</a> &middot; <a href="/install">Install</a> &middot; <a href="/pricing">Pricing &amp; FAQ</a> &middot; <a href="/tutorials">Tutorials</a> &middot; <a href="/changelog.html">Changelog</a> &middot; <a href="/privacy">Privacy</a>
+  &copy; 2026 Marjers &middot; <a href="/">blockbuilder.studio</a> &middot; <a href="/install">Install</a><span class="nav-sep" aria-hidden="true">.</span> &middot; <a href="/pricing">Pricing &amp; FAQ</a> &middot; <a href="/tutorials">Tutorials</a> &middot; <a href="/changelog.html">Changelog</a> &middot; <a href="/privacy">Privacy</a>
 </footer>
 
 <script>
