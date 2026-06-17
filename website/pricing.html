@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Pricing · BlockBuilder Studio</title>
-<meta name="description" content="BlockBuilder Studio pricing. Free forever for personal use, EUR 12 lifetime commercial licence, optional coffee tip. No subscription, no account, every feature unlocked at every tier." />
+<meta name="description" content="BlockBuilder Studio pricing. Free forever for personal use, EUR 12 lifetime commercial licence, business / site licences from EUR 49 for 5 seats. No subscription, no account, every feature unlocked at every tier." />
 <link rel="canonical" href="https://blockbuilder.studio/pricing" />
 <meta property="og:title" content="BlockBuilder Studio pricing, free forever, EUR 12 commercial licence" />
 <meta property="og:description" content="Personal use is free. Commercial licence is EUR 12 once, lifetime, every machine you own. No subscription." />
@@ -273,11 +273,74 @@
   }
   .footer a { color: var(--text-mid); }
 
+  /* Business / volume licence section */
+  .business {
+    max-width: 1180px;
+    margin: 30px auto 0;
+    padding: 0 28px;
+  }
+  .business-card {
+    background:
+      linear-gradient(180deg, rgba(196,240,79,0.04) 0%, transparent 60%),
+      var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .business-head h2 {
+    font-size: 30px;
+    margin: 8px 0 8px;
+    letter-spacing: -0.8px;
+    line-height: 1.15;
+  }
+  .business-head h2 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; color: var(--lime); font-weight: 400; }
+  .business-head p {
+    color: var(--text-mid);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 24px;
+    max-width: 720px;
+  }
+  .business-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .seat {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .seat .seats { font-size: 13px; font-weight: 700; color: var(--text-mid); letter-spacing: 0.6px; text-transform: uppercase; }
+  .seat .price { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: -1px; margin: 6px 0 2px; line-height: 1; }
+  .seat .price .cur { font-size: 16px; color: var(--text-mid); font-weight: 500; margin-right: 2px; }
+  .seat .each { font-size: 12px; color: var(--text-dim); }
+  .seat .save { font-size: 11px; color: var(--lime); font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; margin-top: 6px; }
+  .business-cta {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .business-cta .note { color: var(--text-dim); font-size: 13px; }
+
   @media (max-width: 880px) {
     .tiers { grid-template-columns: 1fr; }
+    .business-grid { grid-template-columns: repeat(2, 1fr); }
+    .business-card { padding: 28px 22px; }
     .hero h1 { font-size: 40px; letter-spacing: -1.2px; }
     .faq-wrap h2 { font-size: 28px; }
+    .business-head h2 { font-size: 24px; }
     .nav-links { display: none; }
+  }
+  @media (max-width: 480px) {
+    .business-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -391,6 +454,45 @@
   Coffee tips on top of any tier are welcome at <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener" style="color: var(--accent);">buymeacoffee.com/marjers</a>.
 </p>
 
+<section class="business">
+  <div class="business-card">
+    <div class="business-head">
+      <span class="eyebrow"><span class="dot"></span>Teams &amp; site licences</span>
+      <h2>Buying for a company? <span class="serif">Volume pricing here.</span></h2>
+      <p>If you're deploying BlockBuilder Studio in an office, a school lab, or a manufacturing floor, the desktop build detects Windows Pro, Enterprise, Education, or a domain / Azure AD joined machine and prompts for a Business licence instead of the personal one. WinRAR-style, no surveillance, the check happens locally. Volume discount kicks in at 5 seats.</p>
+    </div>
+    <div class="business-grid">
+      <div class="seat">
+        <span class="seats">1 seat</span>
+        <div class="price"><span class="cur">€</span>12</div>
+        <span class="each">€12 per person</span>
+      </div>
+      <div class="seat">
+        <span class="seats">5 seats</span>
+        <div class="price"><span class="cur">€</span>49</div>
+        <span class="each">€9.80 per person</span>
+        <span class="save">save 18 %</span>
+      </div>
+      <div class="seat">
+        <span class="seats">25 seats</span>
+        <div class="price"><span class="cur">€</span>199</div>
+        <span class="each">€7.96 per person</span>
+        <span class="save">save 34 %</span>
+      </div>
+      <div class="seat">
+        <span class="seats">100+ seats</span>
+        <div class="price" style="font-size: 22px;">Custom</div>
+        <span class="each">Site-wide quote</span>
+        <span class="save">talk to us</span>
+      </div>
+    </div>
+    <div class="business-cta">
+      <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20business%20licence%20enquiry&amp;body=Number%20of%20seats%3A%20%0AOrganisation%3A%20%0ACountry%20%2F%20VAT%20ID%3A%20%0A" class="btn btn-primary">Request a business quote</a>
+      <span class="note">Single invoice, EU VAT reverse-charge supported, key delivered same business day.</span>
+    </div>
+  </div>
+</section>
+
 <section class="faq-wrap">
   <h2>Licence <span class="serif">questions, answered.</span></h2>
   <p>If something here isn't clear, email <a href="mailto:geral@marjers.com">geral@marjers.com</a>, replies usually within 48 hours.</p>
@@ -400,6 +502,21 @@
     <div class="answer">
       <p>Anything where money changes hands because of the model. Selling prints on Etsy / MakerWorld. Freelance gigs where you ship STLs to a paying client. Engineering work where the STL ends up in a billable deliverable. Classroom is fine as long as no fees are charged for the model itself.</p>
       <p>If you're not sure, ask. I'd rather you ship than wonder.</p>
+    </div>
+  </details>
+  <details>
+    <summary>How does the Business / site licence work?</summary>
+    <div class="answer">
+      <p>Same key format as the individual €12 licence, but issued in a batch with a seat count baked in. One key works on every seat you bought, you don't get N separate keys to distribute. Renewal at v2.0 follows the same volume tiers.</p>
+      <p>Volume tiers, all one-time, lifetime, v1.x updates included: 5 seats €49, 25 seats €199, 50 seats €379, 100+ seats by quote (typically €4 to €5 per seat). EU VAT-ID reverse-charge supported; single invoice; key delivered same business day.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Does the desktop app actually detect Windows Pro / Enterprise?</summary>
+    <div class="answer">
+      <p>From v0.7 onward, yes. The launcher reads the Windows edition (Pro, Enterprise, Education, Server) and whether the machine is domain-joined or Azure AD joined. If any of those flags are true, the soft reminder dialog mentions the Business licence instead of the Individual one. The detection happens locally, nothing is sent to a server, the result is not logged.</p>
+      <p>v0.6 (current beta) shows the same reminder to everyone. If you're using the beta in a business setting today and want to pre-buy at volume, just say so in your email and you'll get a Business key the day issuance flips on.</p>
+      <p>macOS and Linux do not have an equivalent native flag, so on those platforms the reminder defaults to the Individual licence and trusts you to upgrade if commercial / business use applies.</p>
     </div>
   </details>
   <details>
