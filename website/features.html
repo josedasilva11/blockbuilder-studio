@@ -1,0 +1,432 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Features · BlockBuilder Studio</title>
+<meta name="description" content="Every feature in BlockBuilder Studio. CSG, Push/Pull, Reference geometry, Sketch, Array, Hollow, Cut, STL/OBJ/STEP export. What's new in v0.6 and what's coming next." />
+<link rel="canonical" href="https://blockbuilder.studio/features" />
+<meta property="og:title" content="BlockBuilder Studio features · everything it does" />
+<meta property="og:description" content="Tinkercad-style 3D modelling that ships an STL. Offline desktop app + PWA on iPad / iPhone / Android. One project, every screen. Free for personal use." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://blockbuilder.studio/features" />
+<meta property="og:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<!-- Square variant for tools that prefer 1:1 thumbnails (Slack, Discord, some
+     marketplaces). Same composition as og-cover.png, just 1200x1200. -->
+<meta property="og:image" content="https://blockbuilder.studio/og-cover-square.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="1200" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="theme-color" content="#0a0c10" />
+<meta name="author" content="Marjers" />
+<link rel="icon" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" />
+<link rel="stylesheet" href="/site.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 64 64">
+        <defs><linearGradient id="lg-nav" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#cdff45"/><stop offset="100%" stop-color="#7cbe1e"/>
+        </linearGradient></defs>
+        <g fill="none" stroke="url(#lg-nav)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+          <path d="M14 22 L14 36 L26 42 L26 28"/>
+          <path d="M38 22 L38 36 L26 42"/>
+          <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+          <path d="M28 30 L28 44 L40 50 L40 36"/>
+          <path d="M52 30 L52 44 L40 50"/>
+          <path d="M34 12 L42 8 L50 12 L42 16 Z" fill="url(#lg-nav)" fill-opacity="0.22"/>
+          <path d="M34 12 L34 20 L42 24 L42 16"/>
+          <path d="M50 12 L50 20 L42 24"/>
+        </g>
+      </svg>
+      <span class="brand-name"><strong>Block</strong>Builder</span>
+      <span class="brand-tag">STUDIO</span>
+    </a>
+    <div class="nav-links">
+      <a href="/features">Features</a>
+      <a href="#devices">Devices</a>
+      <a href="/tutorials">Tutorials</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener" class="btn btn-ghost">Try in browser</a>
+      <a href="#download" class="btn btn-primary">Download free</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" style="padding: 80px 28px 30px;">
+  <div class="hero-in" style="max-width: 1180px; margin: 0 auto; text-align: center;">
+    <div class="hero-text">
+      <span class="eyebrow"><span class="dot"></span>Features</span>
+      <h1 style="font-size: 56px; line-height: 1.05; margin: 18px 0 14px;">Every tool, <span class="serif">all in one app.</span></h1>
+      <p style="max-width: 640px; margin: 0 auto;">From a single primitive drag to push/pull on a slanted face, here is what BlockBuilder Studio can do on desktop, tablet, and phone. Same project, same STL out.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     What's new in v0.6 (sits above the Features bento)
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section whatsnew" id="whatsnew">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>v0.6.0 just shipped</span>
+      <h2>Ten new things<br><span class="serif">testers asked for.</span></h2>
+      <p>Four rounds of polish from the private beta cohort, all in v0.6. Each item is direct-modelling friendly, no parametric-history baggage.</p>
+    </div>
+
+    <div class="whatsnew-grid fade-up">
+      <div class="wn-card">
+        <div class="wn-num">01</div>
+        <h3>Intersect boolean</h3>
+        <p>Already had Group (union) and Hole + Group (subtract). Now there's <strong>Intersect</strong> too. Select two solids, press <code>Ctrl+Shift+G</code>, get only the volume in both. Reversible until you Bake.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">02</div>
+        <h3>Dimensions on screen</h3>
+        <p>Select any shape, X / Y / Z labels appear at the bounding-box edges in your active unit. No more squinting at the properties panel to check if the bracket is 12.4 or 12.5 mm.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">03</div>
+        <h3>Edge-hover dimensions</h3>
+        <p>Move the cursor near any feature edge. A small label pops up at the midpoint with the edge's exact length. Filters out the hidden triangulation diagonal a Box's quad face has, only edges you can actually see.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">04</div>
+        <h3>Push / Pull on any face</h3>
+        <p>Click a face, including slanted ones, then drag away from it. A new prism extrudes outward along that face's normal, depth set by mouse travel. The 30° wall finally gets its tab in one gesture.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">05</div>
+        <h3>Pattern v2: Skip instances</h3>
+        <p>Array tool gains a "Skip instances" field. Type <code>3, 7, 9</code> and those copies drop out of the pattern. Hex grids with a missing centre, masonry with feature gaps, no more duplicate-then-delete cycles.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">06</div>
+        <h3>Resize handles snap to neighbours</h3>
+        <p>The white face squares used to snap only to the grid. Now they also snap to neighbour shapes' bounding-box edges, mid-planes, and the world origin. Line two parts up by dragging until they click into place.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">07</div>
+        <h3>Chamfer + Fillet on 10 primitives</h3>
+        <p>Box, Cylinder, Cone, Tube, Polygon, Star, Heart, Wedge, Roof, Pyramid all gain <code>Chamfer</code> and <code>Fillet</code> parameters. Sphere / Torus / Dome have no sharp edges, so nothing to bevel.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">08</div>
+        <h3>Math in any number field</h3>
+        <p>Type <code>2*12+4</code>, <code>(40-6)/2</code>, <code>sqrt(50)</code>, or <code>max(10, 8)</code> into any width / position / size input. Press Enter, it evaluates.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">09</div>
+        <h3>Shortcuts palette + quickstart</h3>
+        <p><code>Ctrl+K</code> opens a searchable list of every shortcut. First-launch scene shows a 4-step walkthrough instead of an empty card.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">10</div>
+        <h3>Reference geometry</h3>
+        <p>Three new pickers: <strong>Ref Plane</strong> (3 points), <strong>Ref Axis</strong> (along any edge), <strong>Midpoint</strong> marker. Cyan construction entities, not printable. Body-drag and resize handles snap to them. PLANE_3P rows in the Outliner can be set as the active workplane in one click, perfect for building on an arbitrary tilted face.</p>
+      </div>
+    </div>
+
+    <p class="whatsnew-roadmap-intro fade-up">
+      <strong>Coming next</strong> (working order). Each one ships as its own update when ready, no big-bang rewrites.
+    </p>
+    <ul class="whatsnew-roadmap fade-up">
+      <li><strong>Push / Pull v2.</strong> Today's version spawns a new prism on a clicked face. The next step is true face-translation: move the picked face polygon along its normal so the original mesh deforms in place. Needs a proper half-edge representation under the hood.</li>
+      <li><strong>Reference geometry v2.</strong> Edit a ref's defining points after creation, undo on ref add / delete, full-plane snap (not just defining points).</li>
+      <li><strong>Sketch constraints</strong> (parallel, perpendicular, equal, tangent). Light parametric inside the Sketch tool only.</li>
+      <li><strong>Equations in property values.</strong> <code>width = 2 * wall + 4</code>. Parametric-light without a history timeline.</li>
+      <li><strong>Modifier stack per shape.</strong> Stackable, reorderable, non-destructive Array / Mirror / Bevel / Hollow. The right way to do "almost parametric".</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Features bento
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Features</span>
+      <h2>Everything you need to model<br>for the printer. <span class="serif">Nothing you don't.</span></h2>
+      <p>13 primitive shapes, full CSG (union, subtraction, intersection), STL/OBJ/STEP import-export, sketches, slicing, hollowing, arrays, ruler, all running locally on your machine.</p>
+    </div>
+
+    <div class="bento">
+      <!-- Hero feature 1: CSG -->
+      <div class="cell cell-hero cell-wide-3 fade-up">
+        <div>
+          <span class="tag">Core feature</span>
+        </div>
+        <div class="feat-illust feat-shot">
+          <img src="screenshots/feature-hole.jpg"
+               alt="A blue solid cylinder overlapping a red translucent hole-box, ready to be combined via Group."
+               loading="lazy" decoding="async" />
+        </div>
+        <div>
+          <h3>Solid + Hole booleans</h3>
+          <p>Toggle a shape to <em>hole</em> and it carves into anything it overlaps with after Group. Solids merge, holes subtract. Fully reversible until you bake. Powered by three-bvh-csg.</p>
+        </div>
+      </div>
+
+      <!-- Hero feature 2: Export -->
+      <div class="cell cell-hero cell-wide-3 fade-up">
+        <div>
+          <span class="tag warm">Export</span>
+        </div>
+        <div class="feat-illust feat-shot feat-shot-export">
+          <img src="screenshots/feature-export.jpg"
+               alt="Toolbar export buttons, Save, Upload, Import, STL, STEP, OBJ, with the OBJ tooltip showing its description."
+               loading="lazy" decoding="async" />
+        </div>
+        <div>
+          <h3>STL · OBJ · STEP export</h3>
+          <p>Printer-ready binary STL, Wavefront OBJ, or AP203 faceted-brep STEP for CAD/CAM pipelines. Bring in any mesh as an editable shape, your imports become primitives.</p>
+        </div>
+      </div>
+
+      <!-- small features -->
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18 L9 14 L14 19 L19 14 M5 18 L5 6 L9 2 L14 7 L19 2 L19 14"/></svg></div>
+        <h3>Sketch tools</h3>
+        <p>Extrude polygons, scribble free-hand outlines, revolve profiles into lathe-style solids.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12 H21 M7 6 L7 18 M17 6 L17 18"/></svg></div>
+        <h3>Cut along plane</h3>
+        <p>Bambu-style. Slice along X, Y, or Z into two halves with a live plane preview.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+        <h3>Hollow / Shell</h3>
+        <p>Carve the inside of any shape at a chosen wall thickness. Print-ready shells in two clicks.</p>
+      </div>
+
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18 L18 3 L21 6 L6 21 Z"/></svg></div>
+        <h3>Ruler · vertex snap</h3>
+        <p>Click two points. Distance + per-axis deltas. Locks to vertices so measurements are exact.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><rect x="15" y="15" width="6" height="6"/></svg></div>
+        <h3>Linear + circular arrays</h3>
+        <p>N copies along a line with spacing, or around an axis with a chosen total angle.</p>
+      </div>
+      <div class="cell cell-wide-2 fade-up">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></div>
+        <h3>Workplane on face</h3>
+        <p>Drop the active workplane on any face. New shapes spawn aligned to that face's normal.</p>
+      </div>
+
+      <!-- live stats cell -->
+      <div class="cell cell-wide-6 fade-up" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 28px; padding: 32px; align-items: center;">
+        <div>
+          <h3 style="font-size: 17px; margin: 0 0 4px;">Live volume + surface area</h3>
+          <p style="font-size: 13px;">Estimate filament cost without leaving the app.</p>
+        </div>
+        <div>
+          <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Volume</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">42.18 <span style="font-size: 14px; color: var(--text-dim);">cm³</span></div>
+        </div>
+        <div>
+          <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Surface</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">87.41 <span style="font-size: 14px; color: var(--text-dim);">cm²</span></div>
+        </div>
+        <div>
+          <div class="mono" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">Triangles</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--lime);">2, 164</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="brand">
+        <svg class="brand-mark" viewBox="0 0 64 64">
+          <defs><linearGradient id="lg-foot" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#cdff45"/><stop offset="100%" stop-color="#7cbe1e"/>
+          </linearGradient></defs>
+          <g fill="none" stroke="url(#lg-foot)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+            <path d="M14 22 L14 36 L26 42 L26 28"/>
+            <path d="M38 22 L38 36 L26 42"/>
+            <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+            <path d="M28 30 L28 44 L40 50 L40 36"/>
+            <path d="M52 30 L52 44 L40 50"/>
+            <path d="M34 12 L42 8 L50 12 L42 16 Z" fill="url(#lg-foot)" fill-opacity="0.22"/>
+            <path d="M34 12 L34 20 L42 24 L42 16"/>
+            <path d="M50 12 L50 20 L42 24"/>
+          </g>
+        </svg>
+        <span class="brand-name"><strong>Block</strong>Builder</span>
+        <span class="brand-tag">STUDIO</span>
+      </a>
+      <p>Offline desktop 3D editor. No accounts, no limits, no nonsense. <br>Built honestly by Marjers.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#download">Download</a>
+      <a href="/changelog">Changelog</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:geral@marjers.com">Contact</a>
+      <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643" target="_blank" rel="noopener">Buy licence, €12</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Maker</h4>
+      <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>
+      <a href="https://marjers.com" target="_blank" rel="noopener">Hire me</a>
+      <a href="https://github.com/josedasilva11/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>© 2026 Marjers · BlockBuilder Studio is a trademark of Marjers</div>
+    <a href="https://marjers.com" target="_blank" rel="noopener" class="footer-by">
+      Made by <span class="serif">marjers</span>
+    </a>
+    <div class="mono">no accounts · no tracking · no telemetry</div>
+  </div>
+</footer>
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "BlockBuilder Studio",
+  "operatingSystem": "Windows, macOS, Linux",
+  "applicationCategory": "DesignApplication",
+  "description": "Offline desktop 3D editor for makers and 3D printing. Solid + hole CSG, STL/OBJ/STEP import-export, sketch tools, ruler, hollow, cut, array. No account required.",
+  "url": "https://blockbuilder.studio",
+  "softwareVersion": "0.5.0",
+  "author": { "@type": "Person", "name": "Marjers", "url": "https://marjers.com" },
+  "offers": [
+    { "@type": "Offer", "price": "0",  "priceCurrency": "EUR", "name": "Personal use",       "category": "Free" },
+    { "@type": "Offer", "price": "12", "priceCurrency": "EUR", "name": "Commercial licence", "category": "Paid" }
+  ]
+}
+</script>
+
+<!-- Page behaviour: OS detection, fade-ins, mobile guard -->
+<script>
+(() => {
+  const ua       = navigator.userAgent || '';
+  const platform = navigator.platform || '';
+  const isMac    = /Mac|iPhone|iPad|iPod/i.test(platform) || /Mac OS X/i.test(ua);
+  const isWin    = /Win/i.test(platform);
+  const isLinux  = /Linux/i.test(platform) && !/Android/i.test(ua);
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || matchMedia('(max-width: 600px)').matches;
+  if (isMobile) document.documentElement.setAttribute('data-mobile', '1');
+
+  // Highlight Windows card (only OS we ship for v0.5.0). Mac/Linux cards have
+  // .dl-soon and pointer-events:none so re-ordering doesn't help, just mark
+  // Windows as the recommended download.
+  const winCard = document.querySelector('.dl-card[data-os="win"]');
+  if (winCard) winCard.classList.add('dl-card-match');
+
+  // Post-download modal: when the user clicks the Windows download card, let
+  // the browser start the download (we don't preventDefault), then immediately
+  // show the steps modal so they don't have to scroll past sysreqs to find
+  // "what now?".
+  const dlModal = document.getElementById('dl-modal');
+  const dlClose = document.getElementById('dl-modal-close');
+  const dlOk    = document.getElementById('dl-modal-ok');
+  function openDlModal() {
+    if (!dlModal) return;
+    dlModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDlModal() {
+    if (!dlModal) return;
+    dlModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+  if (winCard) {
+    winCard.addEventListener('click', (ev) => {
+      // Don't intercept if user is opening in new tab / saving target / etc.
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1) return;
+      // The link still navigates and starts the download, modal appears over it.
+      openDlModal();
+    });
+  }
+  if (dlClose) dlClose.addEventListener('click', closeDlModal);
+  if (dlOk)    dlOk.addEventListener('click', closeDlModal);
+  if (dlModal) {
+    dlModal.addEventListener('click', (ev) => {
+      if (ev.target === dlModal) closeDlModal();
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && !dlModal.hidden) closeDlModal();
+    });
+  }
+
+  // Hero CTA label. Until Mac/Linux builds ship, everyone sees "Windows" since
+  // that's the only thing they can actually download.
+  const heroOs = document.getElementById('hero-os');
+  const heroCta = document.getElementById('hero-cta');
+  if (heroOs) {
+    heroOs.textContent = isWin ? 'Windows'
+                       : (isMac || isLinux) ? 'Windows (Mac / Linux soon)'
+                       : 'Windows';
+  }
+  if (heroCta && !isMobile) {
+    heroCta.setAttribute('href', '#download');
+  }
+
+  // Fade-up on scroll.
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    }
+  }, { rootMargin: '-40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+})();
+</script>
+
+<!-- BETA MODE swap. Replace LS checkout buttons with a mailto "Request access".
+     Active only when <body data-mode="beta">. Delete this block when going live. -->
+<script>
+if (document.body.dataset.mode === 'beta') {
+  const MAILTO = 'mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access';
+  document.querySelectorAll('a[href*="lemonsqueezy"]').forEach(a => {
+    a.href = MAILTO;
+    // Replace button text. Buttons have leaf text content (sometimes preceded by
+    // svg/icon); rewriting innerText keeps icons but updates the label.
+    const original = (a.textContent || '').trim();
+    if (/buy/i.test(original) || /licence/i.test(original)) {
+      a.textContent = 'Request beta access →';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
