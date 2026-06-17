@@ -1,6 +1,6 @@
 {
   "name": "blockbuilder-studio",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Offline 3D printing toolkit. Sketch shapes, combine with booleans, export STL. No account, no cloud, no limits.",
   "private": true,
   "main": "electron/main.cjs",

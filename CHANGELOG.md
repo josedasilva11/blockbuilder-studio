@@ -3,6 +3,54 @@
 All notable changes to BlockBuilder Studio are listed here.
 Latest at the top. Date format: YYYY-MM-DD.
 
+## [0.6.1], 2026-06-17, Mobile shells + store prep
+
+This is a build infra + marketing release on top of the v0.6.0 feature set, no new in-app primitives or tools. The Windows binary is unchanged, the web layer has small UX polish, and the project is now wired for App Store + Play Store distribution as paid apps EUR 4.99.
+
+### Capacitor wrappers
+
+- **iOS + Android native shells.** Bundle ID `pt.marjers.blockbuilder`. webDir points at `pwa-stage/`, refreshed via `npm run pwa:stage` before any `cap sync`. Both projects committed so Codemagic can clone + build (Marjers has no Mac + no Android SDK locally, so cloud build is the only path).
+- **Native icons + splash.** Generated 74 Android + 7 iOS assets via `@capacitor/assets` from `build/icon-1024.png`. Alpha stripped by the pipeline so Apple's marketing-icon rule is met without a separate source file.
+- **Signing keystore.** Local Android upload keystore generated, alias `blockbuilder`, valid until 2053, gitignored.
+
+### Paid-app pricing on mobile
+
+- **EUR 4.99 up-front, no IAP, no RevenueCat.** Paying for the download IS the licence on iOS and Android. Apple / Google handle billing, refunds (14-day), receipts. Desktop stays free + EUR 12 commercial via Lemon Squeezy. The soft reminder dialog is hard-coded off when the app runs inside Capacitor native, paying users get a clean app from first launch.
+
+### Mobile UX (PWA + native both)
+
+- **Tablet rail (Shapr3D-style)** at 769-1024 px. Vertical 56 px floating left rail with 10 icon-only tools. Insert opens the shape grid as a fly-out popover next to the rail. Floating Properties card on the right when a shape is selected.
+- **Phone dock (Womp-style)** at =768 px. Six-icon bottom dock (Insert, Undo, Group, Edit, Help, More). Insert and Edit open as bottom-sheets above the dock. Insert auto-closes after spawn.
+- **Long-press radial menu** on touch screens. Hold a finger on any shape for 500 ms, a floating 4-button popover shows Duplicate / Hide / Group / Delete at the press location. 20 ms vibration on open if the device supports the Vibration API.
+- **More menu** lists every secondary tool (CSG, Modify, Reference, Sketch, Edit, History) plus a dedicated Layers section that re-hosts the existing Outliner DOM inside the menu when opened.
+- **Touch handle sizing.** Resize sprites scale up 1.6x on coarse pointer.
+- **Pixel ratio cap** 1.25 on coarse pointer (integrated mobile GPUs cope better at 1.25 than 2x with bevelled primitives).
+- **Touch-aware quickstart copy.** First-launch card swaps text for the touch user ("Tap + Insert in the dock", "Two-finger orbit, pinch to zoom") via `@media (pointer: coarse)`.
+
+### Marketing site
+
+- **/tutorials.** New page with the 85-clip index, 12 categories, sidebar filter, full-text search, modal player (youtube-nocookie embed), watched-state in localStorage. `tutorials.json` data file ready to receive YouTube IDs as Marjers uploads.
+- **/pricing.** Three tiers (Desktop free, Mobile EUR 4.99, Desktop commercial EUR 12), licensing FAQ, beta banner explaining payments-paused gate.
+- **/privacy.** Bilingual PT/EN privacy policy, GDPR rights, third-party processors (Apple, Google, Lemon Squeezy, Buy Me Coffee, Cloudflare), CNPD reference.
+- **Devices section** on the landing page. Real PWA screenshots embedded in CSS-only device frames (monitor + tablet + phone with notch + camera dot), composed at angles.
+- **OG image** regenerated. 1200x630 with brand mark, headline, sub, 3 pills, and a 3-device mockup. Shared links to WhatsApp / Discord / Slack / Twitter now get a rich preview card.
+- **Sitemap + robots.** Sitemap lists /, /pricing, /tutorials, /changelog, /privacy, blockbuilder-app.pages.dev. robots.txt allows all and references the sitemap.
+- **Vanity URLs.** /app -> blockbuilder-app.pages.dev (302). /pricing, /privacy, /tutorials served as clean URLs via Cloudflare Pages rewrites.
+
+### Store assets ready in `store-assets/`
+
+- `icon-512x512.png` + `icon-apple-1024x1024.png` (RGB, no alpha)
+- `feature-graphic-1024x500.png` for Play Store hero
+- 4 iPhone 6.7" screenshots (1290x2796)
+- 3 iPad 13" screenshots (2048x2732)
+- `youtube-banner-2048x1152.png` for the eventual @marjers YouTube channel
+
+### Fixed
+
+- **Critical desktop layout regression.** The mobile-drawer scrim element added for tablet support was eating column 1 of the main grid on desktop, pushing Sidebar to column 2 (900 px wide) and Properties to column 1, breaking the entire 3-column layout. Caught by Playwright audit before any beta zip went out.
+- **Dim pill console warning storm.** Corner-handle resize drags wrote "WxH" strings to a number input; switched to type=text + inputmode=decimal.
+- **iOS-safe viewport units.** Replaced `100vh` with `100dvh` (with `100vh` fallback) so iOS Safari URL bar collapse doesn't crop the layout.
+
 ## [0.6.0], 2026-06-02, Tinkercad++
 
 ### Added
