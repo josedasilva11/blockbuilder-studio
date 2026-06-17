@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tutorials · BlockBuilder Studio</title>
+<meta name="description" content="85 short tutorials for BlockBuilder Studio. Drag a shape, group, push/pull, export STL, install as a PWA. Pick the clip you need." />
+<link rel="canonical" href="https://blockbuilder.studio/tutorials" />
+<meta property="og:title" content="85 BlockBuilder Studio tutorials" />
+<meta property="og:description" content="Short, indexed video tutorials for every BlockBuilder Studio feature." />
+<meta property="og:url" content="https://blockbuilder.studio/tutorials" />
+<meta property="og:image" content="https://blockbuilder.studio/og-cover.png" />
+<meta name="theme-color" content="#0a0c10" />
+<link rel="icon" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" />
+<style>
+  :root {
+    --bg:#0a0c10; --bg-elev:#11141b; --panel:#161a23; --panel-soft:#1c2030;
+    --border:#232838; --border-soft:#1c1f2a;
+    --text:#f0f3f6; --text-mid:#b6bcc5; --text-dim:#7a8395;
+    --accent:#c4f04f; --accent-soft:rgba(196,240,79,0.15);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 15px/1.6 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,12,16,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-in { max-width: 1280px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; gap: 24px; }
+  .brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 17px; letter-spacing: -0.2px; }
+  .brand-link svg { width: 28px; height: 28px; }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent); padding: 3px 6px; background: var(--accent-soft); border-radius: 4px; }
+  .nav-links { margin-left: auto; display: flex; gap: 24px; }
+  .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-links a.active { color: var(--accent); }
+
+  .hero { max-width: 1280px; margin: 0 auto; padding: 50px 28px 24px; }
+  .hero h1 { font-size: 40px; line-height: 1.1; letter-spacing: -1.2px; margin: 0 0 6px; }
+  .hero h1 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--accent); }
+  .hero p { color: var(--text-mid); font-size: 16px; margin: 0 0 24px; max-width: 600px; }
+  .search-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-input {
+    flex: 1; min-width: 240px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 16px 12px 44px;
+    color: var(--text); font-size: 15px; font-family: inherit;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23b6bcc5' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21 L16 16'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 14px center;
+    background-size: 18px;
+  }
+  .search-input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .progress-meta { color: var(--text-dim); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .progress-meta strong { color: var(--accent); }
+
+  .layout {
+    max-width: 1280px; margin: 0 auto; padding: 20px 28px 80px;
+    display: grid; grid-template-columns: 240px 1fr; gap: 32px;
+    align-items: start;
+  }
+  .sidebar {
+    position: sticky; top: 84px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px;
+    max-height: calc(100vh - 100px);
+    max-height: calc(100dvh - 100px);
+    overflow-y: auto;
+  }
+  .cat-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 10px 12px; margin: 2px 0;
+    background: transparent; border: 1px solid transparent; border-radius: 8px;
+    color: var(--text-mid); font-family: inherit; font-size: 14px; font-weight: 500;
+    text-align: left; cursor: pointer; transition: 0.15s;
+  }
+  .cat-btn:hover { color: var(--text); background: var(--bg-elev); }
+  .cat-btn.active { color: var(--accent); background: var(--accent-soft); border-color: rgba(196,240,79,0.3); }
+  .cat-btn .count { font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .cat-btn.active .count { color: var(--accent); }
+  .cat-sep { height: 1px; background: var(--border-soft); margin: 6px 0; }
+
+  .main { min-width: 0; }
+  .cat-header { display: flex; align-items: baseline; gap: 12px; margin: 12px 0 18px; }
+  .cat-header h2 { font-size: 24px; letter-spacing: -0.5px; margin: 0; }
+  .cat-header .blurb { color: var(--text-mid); font-size: 14px; }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .video-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; cursor: pointer;
+    transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+    display: flex; flex-direction: column;
+  }
+  .video-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+  .video-card[data-status="placeholder"] { cursor: default; opacity: 0.7; }
+  .video-card[data-status="placeholder"]:hover { transform: none; border-color: var(--border); box-shadow: none; }
+  .video-thumb {
+    aspect-ratio: 16/9;
+    background: var(--bg-elev);
+    background-image:
+      radial-gradient(circle at 30% 30%, rgba(196,240,79,0.08) 0%, transparent 60%),
+      linear-gradient(135deg, #0e1117 0%, #1a1d28 100%);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .video-thumb .play-icon {
+    width: 56px; height: 56px;
+    background: rgba(196,240,79,0.95);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    transition: transform 0.18s, background 0.18s;
+  }
+  .video-card:hover .play-icon { transform: scale(1.1); }
+  .play-icon svg { width: 24px; height: 24px; color: #0a0c10; margin-left: 3px; }
+  .video-ord {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(10,12,16,0.85); color: var(--text);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.4px;
+    padding: 3px 7px; border-radius: 5px;
+  }
+  .video-dur {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(10,12,16,0.85); color: var(--text);
+    font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+    padding: 3px 7px; border-radius: 4px;
+  }
+  .video-status-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(196,240,79,0.92); color: #0a0c10;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 5px;
+  }
+  .video-card[data-status="ready"] .video-status-badge { display: none; }
+  .video-card[data-status="placeholder"] .play-icon { background: rgba(255,255,255,0.15); }
+  .video-card[data-status="placeholder"] .play-icon svg { color: rgba(255,255,255,0.6); }
+  .video-meta { padding: 12px 14px 14px; }
+  .video-title { font-size: 15px; font-weight: 600; margin: 0 0 4px; color: var(--text); }
+  .video-desc { font-size: 13px; color: var(--text-mid); line-height: 1.5; margin: 0; }
+  .watched-mark {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); margin-right: 6px; vertical-align: middle;
+  }
+  .video-card:not(.watched) .watched-mark { display: none; }
+
+  .empty-state {
+    background: var(--panel); border: 1px dashed var(--border); border-radius: 12px;
+    padding: 50px 28px; text-align: center; color: var(--text-mid);
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(5,7,11,0.85); backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-backdrop[data-open="1"] { display: flex; }
+  .modal {
+    width: 100%; max-width: 960px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+  }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; border-bottom: 1px solid var(--border-soft);
+  }
+  .modal-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .modal-close {
+    background: none; border: none; color: var(--text-mid);
+    font-size: 22px; line-height: 1; cursor: pointer; padding: 0 6px;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-video { aspect-ratio: 16/9; background: #000; }
+  .modal-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .modal-video .placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; color: var(--text-mid); font-size: 14px;
+    background: linear-gradient(135deg, #0e1117 0%, #1a1d28 100%);
+  }
+  .modal-video .placeholder strong { color: var(--accent); }
+  .modal-body { padding: 18px; color: var(--text-mid); font-size: 14px; line-height: 1.6; }
+
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; gap: 18px; }
+    .sidebar { position: static; max-height: none; }
+    .hero h1 { font-size: 30px; }
+  }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 28px; text-align: center;
+    color: var(--text-dim); font-size: 13px;
+  }
+  .footer a { color: var(--text-mid); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand-link">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="none" stroke="#c4f04f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
+          <path d="M14 22 L14 36 L26 42 L26 28"/>
+          <path d="M38 22 L38 36 L26 42"/>
+          <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
+          <path d="M28 30 L28 44 L40 50 L40 36"/>
+          <path d="M52 30 L52 44 L40 50"/>
+        </g>
+      </svg>
+      <span><strong>Block</strong>Builder</span>
+      <span class="brand-tag">STUDIO</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/tutorials" class="active">Tutorials</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>Tutorials, <span class="serif">all 85.</span></h1>
+  <p>Each clip is 15 to 35 seconds long, shows one feature, then ends. Watch the ones you need.</p>
+  <div class="search-row">
+    <input id="search" class="search-input" type="search" placeholder="Search tutorials (try 'push pull', 'array', 'export')" />
+    <div class="progress-meta" id="progress-meta">Loading...</div>
+  </div>
+</section>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated by JS -->
+  </aside>
+
+  <main class="main" id="main">
+    <!-- Populated by JS -->
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Tutorial</h3>
+      <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-video" id="modal-video"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  &copy; 2026 Marjers &middot; <a href="/">blockbuilder.studio</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/tutorials">Tutorials</a> &middot; <a href="/changelog.html">Changelog</a> &middot; <a href="/privacy">Privacy</a>
+</footer>
+
+<script>
+(function () {
+  // ── state ──────────────────────────────────────────────────────────────
+  let data = { categories: [], videos: [] };
+  let active = 'all';          // current category id, or 'all'
+  let query = '';              // search query, normalised lower-case
+  const sidebar = document.getElementById('sidebar');
+  const main    = document.getElementById('main');
+  const search  = document.getElementById('search');
+  const progressMeta = document.getElementById('progress-meta');
+  const modal     = document.getElementById('modal');
+  const modalClose = document.getElementById('modal-close');
+  const modalTitle = document.getElementById('modal-title');
+  const modalVideo = document.getElementById('modal-video');
+  const modalBody  = document.getElementById('modal-body');
+
+  // localStorage for watched list (set of "category:ord")
+  function loadWatched() {
+    try { return new Set(JSON.parse(localStorage.getItem('bb.tutorials.watched') || '[]')); }
+    catch { return new Set(); }
+  }
+  function saveWatched(set) {
+    try { localStorage.setItem('bb.tutorials.watched', JSON.stringify([...set])); } catch {}
+  }
+  let watched = loadWatched();
+
+  // ── fetch data ─────────────────────────────────────────────────────────
+  fetch('tutorials.json').then(r => r.json()).then((d) => {
+    data = d;
+    renderSidebar();
+    renderGrid();
+    renderProgress();
+  }).catch((e) => {
+    main.innerHTML = '<div class="empty-state">Could not load tutorials index. Please refresh.</div>';
+    console.error(e);
+  });
+
+  // ── sidebar ────────────────────────────────────────────────────────────
+  function renderSidebar() {
+    const total = data.videos.length;
+    const html = [];
+    html.push(`<button class="cat-btn ${active === 'all' ? 'active' : ''}" data-cat="all">
+      <span>All tutorials</span><span class="count">${total}</span>
+    </button>`);
+    html.push('<div class="cat-sep"></div>');
+    for (const cat of data.categories) {
+      const count = data.videos.filter(v => v.category === cat.id).length;
+      const w = data.videos.filter(v => v.category === cat.id && watched.has(`${v.category}:${v.ord}`)).length;
+      const badge = w > 0 ? `${w} / ${count}` : `${count}`;
+      html.push(`<button class="cat-btn ${active === cat.id ? 'active' : ''}" data-cat="${cat.id}">
+        <span>${cat.label}</span><span class="count">${badge}</span>
+      </button>`);
+    }
+    sidebar.innerHTML = html.join('');
+    sidebar.querySelectorAll('.cat-btn').forEach((b) => {
+      b.addEventListener('click', () => {
+        active = b.dataset.cat;
+        renderSidebar();
+        renderGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  // ── grid ───────────────────────────────────────────────────────────────
+  function visibleVideos() {
+    const q = query.trim().toLowerCase();
+    let list = data.videos.slice();
+    if (active !== 'all') list = list.filter(v => v.category === active);
+    if (q) list = list.filter(v =>
+      v.title.toLowerCase().includes(q)
+      || v.desc.toLowerCase().includes(q)
+      || (data.categories.find(c => c.id === v.category)?.label || '').toLowerCase().includes(q)
+    );
+    return list.sort((a, b) => a.ord - b.ord);
+  }
+
+  function renderGrid() {
+    const list = visibleVideos();
+    if (list.length === 0) {
+      main.innerHTML = `<div class="empty-state">No tutorials match "${escapeHtml(query)}". Try a different search.</div>`;
+      return;
+    }
+    const html = [];
+    // If a category is active, show its header. If "all" + searching, no header.
+    if (active !== 'all') {
+      const cat = data.categories.find(c => c.id === active);
+      if (cat) html.push(`<div class="cat-header"><h2>${cat.label}</h2><span class="blurb">${cat.blurb}</span></div>`);
+    } else if (!query) {
+      html.push(`<div class="cat-header"><h2>All ${list.length} tutorials</h2><span class="blurb">Or pick a category on the left.</span></div>`);
+    }
+    html.push('<div class="video-grid">');
+    for (const v of list) {
+      const isReady = !!v.videoId;
+      const isWatched = watched.has(`${v.category}:${v.ord}`);
+      const thumbSrc = isReady ? `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg` : '';
+      html.push(`
+        <article class="video-card ${isWatched ? 'watched' : ''}" data-status="${isReady ? 'ready' : 'placeholder'}" data-cat="${v.category}" data-ord="${v.ord}" tabindex="0">
+          <div class="video-thumb">
+            ${isReady ? `<img src="${thumbSrc}" alt="" loading="lazy" />` : ''}
+            <div class="play-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5 L7 19 L20 12 Z"/></svg>
+            </div>
+            <span class="video-ord">${String(v.ord).padStart(2, '0')}</span>
+            ${isReady ? `<span class="video-dur">${v.duration}</span>` : `<span class="video-status-badge">Recording soon</span>`}
+          </div>
+          <div class="video-meta">
+            <h3 class="video-title"><span class="watched-mark"></span>${escapeHtml(v.title)}</h3>
+            <p class="video-desc">${escapeHtml(v.desc)}</p>
+          </div>
+        </article>
+      `);
+    }
+    html.push('</div>');
+    main.innerHTML = html.join('');
+    main.querySelectorAll('.video-card').forEach((c) => {
+      c.addEventListener('click', () => {
+        const cat = c.dataset.cat;
+        const ord = parseInt(c.dataset.ord, 10);
+        const v = data.videos.find(x => x.category === cat && x.ord === ord);
+        if (v) openModal(v);
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  // ── modal ──────────────────────────────────────────────────────────────
+  function openModal(v) {
+    modalTitle.textContent = `${String(v.ord).padStart(2, '0')}. ${v.title}`;
+    modalBody.textContent = v.desc;
+    if (v.videoId) {
+      // youtube-nocookie keeps privacy.html honest (no third-party tracking
+      // cookies set unless the user plays).
+      const src = `https://www.youtube-nocookie.com/embed/${v.videoId}?autoplay=1&rel=0&modestbranding=1`;
+      modalVideo.innerHTML = `<iframe src="${src}" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      // mark watched after a short delay (assume the user pressed play)
+      setTimeout(() => {
+        watched.add(`${v.category}:${v.ord}`);
+        saveWatched(watched);
+        renderSidebar();
+        renderProgress();
+        // refresh the card so the green dot appears
+        const card = main.querySelector(`.video-card[data-cat="${v.category}"][data-ord="${v.ord}"]`);
+        if (card) card.classList.add('watched');
+      }, 2500);
+    } else {
+      modalVideo.innerHTML = `<div class="placeholder">
+        <strong>Recording soon</strong>
+        <span>This tutorial is on the schedule. Subscribe at <a href="https://www.youtube.com/@marjers" target="_blank" rel="noopener" style="color:var(--accent)">youtube.com/@marjers</a> to get a ping when it ships.</span>
+      </div>`;
+    }
+    modal.dataset.open = '1';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.dataset.open = '0';
+    modalVideo.innerHTML = '';  // stop YouTube playback
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', (ev) => { if (ev.target === modal) closeModal(); });
+  window.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && modal.dataset.open === '1') closeModal(); });
+
+  // ── progress + search ──────────────────────────────────────────────────
+  function renderProgress() {
+    const total = data.videos.length;
+    const ready = data.videos.filter(v => !!v.videoId).length;
+    const w = watched.size;
+    progressMeta.innerHTML = `<strong>${ready}</strong> / ${total} recorded &middot; <strong>${w}</strong> watched`;
+  }
+
+  search.addEventListener('input', () => {
+    query = search.value;
+    renderGrid();
+  });
+})();
+</script>
+
+</body>
+</html>
