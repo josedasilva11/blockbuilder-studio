@@ -58,17 +58,29 @@
     gap: 24px;
   }
   .brand-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
     text-decoration: none;
     color: var(--text);
     font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.2px;
+    font-size: 15px;
+    letter-spacing: -0.01em;
   }
-  .brand-link svg { width: 28px; height: 28px; }
-  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--lime); padding: 3px 6px; background: var(--accent-soft); border-radius: 4px; }
+  .brand-link svg { width: 30px; height: 30px; }
+  .brand-name { font-weight: 500; }
+  .brand-name strong { font-weight: 700; }
+  .brand-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    background: var(--lime);
+    color: #0a0c10;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    text-transform: uppercase;
+  }
   .nav-links { margin-left: auto; display: flex; gap: 24px; }
   .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
   .nav-links a:hover { color: var(--text); text-decoration: none; }
@@ -362,7 +374,7 @@
           <path d="M50 12 L50 20 L42 24"/>
         </g>
       </svg>
-      <span><strong>Block</strong>Builder</span>
+      <span class="brand-name"><strong>Block</strong>Builder</span>
       <span class="brand-tag">STUDIO</span>
     </a>
     <div class="nav-links">

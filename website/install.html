@@ -32,9 +32,30 @@
 
   .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,12,16,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
   .nav-in { max-width: 1180px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; gap: 24px; }
-  .brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 17px; letter-spacing: -0.2px; }
-  .brand-link svg { width: 28px; height: 28px; }
-  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent); padding: 3px 6px; background: var(--accent-soft); border-radius: 4px; }
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .brand-link svg { width: 30px; height: 30px; }
+  .brand-name { font-weight: 500; }
+  .brand-name strong { font-weight: 700; }
+  .brand-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    background: var(--lime);
+    color: #0a0c10;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    text-transform: uppercase;
+  }
   .nav-links { margin-left: auto; display: flex; gap: 24px; }
   .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
   .nav-links a:hover { color: var(--text); text-decoration: none; }
@@ -150,7 +171,7 @@
           <path d="M52 30 L52 44 L40 50"/>
         </g>
       </svg>
-      <span><strong>Block</strong>Builder</span>
+      <span class="brand-name"><strong>Block</strong>Builder</span>
       <span class="brand-tag">STUDIO</span>
     </a>
     <div class="nav-links">
