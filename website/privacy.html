@@ -22,48 +22,6 @@
   body { font: 16px/1.65 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,12,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-  .nav-in { max-width: 1180px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; gap: 24px; }
-  .brand-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-  }
-  .brand-link svg { width: 30px; height: 30px; }
-  .brand-name { font-weight: 500; }
-  .brand-name strong { font-weight: 700; }
-  .brand-tag {
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    font-weight: 700;
-    background: var(--accent);
-    color: #0a0c10;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-left: 4px;
-    text-transform: uppercase;
-  }
-  .nav-links { display: flex; gap: 28px; margin-left: 28px; font-size: 14px; }
-  .nav-links a { color: var(--text-mid); font-weight: 500; font-size: 14px; }
-  .nav-links a:hover { color: var(--text); text-decoration: none; }
-  .nav-links a.active { color: var(--accent); }
-  .nav-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 16px; border-radius: 8px;
-    font-size: 13px; font-weight: 600;
-    text-decoration: none; transition: transform 0.15s, background 0.15s;
-    border: 1px solid transparent; font-family: inherit;
-  }
-  .btn-primary { background: var(--accent); color: #0a0c10; }
-  .btn-primary:hover { background: #d9ff5a; transform: translateY(-1px); text-decoration: none; }
-  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
-  .btn-ghost:hover { background: var(--bg-elev); border-color: var(--text-dim); text-decoration: none; }
   .wrap { max-width: 760px; margin: 0 auto; padding: 60px 28px 80px; }
   h1 { font-size: 44px; line-height: 1.1; letter-spacing: -1.2px; margin: 0 0 8px; }
   h1 .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--accent); }
@@ -87,28 +45,27 @@
   html[data-lang="en"] .lang-pt { display: none; }
   html[data-lang="en"] .lang-en { display: block; }
   @media (max-width: 980px) {
-    .nav-links { display: none; }
   }
-  @media (max-width: 600px) {
-    .nav-actions .btn-ghost { display: none; }
-  }
-  .nav-sep { color: var(--text-dim); opacity: 0.45; user-select: none; font-weight: 400; margin: 0 -10px; pointer-events: none; }
-</style>
+  </style>
+<link rel="stylesheet" href="/nav.css" />
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-in">
-    <a href="/" class="brand-link">
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <g fill="none" stroke="#c4f04f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="lg-nav" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#cdff45"/><stop offset="100%" stop-color="#7cbe1e"/>
+        </linearGradient></defs>
+        <g fill="none" stroke="url(#lg-nav)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
           <path d="M14 22 L26 16 L38 22 L26 28 Z"/>
           <path d="M14 22 L14 36 L26 42 L26 28"/>
           <path d="M38 22 L38 36 L26 42"/>
           <path d="M28 30 L40 24 L52 30 L40 36 Z"/>
           <path d="M28 30 L28 44 L40 50 L40 36"/>
           <path d="M52 30 L52 44 L40 50"/>
-          <path d="M34 12 L42 8 L50 12 L42 16 Z" fill="#c4f04f" fill-opacity="0.18"/>
+          <path d="M34 12 L42 8 L50 12 L42 16 Z" fill="url(#lg-nav)" fill-opacity="0.22"/>
           <path d="M34 12 L34 20 L42 24 L42 16"/>
           <path d="M50 12 L50 20 L42 24"/>
         </g>

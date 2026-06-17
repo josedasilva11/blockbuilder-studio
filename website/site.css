@@ -113,74 +113,9 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 700; margin: 0; }
 .banner .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #0a0c10; margin-right: 8px; vertical-align: 1px; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
 
-/* === Nav ================================================================= */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: rgba(10, 12, 16, 0.78);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border-bottom: 1px solid var(--border-soft);
-}
-.nav-in {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  display: flex; align-items: center;
-  padding: 14px 28px;
-  gap: 28px;
-}
-.brand {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-weight: 700; font-size: 15px; color: var(--text);
-  letter-spacing: -0.01em;
-}
-.brand-mark { width: 30px; height: 30px; }
-.brand-name strong { font-weight: 700; }
-.brand-name { font-weight: 500; }
-.brand-tag {
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  font-weight: 700;
-  background: var(--lime);
-  color: #0a0c10;
-  padding: 2px 6px;
-  border-radius: 3px;
-  margin-left: 4px;
-  vertical-align: 2px;
-  font-family: 'JetBrains Mono', monospace;
-}
-.nav-links { display: flex; gap: 28px; margin-left: 28px; font-size: 14px; }
-.nav-links a { color: var(--text-mid); transition: color 0.15s; }
-.nav-links a:hover { color: var(--text); }
-.nav-sep { color: var(--text-dim); opacity: 0.45; user-select: none; font-weight: 400; margin: 0 -10px; pointer-events: none; }
-.nav-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-
-/* === Buttons ============================================================= */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: var(--r);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  border: 1px solid transparent;
-  background: var(--panel);
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.15s var(--ease);
-  white-space: nowrap;
-  text-decoration: none;
-}
-.btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-.btn-primary {
-  background: var(--lime); color: #0a0c10; border-color: var(--lime);
-  box-shadow: 0 4px 14px rgba(196, 240, 79, 0.18);
-}
-.btn-primary:hover { background: #d5ff58; border-color: #d5ff58; box-shadow: 0 8px 24px rgba(196, 240, 79, 0.35); transform: translateY(-1px); }
-.btn-ghost { background: transparent; color: var(--text-mid); border-color: var(--border); }
-.btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
+/* === Nav + base buttons live in nav.css. Don't redefine them here.
+       Only page-specific button size variants remain in this file.
+   ────────────────────────────────────────────────────────────────────── */
 .btn-lg { padding: 14px 24px; font-size: 15px; border-radius: var(--r); }
 .btn-xl { padding: 18px 28px; font-size: 16px; }
 .btn svg { width: 16px; height: 16px; }

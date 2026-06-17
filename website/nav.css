@@ -1,0 +1,101 @@
+/* Shared navigation bar styles across every BlockBuilder Studio page.
+   Single source of truth, do not duplicate these rules in any page <style>
+   block. Page-specific button variants like .btn-lg, .btn-xl, .btn-coffee
+   stay in the page that uses them.
+
+   Requires the following CSS variables in :root of the host page:
+     --text, --text-mid, --text-dim, --border, --bg-elev, --accent
+   All public pages already define them.
+   ──────────────────────────────────────────────────────────────────────── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 12, 16, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-in {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Brand block (logo + wordmark + STUDIO chip) */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+.brand-mark { width: 30px; height: 30px; }
+.brand-name { font-weight: 500; }
+.brand-name strong { font-weight: 700; }
+.brand-tag {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  background: var(--accent);
+  color: #0a0c10;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+  text-transform: uppercase;
+}
+
+/* Centre links */
+.nav-links { display: flex; gap: 28px; margin-left: 28px; font-size: 14px; }
+.nav-links a {
+  color: var(--text-mid);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--accent); }
+.nav-sep {
+  color: var(--text-dim);
+  opacity: 0.45;
+  user-select: none;
+  font-weight: 400;
+  margin: 0 -10px;
+  pointer-events: none;
+}
+
+/* Right-side action buttons */
+.nav-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s, background 0.15s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-primary { background: var(--accent); color: #0a0c10; }
+.btn-primary:hover { background: #d9ff5a; transform: translateY(-1px); text-decoration: none; }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-ghost:hover { background: var(--bg-elev); border-color: var(--text-dim); text-decoration: none; }
+
+@media (max-width: 980px) {
+  .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  .nav-actions .btn-ghost { display: none; }
+}
