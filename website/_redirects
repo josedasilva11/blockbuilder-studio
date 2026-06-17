@@ -7,12 +7,10 @@
 /download/linux    https://github.com/marjers/blockbuilder-studio/releases/latest/download/BlockBuilderStudio.AppImage   302
 /download          /#download                                                                                            302
 
-# Pretty URLs (rewrite, not redirect, so /pricing serves pricing.html
-# without a trailing .html in the address bar).
-/pricing   /pricing.html   200
-/privacy   /privacy.html   200
-/tutorials /tutorials.html 200
-/features  /features.html  200
+# Cloudflare Pages auto-serves /foo.html when /foo is requested AND auto-
+# rewrites the URL bar to /foo, no redirect rule needed. Adding our own
+# /foo /foo.html 200 rewrite collides with that auto-clean and triggers
+# ERR_TOO_MANY_REDIRECTS. So this list ONLY holds genuine redirects.
 /learn     /tutorials      302
 /app       https://blockbuilder-app.pages.dev/  302
 
