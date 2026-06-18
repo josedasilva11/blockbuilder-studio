@@ -435,6 +435,8 @@ function bindKeyboard() {
     else if (k === 'd' && !ev.ctrlKey) { dropToGround(); }
     else if (k === 'h' || k === 'H') { toggleHide(); }
     else if (k === 'f' || k === 'F') { fitView(); }
+    else if (k === 'p' || k === 'P') { toggleProjection(); }
+    else if (ev.ctrlKey && (k === 'k' || k === 'K')) { /* handled by installShortcutsPaletteKeybind */ }
   });
 }
 
