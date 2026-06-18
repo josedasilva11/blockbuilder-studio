@@ -154,9 +154,9 @@
 </nav>
 
 <section class="hero">
-  <span class="eyebrow"><span class="dot"></span>Install</span>
-  <h1>Pick your platform.<br><span class="serif">It runs everywhere.</span></h1>
-  <p>BlockBuilder Studio ships as an offline desktop binary, a browser PWA, and a paid app on iPhone / iPad / Android. Same project file across all of them.</p>
+  <span class="eyebrow"><span class="dot"></span><span data-i18n="install.hero.eyebrow">Install</span></span>
+  <h1 data-i18n="install.hero.h1">Pick your platform.<br><span class="serif">It runs everywhere.</span></h1>
+  <p data-i18n="install.hero.p">BlockBuilder Studio ships as an offline desktop binary, a browser PWA, and a paid app on iPhone / iPad / Android. Same project file across all of them.</p>
 </section>
 
 <div class="platforms">
@@ -164,85 +164,85 @@
     <div class="platform-icon">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 L10.5 4.5 L10.5 11.5 L3 11.5 Z M11.5 4.4 L21 3 L21 11.5 L11.5 11.5 Z M3 12.5 L10.5 12.5 L10.5 19.5 L3 18.5 Z M11.5 12.5 L21 12.5 L21 21 L11.5 19.6 Z"/></svg>
     </div>
-    <span class="status">Available now</span>
-    <h2>Desktop</h2>
-    <p class="sub">Windows 10 / 11, macOS 12+, Linux (any glibc 2.31+). Fully offline.</p>
-    <a href="#desktop" class="btn btn-primary">Install on desktop</a>
+    <span class="status" data-i18n="install.p1.status">Available now</span>
+    <h2 data-i18n="install.p1.h">Desktop</h2>
+    <p class="sub" data-i18n="install.p1.sub">Windows 10 / 11, macOS 12+, Linux (any glibc 2.31+). Fully offline.</p>
+    <a href="#desktop" class="btn btn-primary" data-i18n="install.p1.cta">Install on desktop</a>
   </div>
 
   <div class="platform">
     <div class="platform-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 a14 14 0 0 1 0 18 M12 3 a14 14 0 0 0 0 18 M3 12 H21"/></svg>
     </div>
-    <span class="status">Available now</span>
-    <h2>Web PWA</h2>
-    <p class="sub">Any browser (Chrome, Safari, Edge, Firefox). Works offline after first visit.</p>
-    <a href="#pwa" class="btn btn-primary">Install in browser</a>
+    <span class="status" data-i18n="install.p2.status">Available now</span>
+    <h2 data-i18n="install.p2.h">Web PWA</h2>
+    <p class="sub" data-i18n="install.p2.sub">Any browser (Chrome, Safari, Edge, Firefox). Works offline after first visit.</p>
+    <a href="#pwa" class="btn btn-primary" data-i18n="install.p2.cta">Install in browser</a>
   </div>
 
   <div class="platform">
     <div class="platform-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2.5"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>
     </div>
-    <span class="status soon">Coming soon</span>
-    <h2>iPhone, iPad, Android</h2>
-    <p class="sub">Paid app, EUR 4.99 once, via App Store and Play Store. TestFlight + internal testing rolling out.</p>
-    <a href="#mobile" class="btn btn-ghost">Notify me at launch</a>
+    <span class="status soon" data-i18n="install.p3.status">Coming soon</span>
+    <h2 data-i18n="install.p3.h">iPhone, iPad, Android</h2>
+    <p class="sub" data-i18n="install.p3.sub">Paid app, EUR 4.99 once, via App Store and Play Store. TestFlight + internal testing rolling out.</p>
+    <a href="#mobile" class="btn btn-ghost" data-i18n="install.p3.cta">Notify me at launch</a>
   </div>
 </div>
 
 <section class="step-block" id="desktop">
-  <h2><span class="serif">Desktop:</span> Windows / macOS / Linux</h2>
-  <p class="meta">Offline binary. No installer for the portable zip. Five clicks to running.</p>
+  <h2 data-i18n="install.d.h"><span class="serif">Desktop:</span> Windows / macOS / Linux</h2>
+  <p class="meta" data-i18n="install.d.meta">Offline binary. No installer for the portable zip. Five clicks to running.</p>
   <ol class="steps">
-    <li><strong>Download</strong> the build for your OS from the <a href="/#download">downloads section</a> of the landing page. About 105 MB.</li>
-    <li><strong>Right-click the zip, Extract All</strong> (Windows) or open the .dmg / .AppImage (macOS / Linux). Pick any folder with write access; the app is fully portable.</li>
-    <li><strong>Open the extracted folder</strong> and double-click <code>BlockBuilder Studio.exe</code> (Windows), <code>BlockBuilder Studio.app</code> (macOS), or the AppImage (Linux).</li>
-    <li><strong>Windows SmartScreen</strong> will say "Microsoft Defender SmartScreen prevented an unrecognized app...". Click <strong>More info</strong>, then <strong>Run anyway</strong>. The binary is signed under Azure Trusted Signing but Defender takes a few releases to learn new publishers.</li>
-    <li><strong>First launch</strong> shows a Unit picker (mm / cm / inches). Pick once; changeable later in Settings.<small>That is the whole install. No account, no email, no licence prompt until you do paid work.</small></li>
+    <li data-i18n="install.d.s1"><strong>Download</strong> the build for your OS from the <a href="/#download">downloads section</a> of the landing page. About 105 MB.</li>
+    <li data-i18n="install.d.s2"><strong>Right-click the zip, Extract All</strong> (Windows) or open the .dmg / .AppImage (macOS / Linux). Pick any folder with write access; the app is fully portable.</li>
+    <li data-i18n="install.d.s3"><strong>Open the extracted folder</strong> and double-click <code>BlockBuilder Studio.exe</code> (Windows), <code>BlockBuilder Studio.app</code> (macOS), or the AppImage (Linux).</li>
+    <li data-i18n="install.d.s4"><strong>Windows SmartScreen</strong> will say "Microsoft Defender SmartScreen prevented an unrecognized app...". Click <strong>More info</strong>, then <strong>Run anyway</strong>. The binary is signed under Azure Trusted Signing but Defender takes a few releases to learn new publishers.</li>
+    <li data-i18n="install.d.s5"><strong>First launch</strong> shows a Unit picker (mm / cm / inches). Pick once; changeable later in Settings.<small>That is the whole install. No account, no email, no licence prompt until you do paid work.</small></li>
   </ol>
-  <div class="tip">
+  <div class="tip" data-i18n="install.d.tip">
     <strong>macOS Gatekeeper:</strong> if you see "BlockBuilder Studio cannot be opened because the developer cannot be verified", System Settings &rarr; Privacy &amp; Security &rarr; scroll to the bottom &rarr; <strong>Open Anyway</strong>. Apple notarisation is queued for the v0.7 release.
   </div>
 </section>
 
 <section class="step-block" id="pwa">
-  <h2><span class="serif">Web:</span> install as a PWA</h2>
-  <p class="meta">Runs in the browser tab, but also installable as a standalone app with its own icon. Works offline after the first visit (service worker pre-caches everything).</p>
+  <h2 data-i18n="install.w.h"><span class="serif">Web:</span> install as a PWA</h2>
+  <p class="meta" data-i18n="install.w.meta">Runs in the browser tab, but also installable as a standalone app with its own icon. Works offline after the first visit (service worker pre-caches everything).</p>
   <ol class="steps">
-    <li><strong>Open</strong> <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> in any modern browser.</li>
-    <li><strong>Chrome / Edge:</strong> a small install icon appears in the address bar after a few seconds. Click it &rarr; <strong>Install</strong>. The app opens in a frameless window with a Start menu / Dock entry.</li>
-    <li><strong>Safari (macOS):</strong> File &rarr; Share &rarr; <strong>Add to Dock</strong>. The app behaves as a regular app from there.</li>
-    <li><strong>Firefox:</strong> currently only the in-tab path (no install button). It still works fully offline once visited; just bookmark it.</li>
-    <li><strong>Disconnect from the internet.</strong> Reload. The app still opens; the service worker serves the entire bundle from cache. Proof.<small>Updates download silently in the background on subsequent visits. The notification toast tells you when a new version is ready to reload.</small></li>
+    <li data-i18n="install.w.s1"><strong>Open</strong> <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> in any modern browser.</li>
+    <li data-i18n="install.w.s2"><strong>Chrome / Edge:</strong> a small install icon appears in the address bar after a few seconds. Click it &rarr; <strong>Install</strong>. The app opens in a frameless window with a Start menu / Dock entry.</li>
+    <li data-i18n="install.w.s3"><strong>Safari (macOS):</strong> File &rarr; Share &rarr; <strong>Add to Dock</strong>. The app behaves as a regular app from there.</li>
+    <li data-i18n="install.w.s4"><strong>Firefox:</strong> currently only the in-tab path (no install button). It still works fully offline once visited; just bookmark it.</li>
+    <li data-i18n="install.w.s5"><strong>Disconnect from the internet.</strong> Reload. The app still opens; the service worker serves the entire bundle from cache. Proof.<small>Updates download silently in the background on subsequent visits. The notification toast tells you when a new version is ready to reload.</small></li>
   </ol>
-  <div class="tip">
+  <div class="tip" data-i18n="install.w.tip">
     <strong>Storage on your device:</strong> the PWA bundle is roughly 7 MB, plus whatever your project autosaves occupy in IndexedDB. Clearing browser data wipes both; export your <code>.json</code> projects if you plan to do that.
   </div>
 </section>
 
 <section class="step-block" id="mobile-add-to-home">
-  <h2><span class="serif">Mobile shortcut:</span> Add to Home Screen</h2>
-  <p class="meta">Skip the App Store + Play Store path entirely by saving the PWA as a Home Screen icon. Same code, same data, free.</p>
+  <h2 data-i18n="install.m.h"><span class="serif">Mobile shortcut:</span> Add to Home Screen</h2>
+  <p class="meta" data-i18n="install.m.meta">Skip the App Store + Play Store path entirely by saving the PWA as a Home Screen icon. Same code, same data, free.</p>
   <ol class="steps">
-    <li><strong>iPhone / iPad (Safari):</strong> open <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> &rarr; tap the Share button (square with up-arrow) &rarr; <strong>Add to Home Screen</strong>. The icon appears like any native app. Tapping it opens fullscreen without browser chrome.</li>
-    <li><strong>Android (Chrome):</strong> open the same URL &rarr; menu 3-dots &rarr; <strong>Add to Home screen</strong> (or <strong>Install app</strong> on newer Chromes). Same behaviour.</li>
-    <li><strong>Once added,</strong> the PWA detects native (no browser chrome), shows the bottom dock + bottom-sheet layout, and works fully offline.</li>
+    <li data-i18n="install.m.s1"><strong>iPhone / iPad (Safari):</strong> open <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> &rarr; tap the Share button (square with up-arrow) &rarr; <strong>Add to Home Screen</strong>. The icon appears like any native app. Tapping it opens fullscreen without browser chrome.</li>
+    <li data-i18n="install.m.s2"><strong>Android (Chrome):</strong> open the same URL &rarr; menu 3-dots &rarr; <strong>Add to Home screen</strong> (or <strong>Install app</strong> on newer Chromes). Same behaviour.</li>
+    <li data-i18n="install.m.s3"><strong>Once added,</strong> the PWA detects native (no browser chrome), shows the bottom dock + bottom-sheet layout, and works fully offline.</li>
   </ol>
-  <div class="tip">
+  <div class="tip" data-i18n="install.m.tip">
     <strong>Why pay for the App Store version</strong> when this is free? The store apps will get a few platform-tied features the PWA can't reach (native Files integration on iOS, deeper Android background processing), plus you avoid Apple's iCloud limits on Add-to-Home storage. For most users the PWA path is plenty.
   </div>
 </section>
 
 <section class="step-block" id="mobile">
-  <h2><span class="serif">App Store + Play Store:</span> paid app, coming soon</h2>
-  <p class="meta">EUR 4.99 up-front, single purchase, no subscription. TestFlight + Play Internal Testing are rolling out before public release.</p>
+  <h2 data-i18n="install.s.h"><span class="serif">App Store + Play Store:</span> paid app, coming soon</h2>
+  <p class="meta" data-i18n="install.s.meta">EUR 4.99 up-front, single purchase, no subscription. TestFlight + Play Internal Testing are rolling out before public release.</p>
   <ol class="steps">
-    <li><strong>iPhone / iPad:</strong> bundle ID <code>pt.marjers.blockbuilder</code>. Internal testing through TestFlight; reach out to <a href="mailto:geral@marjers.com">geral@marjers.com</a> to be added.</li>
-    <li><strong>Android phone / tablet:</strong> same bundle ID. Internal testing through Play Console; opt-in link will appear here once the first AAB is approved.</li>
-    <li><strong>Public release:</strong> aimed at the back of summer 2026 along with the v0.6.0 desktop binary going stable. Email <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20mobile%20launch%20notify">geral@marjers.com</a> to be notified the day it lists.</li>
+    <li data-i18n="install.s.s1"><strong>iPhone / iPad:</strong> bundle ID <code>pt.marjers.blockbuilder</code>. Internal testing through TestFlight; reach out to <a href="mailto:geral@marjers.com">geral@marjers.com</a> to be added.</li>
+    <li data-i18n="install.s.s2"><strong>Android phone / tablet:</strong> same bundle ID. Internal testing through Play Console; opt-in link will appear here once the first AAB is approved.</li>
+    <li data-i18n="install.s.s3"><strong>Public release:</strong> aimed at the back of summer 2026 along with the v0.6.0 desktop binary going stable. Email <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20mobile%20launch%20notify">geral@marjers.com</a> to be notified the day it lists.</li>
   </ol>
-  <div class="tip">
+  <div class="tip" data-i18n="install.s.tip">
     <strong>Apple Family Sharing</strong> and <strong>Google Play Family Library</strong> are both honoured. One purchase covers everyone in your family group.
   </div>
 </section>

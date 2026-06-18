@@ -233,6 +233,59 @@ const DICT = {
     'pricing.biz.seat100.save':'talk to us',
     'pricing.biz.cta':        'Request a business quote',
     'pricing.biz.note':       'Single invoice, EU VAT reverse-charge supported, key delivered same business day.',
+
+    // === Tutorials page ================================================
+    'tutorials.h1':           'Tutorials, <span class="serif">all 85.</span>',
+    'tutorials.p':            'Each clip is 15 to 35 seconds long, shows one feature, then ends. Watch the ones you need.',
+    'tutorials.search':       'Search tutorials (try \'push pull\', \'array\', \'export\')',
+    'tutorials.loading':      'Loading...',
+    'tutorials.modal.title':  'Tutorial',
+    'tutorials.modal.close':  'Close',
+
+    // === Install page ==================================================
+    'install.hero.eyebrow':   'Install',
+    'install.hero.h1':        'Pick your platform.<br><span class="serif">It runs everywhere.</span>',
+    'install.hero.p':         'BlockBuilder Studio ships as an offline desktop binary, a browser PWA, and a paid app on iPhone / iPad / Android. Same project file across all of them.',
+    'install.p1.status':      'Available now',
+    'install.p1.h':           'Desktop',
+    'install.p1.sub':         'Windows 10 / 11, macOS 12+, Linux (any glibc 2.31+). Fully offline.',
+    'install.p1.cta':         'Install on desktop',
+    'install.p2.status':      'Available now',
+    'install.p2.h':           'Web PWA',
+    'install.p2.sub':         'Any browser (Chrome, Safari, Edge, Firefox). Works offline after first visit.',
+    'install.p2.cta':         'Install in browser',
+    'install.p3.status':      'Coming soon',
+    'install.p3.h':           'iPhone, iPad, Android',
+    'install.p3.sub':         'Paid app, EUR 4.99 once, via App Store and Play Store. TestFlight + internal testing rolling out.',
+    'install.p3.cta':         'Notify me at launch',
+    'install.d.h':            '<span class="serif">Desktop:</span> Windows / macOS / Linux',
+    'install.d.meta':         'Offline binary. No installer for the portable zip. Five clicks to running.',
+    'install.d.s1':           '<strong>Download</strong> the build for your OS from the <a href="/#download">downloads section</a> of the landing page. About 105 MB.',
+    'install.d.s2':           '<strong>Right-click the zip, Extract All</strong> (Windows) or open the .dmg / .AppImage (macOS / Linux). Pick any folder with write access; the app is fully portable.',
+    'install.d.s3':           '<strong>Open the extracted folder</strong> and double-click <code>BlockBuilder Studio.exe</code> (Windows), <code>BlockBuilder Studio.app</code> (macOS), or the AppImage (Linux).',
+    'install.d.s4':           '<strong>Windows SmartScreen</strong> will say "Microsoft Defender SmartScreen prevented an unrecognized app...". Click <strong>More info</strong>, then <strong>Run anyway</strong>. The binary is signed under Azure Trusted Signing but Defender takes a few releases to learn new publishers.',
+    'install.d.s5':           '<strong>First launch</strong> shows a Unit picker (mm / cm / inches). Pick once; changeable later in Settings.<small>That is the whole install. No account, no email, no licence prompt until you do paid work.</small>',
+    'install.d.tip':          '<strong>macOS Gatekeeper:</strong> if you see "BlockBuilder Studio cannot be opened because the developer cannot be verified", System Settings &rarr; Privacy &amp; Security &rarr; scroll to the bottom &rarr; <strong>Open Anyway</strong>. Apple notarisation is queued for the v0.7 release.',
+    'install.w.h':            '<span class="serif">Web:</span> install as a PWA',
+    'install.w.meta':         'Runs in the browser tab, but also installable as a standalone app with its own icon. Works offline after the first visit (service worker pre-caches everything).',
+    'install.w.s1':           '<strong>Open</strong> <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> in any modern browser.',
+    'install.w.s2':           '<strong>Chrome / Edge:</strong> a small install icon appears in the address bar after a few seconds. Click it &rarr; <strong>Install</strong>. The app opens in a frameless window with a Start menu / Dock entry.',
+    'install.w.s3':           '<strong>Safari (macOS):</strong> File &rarr; Share &rarr; <strong>Add to Dock</strong>. The app behaves as a regular app from there.',
+    'install.w.s4':           '<strong>Firefox:</strong> currently only the in-tab path (no install button). It still works fully offline once visited; just bookmark it.',
+    'install.w.s5':           '<strong>Disconnect from the internet.</strong> Reload. The app still opens; the service worker serves the entire bundle from cache. Proof.<small>Updates download silently in the background on subsequent visits. The notification toast tells you when a new version is ready to reload.</small>',
+    'install.w.tip':          '<strong>Storage on your device:</strong> the PWA bundle is roughly 7 MB, plus whatever your project autosaves occupy in IndexedDB. Clearing browser data wipes both; export your <code>.json</code> projects if you plan to do that.',
+    'install.m.h':            '<span class="serif">Mobile shortcut:</span> Add to Home Screen',
+    'install.m.meta':         'Skip the App Store + Play Store path entirely by saving the PWA as a Home Screen icon. Same code, same data, free.',
+    'install.m.s1':           '<strong>iPhone / iPad (Safari):</strong> open <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> &rarr; tap the Share button (square with up-arrow) &rarr; <strong>Add to Home Screen</strong>. The icon appears like any native app. Tapping it opens fullscreen without browser chrome.',
+    'install.m.s2':           '<strong>Android (Chrome):</strong> open the same URL &rarr; menu 3-dots &rarr; <strong>Add to Home screen</strong> (or <strong>Install app</strong> on newer Chromes). Same behaviour.',
+    'install.m.s3':           '<strong>Once added,</strong> the PWA detects native (no browser chrome), shows the bottom dock + bottom-sheet layout, and works fully offline.',
+    'install.m.tip':          '<strong>Why pay for the App Store version</strong> when this is free? The store apps will get a few platform-tied features the PWA can\'t reach (native Files integration on iOS, deeper Android background processing), plus you avoid Apple\'s iCloud limits on Add-to-Home storage. For most users the PWA path is plenty.',
+    'install.s.h':            '<span class="serif">App Store + Play Store:</span> paid app, coming soon',
+    'install.s.meta':         'EUR 4.99 up-front, single purchase, no subscription. TestFlight + Play Internal Testing are rolling out before public release.',
+    'install.s.s1':           '<strong>iPhone / iPad:</strong> bundle ID <code>pt.marjers.blockbuilder</code>. Internal testing through TestFlight; reach out to <a href="mailto:geral@marjers.com">geral@marjers.com</a> to be added.',
+    'install.s.s2':           '<strong>Android phone / tablet:</strong> same bundle ID. Internal testing through Play Console; opt-in link will appear here once the first AAB is approved.',
+    'install.s.s3':           '<strong>Public release:</strong> aimed at the back of summer 2026 along with the v0.6.0 desktop binary going stable. Email <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20mobile%20launch%20notify">geral@marjers.com</a> to be notified the day it lists.',
+    'install.s.tip':          '<strong>Apple Family Sharing</strong> and <strong>Google Play Family Library</strong> are both honoured. One purchase covers everyone in your family group.',
   },
   pt: {
     // === Shared (nav + footer) =========================================
@@ -240,7 +293,7 @@ const DICT = {
     'nav.tutorials': 'Tutoriais',
     'nav.install':   'Instalar',
     'nav.pricing':   'Pre&ccedil;os e FAQ',
-    'nav.changelog': 'Notas de vers&atilde;o',
+    'nav.changelog': 'Changelog',
     'nav.try':       'Abrir no browser',
     'nav.download':  'Descarregar gr&aacute;tis',
     'footer.copy':   '&copy; 2026 Marjers',
@@ -456,6 +509,59 @@ const DICT = {
     'pricing.biz.seat100.save':'fala connosco',
     'pricing.biz.cta':        'Pedir or&ccedil;amento empresarial',
     'pricing.biz.note':       'Factura &uacute;nica, reverse-charge IVA EU suportado, chave entregue no mesmo dia &uacute;til.',
+
+    // === Tutorials page ================================================
+    'tutorials.h1':           'Tutoriais, <span class="serif">os 85.</span>',
+    'tutorials.p':            'Cada clip dura entre 15 e 35 segundos, mostra uma funcionalidade e acaba. V&ecirc; os que precisares.',
+    'tutorials.search':       'Procurar tutoriais (tenta \'push pull\', \'array\', \'exportar\')',
+    'tutorials.loading':      'A carregar...',
+    'tutorials.modal.title':  'Tutorial',
+    'tutorials.modal.close':  'Fechar',
+
+    // === Install page ==================================================
+    'install.hero.eyebrow':   'Instalar',
+    'install.hero.h1':        'Escolhe a tua plataforma.<br><span class="serif">Corre em todo o lado.</span>',
+    'install.hero.p':         'O BlockBuilder Studio &eacute; um bin&aacute;rio desktop offline, uma PWA no browser e uma app paga em iPhone / iPad / Android. O mesmo ficheiro de projecto em todos eles.',
+    'install.p1.status':      'Dispon&iacute;vel j&aacute;',
+    'install.p1.h':           'Desktop',
+    'install.p1.sub':         'Windows 10 / 11, macOS 12+, Linux (qualquer glibc 2.31+). Totalmente offline.',
+    'install.p1.cta':         'Instalar no desktop',
+    'install.p2.status':      'Dispon&iacute;vel j&aacute;',
+    'install.p2.h':           'PWA Web',
+    'install.p2.sub':         'Qualquer browser (Chrome, Safari, Edge, Firefox). Funciona offline depois da primeira visita.',
+    'install.p2.cta':         'Instalar no browser',
+    'install.p3.status':      'Em breve',
+    'install.p3.h':           'iPhone, iPad, Android',
+    'install.p3.sub':         'App paga, &euro;4,99 uma vez, via App Store e Play Store. TestFlight + testes internos a sair.',
+    'install.p3.cta':         'Avisar no lan&ccedil;amento',
+    'install.d.h':            '<span class="serif">Desktop:</span> Windows / macOS / Linux',
+    'install.d.meta':         'Bin&aacute;rio offline. Sem instalador na vers&atilde;o portable .zip. Cinco cliques at&eacute; correr.',
+    'install.d.s1':           '<strong>Descarrega</strong> o build do teu OS na <a href="/#download">sec&ccedil;&atilde;o de descarregamentos</a> da landing. Cerca de 105 MB.',
+    'install.d.s2':           '<strong>Bot&atilde;o direito no zip, Extrair tudo</strong> (Windows) ou abre o .dmg / .AppImage (macOS / Linux). Escolhe qualquer pasta com permiss&atilde;o de escrita; a app &eacute; totalmente port&aacute;til.',
+    'install.d.s3':           '<strong>Abre a pasta extra&iacute;da</strong> e duplo-clica em <code>BlockBuilder Studio.exe</code> (Windows), <code>BlockBuilder Studio.app</code> (macOS) ou no AppImage (Linux).',
+    'install.d.s4':           '<strong>SmartScreen do Windows</strong> vai dizer "O Microsoft Defender SmartScreen impediu uma aplica&ccedil;&atilde;o n&atilde;o reconhecida...". Clica <strong>Mais informa&ccedil;&otilde;es</strong>, depois <strong>Executar mesmo assim</strong>. O bin&aacute;rio est&aacute; assinado por Azure Trusted Signing mas o Defender demora algumas releases a aprender novos editores.',
+    'install.d.s5':           'O <strong>primeiro arranque</strong> mostra um selector de unidade (mm / cm / polegadas). Escolhe uma vez; pode mudar depois em Defini&ccedil;&otilde;es.<small>&Eacute; tudo o que &eacute; preciso instalar. Sem conta, sem email, sem pedido de licen&ccedil;a at&eacute; usares em trabalho pago.</small>',
+    'install.d.tip':          '<strong>Gatekeeper do macOS:</strong> se vires "O BlockBuilder Studio n&atilde;o pode ser aberto porque o programador n&atilde;o pode ser verificado", Defini&ccedil;&otilde;es do Sistema &rarr; Privacidade e Seguran&ccedil;a &rarr; ir at&eacute; ao fundo &rarr; <strong>Abrir Mesmo Assim</strong>. A notariza&ccedil;&atilde;o da Apple est&aacute; em fila para a v0.7.',
+    'install.w.h':            '<span class="serif">Web:</span> instalar como PWA',
+    'install.w.meta':         'Corre num separador do browser, mas tamb&eacute;m d&aacute; para instalar como app aut&oacute;noma com &iacute;cone pr&oacute;prio. Funciona offline depois da primeira visita (o service worker p&otilde;e tudo em cache).',
+    'install.w.s1':           '<strong>Abre</strong> <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> em qualquer browser moderno.',
+    'install.w.s2':           '<strong>Chrome / Edge:</strong> aparece um pequeno &iacute;cone de instala&ccedil;&atilde;o na barra de endere&ccedil;os depois de alguns segundos. Clica nele &rarr; <strong>Instalar</strong>. A app abre numa janela sem moldura, com entrada no menu Iniciar / Dock.',
+    'install.w.s3':           '<strong>Safari (macOS):</strong> Ficheiro &rarr; Partilhar &rarr; <strong>Adicionar &agrave; Dock</strong>. A app passa a comportar-se como uma app normal.',
+    'install.w.s4':           '<strong>Firefox:</strong> de momento s&oacute; corre no separador (sem bot&atilde;o de instalar). Mesmo assim funciona offline ap&oacute;s visita; mete nos marcadores.',
+    'install.w.s5':           '<strong>Desliga-te da internet.</strong> Recarrega. A app continua a abrir; o service worker serve o bundle inteiro da cache. Prova feita.<small>As actualiza&ccedil;&otilde;es descarregam em background nas visitas seguintes. O toast avisa quando uma nova vers&atilde;o est&aacute; pronta a recarregar.</small>',
+    'install.w.tip':          '<strong>Armazenamento no dispositivo:</strong> o bundle da PWA pesa cerca de 7 MB, mais o que os autosaves dos projectos ocupam em IndexedDB. Limpar dados do browser apaga ambos; exporta os teus <code>.json</code> se planeas faz&ecirc;-lo.',
+    'install.m.h':            '<span class="serif">Atalho m&oacute;vel:</span> Adicionar ao ecr&atilde; principal',
+    'install.m.meta':         'Salta o caminho App Store + Play Store, basta guardar a PWA como &iacute;cone no ecr&atilde; principal. Mesmo c&oacute;digo, mesmos dados, gr&aacute;tis.',
+    'install.m.s1':           '<strong>iPhone / iPad (Safari):</strong> abre <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> &rarr; toca no bot&atilde;o Partilhar (quadrado com seta) &rarr; <strong>Adicionar ao Ecr&atilde; Principal</strong>. O &iacute;cone aparece como qualquer app nativa. Tocar abre em ecr&atilde; completo sem moldura do browser.',
+    'install.m.s2':           '<strong>Android (Chrome):</strong> abre o mesmo URL &rarr; menu dos 3 pontos &rarr; <strong>Adicionar ao ecr&atilde; principal</strong> (ou <strong>Instalar app</strong> em Chromes mais recentes). Comportamento igual.',
+    'install.m.s3':           '<strong>Depois de adicionada,</strong> a PWA detecta que est&aacute; em modo nativo (sem moldura do browser), mostra dock inferior + layout de bottom-sheet e funciona offline totalmente.',
+    'install.m.tip':          '<strong>Porqu&ecirc; pagar pela vers&atilde;o da App Store</strong> se esta &eacute; gr&aacute;tis? As apps da loja v&atilde;o ter algumas funcionalidades nativas que a PWA n&atilde;o alcan&ccedil;a (integra&ccedil;&atilde;o com Ficheiros no iOS, background processing mais profundo no Android), e evita os limites de armazenamento da Apple para Add-to-Home. Para a maioria dos utilizadores a PWA chega bem.',
+    'install.s.h':            '<span class="serif">App Store + Play Store:</span> app paga, em breve',
+    'install.s.meta':         '&euro;4,99 &agrave; cabe&ccedil;a, compra &uacute;nica, sem subscri&ccedil;&atilde;o. TestFlight + Play Internal Testing a sair antes do lan&ccedil;amento p&uacute;blico.',
+    'install.s.s1':           '<strong>iPhone / iPad:</strong> bundle ID <code>pt.marjers.blockbuilder</code>. Testes internos via TestFlight; manda email para <a href="mailto:geral@marjers.com">geral@marjers.com</a> para te juntares.',
+    'install.s.s2':           '<strong>Telem&oacute;vel / tablet Android:</strong> mesmo bundle ID. Testes internos via Play Console; o link de opt-in aparece aqui quando o primeiro AAB for aprovado.',
+    'install.s.s3':           '<strong>Lan&ccedil;amento p&uacute;blico:</strong> apontado para o fim do Ver&atilde;o de 2026, em conjunto com o build desktop v0.6.0 a passar a est&aacute;vel. Email para <a href="mailto:geral@marjers.com?subject=BlockBuilder%20Studio%20mobile%20launch%20notify">geral@marjers.com</a> para te avisar no dia.',
+    'install.s.tip':          '<strong>Apple Family Sharing</strong> e <strong>Google Play Family Library</strong> s&atilde;o ambos honrados. Uma compra cobre toda a tua fam&iacute;lia.',
   },
 };
 
@@ -474,6 +580,12 @@ function applyLang(lang) {
     const key = el.dataset.i18n;
     const txt = dict[key];
     if (txt !== undefined) el.innerHTML = txt;
+  });
+  // Placeholders on <input> / <textarea> live in an attribute, not innerHTML.
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    const key = el.dataset.i18nPlaceholder;
+    const txt = dict[key];
+    if (txt !== undefined) el.setAttribute('placeholder', txt.replace(/&[a-z]+;/g, (m) => ({'&amp;':'&','&quot;':'"','&apos;':"'",'&#39;':"'",'&middot;':'·','&hellip;':'…','&rarr;':'→','&ndash;':'–','&mdash;':'—','&euro;':'€','&ccedil;':'ç','&atilde;':'ã','&otilde;':'õ','&aacute;':'á','&eacute;':'é','&iacute;':'í','&oacute;':'ó','&uacute;':'ú','&ecirc;':'ê'}[m] || m)));
   });
   // Title is tagged with data-i18n-title="key" on <title>
   const titleEl = document.querySelector('title[data-i18n-title]');
