@@ -60,6 +60,7 @@
   font-size: 14px;
   text-decoration: none;
   transition: color 0.15s;
+  white-space: nowrap;
 }
 .nav-links a:hover { color: var(--text); }
 .nav-links a.active { color: var(--accent); }
@@ -118,6 +119,7 @@
   border: 1px solid transparent;
   cursor: pointer;
   font-family: inherit;
+  white-space: nowrap;
 }
 .btn-primary { background: var(--accent); color: #0a0c10; }
 .btn-primary:hover { background: #d9ff5a; transform: translateY(-1px); text-decoration: none; }
