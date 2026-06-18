@@ -26,6 +26,9 @@
   --lime-glow:    rgba(196, 240, 79, 0.32);
   --lime-soft:    rgba(196, 240, 79, 0.10);
   --lime-line:    rgba(196, 240, 79, 0.22);
+  /* Alias so nav.css (shared with standalone pages that use --accent) finds
+     the same colour on the landing pages without renaming every other rule. */
+  --accent:       var(--lime);
 
   --warm:         #f0a624; /* secondary accent for danger / mobile notice */
   --plum:         #b87df0; /* tertiary, used in voxel scene */
