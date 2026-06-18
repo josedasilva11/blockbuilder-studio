@@ -23,6 +23,29 @@ const DICT = {
     'footer.copy':   '&copy; 2026 Marjers',
     'footer.privacy': 'Privacy',
 
+    // === Final CTA + footer (landing) ==================================
+    'landing.final.p':        'Free forever for personal use. No signup, no email, no credit card. Drop in shapes, hit print.',
+    'landing.final.cta1':     'Download BlockBuilder Studio',
+    'landing.final.cta2':     '&#x2615; Buy me a coffee',
+    'landing.final.cta3':     'Commercial licence &middot; &euro;12',
+    'landing.final.foot':     'Free forever for personal use. The coffee and the licence are how it stays alive, pick whichever fits.',
+    'cta.beta':               'Request beta access &rarr;',
+    'footer.brand':           'Offline desktop 3D editor. No accounts, no limits, no nonsense. <br>Built honestly by Marjers.',
+    'footer.col.product':     'Product',
+    'footer.col.workflow':    'Workflow',
+    'footer.col.pricing':     'Pricing',
+    'footer.col.download':    'Download',
+    'footer.col.support':     'Support',
+    'footer.col.faq':         'FAQ',
+    'footer.col.contact':     'Contact',
+    'footer.col.coffee':      '&#x2615; Buy me a coffee',
+    'footer.col.licence':     'Buy licence, &euro;12',
+    'footer.col.maker':       'Maker',
+    'footer.col.hire':        'Hire me',
+    'footer.bottom.legal':    '&copy; 2026 Marjers &middot; BlockBuilder Studio is a trademark of Marjers',
+    'footer.bottom.by':       'Made by <span class="serif">marjers</span>',
+    'footer.bottom.notrack':  'no accounts &middot; no tracking &middot; no telemetry',
+
     // === Landing =======================================================
     'landing.title': 'BlockBuilder Studio · Model in minutes. Print the same day.',
     'landing.hero.os': 'Offline 3D editor · Desktop · iPad · iPhone · Android',
@@ -298,6 +321,29 @@ const DICT = {
     'nav.download':  'Descarregar gr&aacute;tis',
     'footer.copy':   '&copy; 2026 Marjers',
     'footer.privacy':'Privacidade',
+
+    // === Final CTA + footer (landing) ==================================
+    'landing.final.p':        'Gr&aacute;tis para sempre em uso pessoal. Sem registo, sem email, sem cart&atilde;o de cr&eacute;dito. Larga formas, imprime.',
+    'landing.final.cta1':     'Descarregar BlockBuilder Studio',
+    'landing.final.cta2':     '&#x2615; Compra-me um caf&eacute;',
+    'landing.final.cta3':     'Licen&ccedil;a comercial &middot; &euro;12',
+    'landing.final.foot':     'Gr&aacute;tis para sempre em uso pessoal. O caf&eacute; e a licen&ccedil;a s&atilde;o como continua vivo, escolhe o que te encaixa.',
+    'cta.beta':               'Pedir acesso &agrave; beta &rarr;',
+    'footer.brand':           'Editor 3D desktop offline. Sem contas, sem limites, sem treta. <br>Feito honestamente por Marjers.',
+    'footer.col.product':     'Produto',
+    'footer.col.workflow':    'Fluxo de trabalho',
+    'footer.col.pricing':     'Pre&ccedil;os',
+    'footer.col.download':    'Descarregar',
+    'footer.col.support':     'Apoio',
+    'footer.col.faq':         'FAQ',
+    'footer.col.contact':     'Contacto',
+    'footer.col.coffee':      '&#x2615; Compra-me um caf&eacute;',
+    'footer.col.licence':     'Comprar licen&ccedil;a, &euro;12',
+    'footer.col.maker':       'Autor',
+    'footer.col.hire':        'Contratar-me',
+    'footer.bottom.legal':    '&copy; 2026 Marjers &middot; BlockBuilder Studio &eacute; uma marca da Marjers',
+    'footer.bottom.by':       'Feito por <span class="serif">marjers</span>',
+    'footer.bottom.notrack':  'sem contas &middot; sem rastreio &middot; sem telemetria',
 
     // === Landing =======================================================
     'landing.title': 'BlockBuilder Studio &middot; Modelar em minutos. Imprimir no mesmo dia.',
@@ -613,6 +659,10 @@ function bindToggle() {
     });
   });
 }
+
+// Expose a re-apply hook so inline scripts that mutate the DOM after i18n
+// has run (e.g. beta-mode CTA rewriting) can ask for a fresh pass.
+window.bbApplyLang = () => applyLang(getLang());
 
 // Run as early as possible so PT visitors don't flash EN content. Without
 // DOMContentLoaded we still need the DOM, so we let the parser get past the

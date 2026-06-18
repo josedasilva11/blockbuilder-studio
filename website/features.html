@@ -280,40 +280,40 @@
         <span class="brand-name"><strong>Block</strong>Builder</span>
         <span class="brand-tag">STUDIO</span>
       </a>
-      <p>Offline desktop 3D editor. No accounts, no limits, no nonsense. <br>Built honestly by Marjers.</p>
+      <p data-i18n="footer.brand">Offline desktop 3D editor. No accounts, no limits, no nonsense. <br>Built honestly by Marjers.</p>
     </div>
 
     <div class="footer-col">
-      <h4>Product</h4>
+      <h4 data-i18n="footer.col.product">Product</h4>
       <a href="/features"><span data-i18n="nav.features">Features</span></a>
-      <a href="#workflow">Workflow</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#download">Download</a>
-      <a href="/changelog">Changelog</a>
+      <a href="/#workflow" data-i18n="footer.col.workflow">Workflow</a>
+      <a href="/#pricing" data-i18n="footer.col.pricing">Pricing</a>
+      <a href="/#download" data-i18n="footer.col.download">Download</a>
+      <a href="/changelog" data-i18n="nav.changelog">Changelog</a>
     </div>
 
     <div class="footer-col">
-      <h4>Support</h4>
-      <a href="#faq">FAQ</a>
-      <a href="mailto:geral@marjers.com">Contact</a>
-      <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener">☕ Buy me a coffee</a>
-      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643" target="_blank" rel="noopener">Buy licence, €12</a>
+      <h4 data-i18n="footer.col.support">Support</h4>
+      <a href="/#faq" data-i18n="footer.col.faq">FAQ</a>
+      <a href="mailto:geral@marjers.com" data-i18n="footer.col.contact">Contact</a>
+      <a href="https://buymeacoffee.com/marjers" target="_blank" rel="noopener" data-i18n="footer.col.coffee">☕ Buy me a coffee</a>
+      <a href="https://marjers.lemonsqueezy.com/buy/720c0f69-f860-427a-bddb-0c01481c1643" target="_blank" rel="noopener" data-i18n="footer.col.licence">Buy licence, €12</a>
     </div>
 
     <div class="footer-col">
-      <h4>Maker</h4>
+      <h4 data-i18n="footer.col.maker">Maker</h4>
       <a href="https://marjers.com" target="_blank" rel="noopener">Marjers</a>
-      <a href="https://marjers.com" target="_blank" rel="noopener">Hire me</a>
+      <a href="https://marjers.com" target="_blank" rel="noopener" data-i18n="footer.col.hire">Hire me</a>
       <a href="https://github.com/josedasilva11/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 
   <div class="footer-bottom">
-    <div>© 2026 Marjers · BlockBuilder Studio is a trademark of Marjers</div>
-    <a href="https://marjers.com" target="_blank" rel="noopener" class="footer-by">
+    <div data-i18n="footer.bottom.legal">© 2026 Marjers · BlockBuilder Studio is a trademark of Marjers</div>
+    <a href="https://marjers.com" target="_blank" rel="noopener" class="footer-by" data-i18n="footer.bottom.by">
       Made by <span class="serif">marjers</span>
     </a>
-    <div class="mono">no accounts · no tracking · no telemetry</div>
+    <div class="mono" data-i18n="footer.bottom.notrack">no accounts · no tracking · no telemetry</div>
   </div>
 </footer>
 
@@ -422,13 +422,17 @@ if (document.body.dataset.mode === 'beta') {
   const MAILTO = 'mailto:geral@marjers.com?subject=BlockBuilder%20beta%20access';
   document.querySelectorAll('a[href*="lemonsqueezy"]').forEach(a => {
     a.href = MAILTO;
-    // Replace button text. Buttons have leaf text content (sometimes preceded by
-    // svg/icon); rewriting innerText keeps icons but updates the label.
+    a.removeAttribute('data-i18n');
+    a.querySelectorAll('[data-i18n]').forEach(el => el.removeAttribute('data-i18n'));
     const original = (a.textContent || '').trim();
-    if (/buy/i.test(original) || /licence/i.test(original)) {
+    if (/buy/i.test(original) || /licence/i.test(original) || /licen/i.test(original)) {
+      a.setAttribute('data-i18n', 'cta.beta');
       a.textContent = 'Request beta access →';
     }
   });
+  if (typeof window !== 'undefined' && typeof window.bbApplyLang === 'function') {
+    window.bbApplyLang();
+  }
 }
 </script>
 
