@@ -2528,13 +2528,28 @@ summary:focus-visible,
   backdrop-filter: blur(10px);
   z-index: 9999;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  /* Scroll the whole overlay when the card is taller than the visible
+     viewport (small phones, landscape, browser URL-bar showing). */
+  overflow-y: auto;
+  /* Honour iOS notch + dynamic URL bar so the card's close X never ends up
+     under chrome. dvh > vh in mobile browsers because it shrinks with the
+     URL bar; we still keep the fallback. */
+  padding: max(env(safe-area-inset-top, 16px), 16px)
+           16px
+           max(env(safe-area-inset-bottom, 16px), 16px);
   animation: fadeIn 0.18s var(--ease);
 }
 .support-card {
   position: relative;
   width: min(460px, 92vw);
+  /* Card may scroll its own body if it ever exceeds the visible viewport. */
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  /* Centre the card when it fits, push to top + scroll the overlay when
+     it doesn't. margin:auto with flex-start parent does exactly that. */
+  margin: auto 0;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 16px;
