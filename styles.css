@@ -939,6 +939,61 @@ kbd {
   background: var(--accent-soft);
 }
 
+/* Right-click context menu on a shape row in the outliner. */
+.ol-ctx-menu {
+  position: fixed;
+  z-index: 250;
+  min-width: 200px;
+  padding: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 12px;
+}
+.ol-ctx-head {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 6px 10px 2px;
+}
+.ol-ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s var(--ease);
+}
+.ol-ctx-item:hover:not([disabled]) { background: var(--accent-soft); color: var(--accent); }
+.ol-ctx-item[disabled] { opacity: 0.45; cursor: default; }
+.ol-ctx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+.ol-ctx-dot.is-current { background: var(--accent); }
+.ol-ctx-name { flex: 1; }
+.ol-ctx-tag {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  color: var(--text-dim);
+}
+
 .ol-glyph-ref {
   color: #6cd5ff;
 }

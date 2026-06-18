@@ -12,6 +12,7 @@ import {
   renameLayer,
   setActiveLayer,
   setLayerVisibility,
+  moveShapeToLayer,
 } from './layers.js';
 
 const KIND_GLYPH = {
@@ -29,6 +30,7 @@ export function initOutliner() {
   if (!_body) return;
   _body.addEventListener('click', onClick);
   _body.addEventListener('dblclick', onDblClick);
+  _body.addEventListener('contextmenu', onContextMenu);
   setInterval(refresh, 400);
 }
 
@@ -325,6 +327,59 @@ function onDblClick(ev) {
   if (!shape) return;
   ev.stopPropagation();
   startRename(name, shape);
+}
+
+// Right-click on a shape row → small popover with "Move to layer →" entries
+// for every layer the shape is not already in. Click outside / Esc closes.
+let _ctxMenu = null;
+function onContextMenu(ev) {
+  const row = ev.target.closest('[data-id]');
+  if (!row) return;
+  ev.preventDefault();
+  const shapeId = row.dataset.id;
+  const shape = state.shapes.get(shapeId);
+  if (!shape) return;
+  closeContextMenu();
+  _ctxMenu = document.createElement('div');
+  _ctxMenu.className = 'ol-ctx-menu';
+  const items = [];
+  items.push(`<div class="ol-ctx-head">Move to layer</div>`);
+  for (const layer of state.layers) {
+    const current = layer.id === shape.layerId;
+    items.push(
+      `<button class="ol-ctx-item${current ? ' is-current' : ''}" data-move-layer="${layer.id}"${current ? ' disabled' : ''}>
+        <span class="ol-ctx-dot${current ? ' is-current' : ''}"></span>
+        <span class="ol-ctx-name">${escapeHtml(layer.name || 'Layer')}</span>
+        ${current ? '<span class="ol-ctx-tag">here</span>' : ''}
+      </button>`
+    );
+  }
+  _ctxMenu.innerHTML = items.join('');
+  document.body.appendChild(_ctxMenu);
+  // Position near the cursor but clamped to viewport.
+  const w = _ctxMenu.offsetWidth || 200;
+  const h = _ctxMenu.offsetHeight || 200;
+  const x = Math.min(ev.clientX, window.innerWidth - w - 8);
+  const y = Math.min(ev.clientY, window.innerHeight - h - 8);
+  _ctxMenu.style.left = x + 'px';
+  _ctxMenu.style.top  = y + 'px';
+  _ctxMenu.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-move-layer]');
+    if (!btn) return;
+    moveShapeToLayer(shapeId, btn.dataset.moveLayer);
+    closeContextMenu();
+    _lastSig = '';
+  });
+  setTimeout(() => {
+    document.addEventListener('click', closeContextMenu, { once: true });
+    document.addEventListener('keydown', escClose);
+  }, 0);
+}
+function escClose(ev) { if (ev.key === 'Escape') closeContextMenu(); }
+function closeContextMenu() {
+  if (_ctxMenu && _ctxMenu.parentNode) _ctxMenu.parentNode.removeChild(_ctxMenu);
+  _ctxMenu = null;
+  document.removeEventListener('keydown', escClose);
 }
 
 function startLayerRename(nameEl, layer) {

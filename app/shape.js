@@ -124,6 +124,11 @@ export class TinkerShape {
     if (this.kind === 'IMPORT') return; // imported meshes keep their geometry
     this.mesh.geometry.dispose();
     this.mesh.geometry = buildGeometry(this.kind, this.params);
+    // Mark the scene dirty so the render-on-demand loop in scene.js paints
+    // the new geometry on the next frame. Without this, slider drags update
+    // the geometry in memory but the canvas keeps showing the stale frame
+    // until some other event (click, orbit) sets _dirty.
+    if (state.requestRender) state.requestRender();
   }
 
   dispose() {
