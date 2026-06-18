@@ -21,6 +21,7 @@ export class TinkerShape {
       this.color = opts.color ?? (this.isHole ? HOLE_COLOR : nextPaletteColor());
       this.locked = false;
       this.name = opts.name || null;             // user-editable label
+      this.layerId = opts.layerId || state.activeLayerId || 'default';
       this.importedName = opts.importedName || opts.name || 'Imported';
       this._geomSerialised = opts._geomSerialised || null;  // base64 buffers for autosave
 
@@ -59,6 +60,7 @@ export class TinkerShape {
     this.color = opts.color ?? (this.isHole ? HOLE_COLOR : nextPaletteColor());
     this.name = opts.name || null;
     this.locked = false;
+    this.layerId = opts.layerId || state.activeLayerId || 'default';
 
     const geom = buildGeometry(this.kind, this.params);
     const mat = this._makeMaterial();
@@ -147,6 +149,7 @@ export class TinkerShape {
       color: this.color,
       name: this.name,
       locked: !!this.locked,
+      layerId: this.layerId || 'default',
       position: this.mesh.position.toArray(),
       rotation: this.mesh.rotation.toArray().slice(0, 3),
       scale: this.mesh.scale.toArray(),
@@ -165,6 +168,7 @@ export class TinkerShape {
       isHole: data.isHole,
       color: data.color,
       name: data.name,
+      layerId: data.layerId || 'default',
       importedName: data.importedName,
       _geomSerialised: data._geomSerialised,
       position: data.position,

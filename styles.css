@@ -827,6 +827,118 @@ kbd {
   color: var(--text-dim);
   margin: 12px 8px 4px;
 }
+.ol-section-layers { margin-top: 4px; }
+
+/* ----- Layer header row (above its shapes in the outliner) ----- */
+.ol-layer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  margin: 2px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.02);
+  transition: background 0.12s var(--ease), border-color 0.12s var(--ease);
+}
+.ol-layer:hover { background: rgba(255,255,255,0.04); }
+.ol-layer.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.ol-layer.is-active .ol-layer-name { color: var(--accent); }
+.ol-layer.is-hidden { opacity: 0.5; }
+.ol-layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+.ol-layer.is-active .ol-layer-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ol-layer-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ol-layer-name.editing { padding: 0; }
+.ol-layer-name input.ol-name-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  padding: 1px 6px;
+  outline: none;
+}
+.ol-layer-count {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  color: var(--text-dim);
+  background: var(--bg-elev);
+  border-radius: 999px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+.ol-layer .ol-mini {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+.ol-layer .ol-mini:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+.ol-layer .ol-mini svg { width: 13px; height: 13px; }
+
+/* Shapes nested under their layer get a small indent. */
+.outliner-row[data-id] { margin-left: 12px; }
+
+/* "+ New layer" button at the end of the layers section */
+.ol-new-layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px 8px;
+  margin: 4px 0 2px;
+  background: transparent;
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.12s var(--ease);
+}
+.ol-new-layer:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .ol-glyph-ref {
   color: #6cd5ff;
 }

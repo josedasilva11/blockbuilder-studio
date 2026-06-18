@@ -15,6 +15,15 @@ export const state = {
   selectedId: null,
   groupHostId: null,       // when inside an Edit Group, the host id
   nextId: 1,
+  // Layers: lightweight grouping of shapes by purpose ("base", "decoration",
+  // "internals"). Always has at least one layer; default 'default' / "Layer 1"
+  // is created on first render and is what every shape lands in unless the
+  // user has explicitly chosen another active layer. Backward-compat: projects
+  // saved before layers existed inherit `layerId = 'default'` on load.
+  layers: [
+    { id: 'default', name: 'Layer 1', visible: true, locked: false, color: null },
+  ],
+  activeLayerId: 'default',
 };
 
 export function setSelected(id) {

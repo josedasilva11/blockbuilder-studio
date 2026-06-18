@@ -6,6 +6,13 @@ import { state } from './state.js';
 import { selectShape, getMultiSelection } from './selection.js';
 import { ungroupShapes, bakeGroup } from './csg.js';
 import { requestRender } from './scene.js';
+import {
+  addLayer,
+  deleteLayer,
+  renameLayer,
+  setActiveLayer,
+  setLayerVisibility,
+} from './layers.js';
 
 const KIND_GLYPH = {
   CUBE: '⬛', CYLINDER: '⬭', SPHERE: '◯', CONE: '▲', PYRAMID: '◆',
@@ -28,6 +35,7 @@ export function initOutliner() {
 function refresh() {
   if (!_body) return;
   if (_body.querySelector('.ol-name.editing')) return;
+  if (_body.querySelector('.ol-layer-name.editing')) return;
   const selectedSet = new Set(getMultiSelection());
   const items = [...state.shapes.values()];
 
@@ -40,26 +48,78 @@ function refresh() {
   }
   const topLevel = items.filter(s => !childToParent.has(s.id));
 
+  // Group top-level shapes by layerId. Any shape with a stale layerId gets
+  // reassigned to the first layer so nothing falls off the outliner.
+  const byLayer = new Map();
+  for (const l of state.layers) byLayer.set(l.id, []);
+  for (const s of topLevel) {
+    if (!byLayer.has(s.layerId)) {
+      s.layerId = state.layers[0]?.id || 'default';
+    }
+    byLayer.get(s.layerId).push(s);
+  }
+
   const refs = [...(state.refGeoms?.values?.() ?? [])];
 
   // Stable signature so we only repaint on real changes
-  const sig = items.map(s =>
-    `${s.id}|${s.mesh.visible}|${s.isHole ? 1 : 0}|${selectedSet.has(s.id) ? 1 : 0}|${s.displayName?.() ?? s.kind}|${s.csgChildren?.length ?? 0}|${_expanded.get(s.id) !== false ? 1 : 0}`
-  ).join(',') + '#' + refs.map(r => `${r.id}|${r.kind}|${r.visible ? 1 : 0}|${r.name}`).join(',');
+  const layerSig = state.layers
+    .map(l => `${l.id}|${l.name}|${l.visible ? 1 : 0}|${l.locked ? 1 : 0}|${l.id === state.activeLayerId ? 1 : 0}`)
+    .join(',');
+  const shapeSig = items.map(s =>
+    `${s.id}|${s.layerId}|${s.mesh.visible}|${s.isHole ? 1 : 0}|${selectedSet.has(s.id) ? 1 : 0}|${s.displayName?.() ?? s.kind}|${s.csgChildren?.length ?? 0}|${_expanded.get(s.id) !== false ? 1 : 0}`
+  ).join(',');
+  const refSig = refs.map(r => `${r.id}|${r.kind}|${r.visible ? 1 : 0}|${r.name}`).join(',');
+  const sig = `${layerSig}#${shapeSig}#${refSig}`;
   if (sig === _lastSig) return;
   _lastSig = sig;
 
+  // Always render the Layers section, even on a fresh scene, so users can
+  // see and add layers before dropping any shape.
+  let html = `<div class="ol-section-head ol-section-layers">Layers</div>`;
+  for (const layer of state.layers) {
+    const shapesInLayer = byLayer.get(layer.id) || [];
+    html += renderLayerHeader(layer, shapesInLayer.length);
+    if (layer.visible !== false) {
+      // Render children only when the layer is unfolded (always for now).
+      for (const s of shapesInLayer) {
+        html += renderRow(s, 0, selectedSet);
+      }
+    } else {
+      // Collapsed-by-visibility: still show the children but greyed out, so
+      // user can find them and toggle their own eye.
+      for (const s of shapesInLayer) {
+        html += renderRow(s, 0, selectedSet);
+      }
+    }
+  }
+  html += `<button class="ol-new-layer" data-add-layer>+ New layer</button>`;
+
   if (items.length === 0 && refs.length === 0) {
-    _body.innerHTML = `<p class="hint">No shapes yet.<br>Drag one from the left to begin.</p>`;
-    return;
+    // Append the hint so it doesn't kill the layers UI on first launch.
+    html += `<p class="hint" style="margin-top: 12px;">No shapes yet.<br>Drag one from the left to begin.</p>`;
   }
 
-  let html = topLevel.map(s => renderRow(s, 0, selectedSet)).join('');
   if (refs.length > 0) {
     html += `<div class="ol-section-head">Reference geometry</div>`;
     html += refs.map(renderRefRow).join('');
   }
   _body.innerHTML = html;
+}
+
+function renderLayerHeader(layer, shapeCount) {
+  const active = layer.id === state.activeLayerId;
+  const hidden = layer.visible === false;
+  const safeName = escapeHtml(layer.name || 'Layer');
+  return `<div class="ol-layer${active ? ' is-active' : ''}${hidden ? ' is-hidden' : ''}" data-layer-id="${layer.id}">
+    <span class="ol-layer-dot" data-tip="${active ? 'Active layer — new shapes spawn here.' : 'Click the name to make this the active layer.'}"></span>
+    <span class="ol-layer-name tip" data-layer-name="${layer.id}"
+      data-tip="${active ? 'Active layer. Click again to rename.' : 'Click to make this layer active. Double-click to rename.'}">${safeName}</span>
+    <span class="ol-layer-count">${shapeCount}</span>
+    <button class="ol-mini tip" data-layer-eye="${layer.id}"
+      data-tip="${hidden ? 'Show this layer (all shapes inside become visible again).' : 'Hide this layer. Every shape inside is hidden from the viewport.'}">${hidden ? eyeOff() : eyeOn()}</button>
+    <button class="ol-mini tip" data-layer-del="${layer.id}"
+      data-tip="Delete this layer. Shapes inside move to the first surviving layer.">×</button>
+  </div>`;
 }
 
 const REF_GLYPH = { PLANE_3P: '▱', AXIS_EDGE: '⤢', MIDPOINT: '•' };
@@ -130,6 +190,47 @@ function escapeHtml(s) {
 }
 
 function onClick(ev) {
+  // Layer buttons: handled before shape rows so the row's data-id click
+  // doesn't steal the event when clicking a layer header.
+  const addLyr = ev.target.closest('[data-add-layer]');
+  if (addLyr) {
+    ev.stopPropagation();
+    addLayer();
+    _lastSig = '';
+    return;
+  }
+  const layerEye = ev.target.closest('[data-layer-eye]');
+  if (layerEye) {
+    ev.stopPropagation();
+    const id = layerEye.dataset.layerEye;
+    const layer = state.layers.find(l => l.id === id);
+    if (layer) setLayerVisibility(id, !layer.visible);
+    _lastSig = '';
+    return;
+  }
+  const layerDel = ev.target.closest('[data-layer-del]');
+  if (layerDel) {
+    ev.stopPropagation();
+    const id = layerDel.dataset.layerDel;
+    const layer = state.layers.find(l => l.id === id);
+    if (!layer) return;
+    const shapesInLayer = [...state.shapes.values()].filter(s => s.layerId === id);
+    if (shapesInLayer.length > 0) {
+      const ok = window.confirm(`Delete "${layer.name}"? ${shapesInLayer.length} shape${shapesInLayer.length === 1 ? '' : 's'} move into the first surviving layer.`);
+      if (!ok) return;
+    }
+    deleteLayer(id);
+    _lastSig = '';
+    return;
+  }
+  const layerName = ev.target.closest('[data-layer-name]');
+  if (layerName) {
+    ev.stopPropagation();
+    const id = layerName.dataset.layerName;
+    setActiveLayer(id);
+    _lastSig = '';
+    return;
+  }
   const toggle = ev.target.closest('[data-toggle]');
   if (toggle) {
     ev.stopPropagation();
@@ -160,6 +261,9 @@ function onClick(ev) {
     const s = state.shapes.get(eye.dataset.eye);
     if (s) {
       s.mesh.visible = !s.mesh.visible;
+      // Track user intent so when the parent layer's visibility toggles,
+      // shapes the user explicitly hid stay hidden after re-show.
+      s._userVisible = s.mesh.visible;
       requestRender();
     }
     _lastSig = '';
@@ -207,12 +311,39 @@ function onClick(ev) {
 }
 
 function onDblClick(ev) {
+  const layerName = ev.target.closest('.ol-layer-name[data-layer-name]');
+  if (layerName) {
+    ev.stopPropagation();
+    const id = layerName.dataset.layerName;
+    const layer = state.layers.find(l => l.id === id);
+    if (layer) startLayerRename(layerName, layer);
+    return;
+  }
   const name = ev.target.closest('.ol-name[data-name]');
   if (!name) return;
   const shape = state.shapes.get(name.dataset.name);
   if (!shape) return;
   ev.stopPropagation();
   startRename(name, shape);
+}
+
+function startLayerRename(nameEl, layer) {
+  const current = layer.name;
+  nameEl.classList.add('editing');
+  nameEl.innerHTML = `<input class="ol-name-input" value="${escapeHtml(current)}" />`;
+  const inp = nameEl.querySelector('input');
+  inp.select();
+  const commit = () => {
+    const v = inp.value.trim() || current;
+    renameLayer(layer.id, v);
+    nameEl.classList.remove('editing');
+    _lastSig = '';
+  };
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { commit(); inp.blur(); }
+    if (e.key === 'Escape') { inp.value = current; commit(); inp.blur(); }
+  });
 }
 
 function startRename(nameEl, shape) {

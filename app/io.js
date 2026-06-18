@@ -8,6 +8,7 @@ import { TinkerShape } from './shape.js';
 import { RefGeom } from './ref_geom.js';
 import { selectShape } from './selection.js';
 import { clearHistory } from './history.js';
+import { migrateLayersFromLoad } from './layers.js';
 import { isLicensed, revalidateLicense, getLicenseName } from './support_nag.js';
 import { toast } from './toast.js';
 
@@ -130,12 +131,20 @@ export async function exportOBJ() {
 
 export function saveProject() {
   const data = {
-    version: 2,
+    version: 3,
     generator: 'BlockBuilder Studio',
     source: 'https://marjers.com',
     ts: Date.now(),
     shapes: [...state.shapes.values()].map(s => s.serialize()),
     refGeoms: [...state.refGeoms.values()].map(serializeRefGeom),
+    layers: state.layers.map(l => ({
+      id: l.id,
+      name: l.name,
+      visible: l.visible !== false,
+      locked: !!l.locked,
+      color: l.color || null,
+    })),
+    activeLayerId: state.activeLayerId,
     workplane: state.workplane,
     snapStep: state.snapStep,
   };
@@ -170,6 +179,9 @@ export function loadProject(file) {
       // key just means no refs to restore.
       for (const rg of [...state.refGeoms.values()]) rg.dispose();
       for (const rd of data.refGeoms || []) deserializeRefGeom(rd);
+      // Layers: v3+ projects ship a layers array. Older projects get one
+      // default layer with every shape moved into it.
+      migrateLayersFromLoad(data.layers, data.activeLayerId);
       if (data.workplane) state.workplane = data.workplane;
       if (typeof data.snapStep === 'number') state.snapStep = data.snapStep;
       // Track in recents so the welcome modal lists it
