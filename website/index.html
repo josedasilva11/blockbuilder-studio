@@ -100,8 +100,8 @@
   <div class="hero-in">
     <div class="hero-text">
       <div class="hero-eyebrow">
-        <span class="badge">v0.5.0</span>
-        <span>Offline 3D editor · Windows · macOS · Linux</span>
+        <span class="badge">v0.6.0</span>
+        <span>Offline 3D editor · Desktop · iPad · iPhone · Android</span>
       </div>
       <h1>
         <span class="stack">Model in</span>
@@ -109,9 +109,7 @@
         <span class="stack">Print the same day.</span>
       </h1>
       <p class="hero-lede">
-        A <strong>drag-and-drop 3D editor</strong> that runs fully offline.
-        Drop in shapes, combine with booleans, export STL, hit print.
-        No account, no cloud waiting, no upload caps. Just you and your printer.
+        Drag a primitive. <strong>Push/pull any face</strong>, including slanted. Combine with full Boolean CSG. Drop reference planes, sketch outlines, revolve a lathe profile. Export STL, OBJ or STEP. All offline, on every screen you own.
       </p>
       <div class="hero-cta">
         <a href="#download" class="btn btn-primary btn-xl" id="hero-cta">
@@ -142,9 +140,9 @@
         </span>
       </div>
       <div class="hero-stats">
-        <div><strong>v0.5.0</strong><span>Released May 2026</span></div>
+        <div><strong>v0.6.0</strong><span>Released June 2026</span></div>
         <div><strong>13</strong><span>Primitive shapes</span></div>
-        <div><strong>3</strong><span>Sketch tools</span></div>
+        <div><strong>3</strong><span>Sketch tools · Extrude · Scribble · Revolve</span></div>
         <div><strong>0</strong><span>Tracking pixels</span></div>
       </div>
     </div>
@@ -296,9 +294,9 @@
 <section class="section" id="features">
   <div class="inner" style="text-align: center;">
     <div class="section-head fade-up">
-      <span class="eyebrow"><span class="dot"></span>Features</span>
-      <h2>Everything you need to model<br>for the printer. <span class="serif">Nothing you don't.</span></h2>
-      <p>13 primitives, full CSG, push/pull, reference geometry, sketch tools, STL/OBJ/STEP export. Offline.</p>
+      <span class="eyebrow"><span class="dot"></span>What v0.6 brought</span>
+      <h2>Direct modelling that finally <span class="serif">feels like CAD.</span></h2>
+      <p>Push/Pull on any face including slanted ones. Reference planes, axes, midpoints. Sketch + Revolve. Pattern with skip-list. Live-scrub sliders. Edge-hover dimensions. Maths in every number field. Ten new moves in v0.6 that no browser modeler has.</p>
     </div>
     <a href="/features" class="btn btn-primary btn-lg" style="margin-top: 24px;">See every feature &rarr;</a>
   </div>
@@ -369,31 +367,81 @@
     <div class="section-head fade-up">
       <span class="eyebrow"><span class="dot"></span>Workflow</span>
       <h2>From idea to printable STL<br><span class="serif">in four steps.</span></h2>
-      <p>Five minutes from first launch to a printed bracket. No tutorial required.</p>
+      <p>Five minutes from first launch to a printed bracket. No tutorial required, but eighty-five short ones wait at <a href="/tutorials" style="color: var(--lime); text-decoration: none;">/tutorials</a> if you want them.</p>
     </div>
 
     <div class="steps">
       <div class="step fade-up">
         <div class="step-num">01</div>
         <h3>Drop in a shape</h3>
-        <p>Drag any of the <strong style="color:var(--text)">13 primitives</strong> from the left panel. Tweak size + segments in Properties.</p>
+        <p>Drag any of the <strong style="color:var(--text)">13 primitives</strong> from the left panel. <strong style="color:var(--text)">Live-scrub</strong> any slider in Properties to morph the shape in real time. Type <code>2*12+4</code> into any field, it evaluates.</p>
       </div>
       <div class="step fade-up">
         <div class="step-num">02</div>
-        <h3>Toggle a Hole</h3>
-        <p>Mark a shape as <strong style="color:var(--text)">Hole</strong> and it carves into overlapping solids on Group.</p>
+        <h3>Combine with CSG</h3>
+        <p>Group (<kbd>Ctrl</kbd>+<kbd>G</kbd>), Hole (subtract), Intersect (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>). Full Boolean stack, reversible until you <strong style="color:var(--text)">Bake</strong>.</p>
       </div>
       <div class="step fade-up">
         <div class="step-num">03</div>
-        <h3>Group to combine</h3>
-        <p>Select shapes, hit <kbd>Ctrl</kbd>+<kbd>G</kbd>. Live CSG. Reversible until you Bake.</p>
+        <h3>Push/Pull on any face</h3>
+        <p>Click any face, even a 30° slant on a Wedge, drag away. A new prism extrudes along that face's normal. Add chamfers, fillets, hollow shells, arrays with skip-list, all in a few clicks.</p>
       </div>
       <div class="step fade-up">
         <div class="step-num">04</div>
-        <h3>Export · slice · print</h3>
-        <p>Click <strong style="color:var(--text)">STL</strong>. Open in Bambu Studio / Cura / PrusaSlicer. Done.</p>
+        <h3>Export &middot; slice &middot; print</h3>
+        <p>Click <strong style="color:var(--text)">STL</strong>, <strong style="color:var(--text)">OBJ</strong>, or <strong style="color:var(--text)">STEP AP203</strong>. Open in Bambu Studio, Cura, PrusaSlicer, or import into Fusion. Done.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     Power tools, the v0.6 additions that put it ahead of browser modelers
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="section whatsnew" id="power">
+  <div class="inner">
+    <div class="section-head fade-up">
+      <span class="eyebrow"><span class="dot"></span>Power tools &middot; v0.6</span>
+      <h2>Not just blocks.<br><span class="serif">Real CAD moves without the menus.</span></h2>
+      <p>Six features that put BlockBuilder ahead of Tinkercad's web app. Watch each in &lt;30 seconds at <a href="/tutorials" style="color: var(--lime); text-decoration: none;">/tutorials</a>.</p>
+    </div>
+
+    <div class="whatsnew-grid fade-up">
+      <div class="wn-card">
+        <div class="wn-num">01</div>
+        <h3>Push / Pull on any face</h3>
+        <p>Click a face, even a slanted one on a Wedge or Pyramid lateral, then drag away. A new prism extrudes along that face's normal. The 30° wall finally gets its tab in one gesture.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">02</div>
+        <h3>Reference geometry</h3>
+        <p>Drop a translucent <strong style="color:var(--text)">plane through 3 picked points</strong>, an axis along any edge, a midpoint marker on any edge. Snap body-drag and resize handles to them. Promote any plane to the active workplane.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">03</div>
+        <h3>Sketch + Revolve</h3>
+        <p>Click points to draw a polygon, hit Enter, it extrudes. Or hold the mouse and <strong style="color:var(--text)">scribble freehand</strong>, the outline closes and extrudes. Or sketch a 2D profile and <strong style="color:var(--text)">revolve it 360°</strong> for vases, bottles, funnels.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">04</div>
+        <h3>Pattern v2 with Skip</h3>
+        <p>Linear or circular arrays, then type <code>3, 7, 9</code> into the Skip field and those copies drop out. Hex grids with a missing centre, masonry with feature gaps, all in one step instead of duplicate-and-delete.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">05</div>
+        <h3>Edge-hover dimensions</h3>
+        <p>Move the cursor near any feature edge. A label pops up with the edge's exact length. Hidden triangulation diagonals are filtered out, only the edges you can actually see. Plus a Ruler tool for two-point distance.</p>
+      </div>
+      <div class="wn-card">
+        <div class="wn-num">06</div>
+        <h3>Touch-tuned on mobile</h3>
+        <p>Floating <strong style="color:var(--text)">rail UI</strong> on tablets (Shapr3D-style), <strong style="color:var(--text)">bottom dock</strong> on phones (Womp-style), <strong style="color:var(--text)">long-press radial</strong> for Duplicate / Hide / Group / Delete. Touch handles are 1.6&times; bigger so fingertips hit them.</p>
+      </div>
+    </div>
+
+    <p style="text-align: center; margin: 36px auto 0; color: var(--text-mid); font-size: 15px; max-width: 720px;">
+      Also new in v0.6: <strong style="color:var(--text)">Intersect boolean</strong>, dimension overlay, math in any number field (<code>2*12+4</code>, <code>sqrt(50)</code>), <strong style="color:var(--text)">Chamfer + Fillet on 10 primitives</strong>, neighbour-snap on resize handles, shortcut palette (<kbd>Ctrl</kbd>+<kbd>K</kbd>), STEP AP203 export. <a href="/features" style="color: var(--lime);">Read the full list &rarr;</a>
+    </p>
   </div>
 </section>
 
@@ -656,7 +704,7 @@
     </div>
 
     <p class="dl-foot">
-      <span class="mono" style="color: var(--text-mid);">v0.5.0</span> · Released May 2026 · Source on <a href="https://github.com/josedasilva11/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a> · <a href="/changelog">Changelog →</a>
+      <span class="mono" style="color: var(--text-mid);">v0.6.0</span> · Released June 2026 · Source on <a href="https://github.com/josedasilva11/blockbuilder-studio" target="_blank" rel="noopener">GitHub</a> · <a href="/changelog">Changelog →</a>
     </p>
     <p class="dl-foot" style="font-size: 0.85em; color: var(--text-mid); margin-top: 0.75rem;">
       Windows SmartScreen may show a warning on first launch (binary not yet code-signed). Click <strong>More info → Run anyway</strong>. <a href="https://github.com/josedasilva11/blockbuilder-studio#why-the-smartscreen-warning" target="_blank" rel="noopener">Why?</a>
@@ -785,7 +833,8 @@
       <details>
         <summary>Touchscreens, iPads, phones?</summary>
         <div class="answer">
-          <p>Not supported. BlockBuilder is desktop-only (mouse + keyboard). The 3D viewport relies on right-click orbit, scroll-zoom, and precise pointer hits that don't translate to touch. A web version may come later.</p>
+          <p>Fully supported in v0.6. Tablets get a floating <strong>left rail</strong> (Shapr3D-style) with the primary tools plus a Properties card that slides in on the right. Phones get a six-icon <strong>bottom dock</strong> (Insert / Undo / Group / Edit / Help / More), bottom-sheet Properties, and a <strong>long-press radial menu</strong> for Duplicate / Hide / Group / Delete. Two-finger orbit + pan and pinch-zoom work natively. Touch handles are sized 1.6&times; on coarse pointer so fingertips can hit them.</p>
+          <p>Try it now at <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener">blockbuilder-app.pages.dev</a> from any device. Paid apps for App Store and Play Store ship after v0.6 leaves beta.</p>
         </div>
       </details>
     </div>
