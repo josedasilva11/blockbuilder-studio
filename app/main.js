@@ -623,9 +623,10 @@ function bindViewcube() {
   for (const btn of document.querySelectorAll('#viewcube-wrap button[data-view]')) {
     btn.addEventListener('click', () => setView(btn.dataset.view));
   }
-  for (const btn of document.querySelectorAll('#viewcube-wrap button[data-action="toggle-projection"]')) {
-    btn.addEventListener('click', toggleProjection);
-  }
+  // The viewcube's P button has data-action="toggle-projection" and is
+  // dispatched by the document-level bindToolbar listener now. We used to
+  // attach an extra click handler here, which fired toggleProjection a
+  // second time and cancelled out the first. Removed.
 }
 
 function dropToGround() {
