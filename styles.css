@@ -149,12 +149,103 @@ body {
   text-transform: uppercase;
 }
 
+/* ------- menu bar (desktop) -----------------------------------------------
+   Photoshop / Figma-style: each trigger opens a dropdown on click. Click
+   outside or Escape closes. While one menu is open, hovering another trigger
+   switches dropdowns. data-action on each item routes through the same
+   bindToolbar() switch in main.js.
+   Hidden on tablet + phone — those keep the rail / dock / More menu.
+   ----------------------------------------------------------------------- */
+.menubar {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+.menubar .menu { position: relative; }
+.menubar .menu-trigger {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-mid);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.12s var(--ease), color 0.12s var(--ease);
+}
+.menubar .menu-trigger:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.menubar .menu.is-open .menu-trigger {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--border-soft);
+}
+.menubar .menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  padding: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+}
+.menubar .menu.is-open .menu-dropdown { display: flex; animation: menu-open 0.12s var(--ease); }
+@keyframes menu-open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.menubar .menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 7px 12px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s var(--ease), color 0.1s var(--ease);
+}
+.menubar .menu-item:hover { background: var(--accent-soft); color: var(--accent); }
+.menubar .menu-item[disabled] { opacity: 0.35; pointer-events: none; }
+.menubar .menu-kbd {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.menubar .menu-item:hover .menu-kbd { color: var(--accent); }
+.menubar .menu-sep {
+  height: 1px;
+  background: var(--border-soft);
+  margin: 4px 6px;
+}
+
+/* On tablet + phone we hide the menu bar (rail / dock + More menu take over) */
+@media (max-width: 980px) {
+  .menubar { display: none; }
+}
+
 /* ------- toolbar ------- */
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   flex-wrap: wrap;
+}
+.tool-sep {
+  width: 1px;
+  height: 22px;
+  background: var(--border-soft);
+  margin: 0 4px;
 }
 .tool-group {
   display: flex;

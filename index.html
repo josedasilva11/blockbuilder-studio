@@ -62,151 +62,149 @@
       <span class="brand-name"><strong>Block</strong>Builder<span class="brand-studio">Studio</span></span>
     </a>
 
+    <!-- Menu bar. Single source of truth for every action. Items use the same
+         data-action attribute as toolbar buttons so main.js bindToolbar()
+         dispatches them through one switch. Hidden on tablet + phone (those
+         have their own dock / rail / More menu). -->
+    <nav class="menubar" id="menubar" role="menubar">
+      <div class="menu" data-menu="file">
+        <button class="menu-trigger" type="button" aria-haspopup="true">File</button>
+        <div class="menu-dropdown" role="menu">
+          <button class="menu-item" data-action="new" role="menuitem"><span>New project</span><span class="menu-kbd">Ctrl&middot;N</span></button>
+          <button class="menu-item" data-action="load" role="menuitem"><span>Open&hellip;</span><span class="menu-kbd">Ctrl&middot;O</span></button>
+          <button class="menu-item" data-action="save" role="menuitem"><span>Save project</span><span class="menu-kbd">Ctrl&middot;S</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="import-mesh" role="menuitem"><span>Import STL or OBJ&hellip;</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="export-stl" role="menuitem"><span>Export STL</span></button>
+          <button class="menu-item" data-action="export-obj" role="menuitem"><span>Export OBJ</span></button>
+          <button class="menu-item" data-action="export-step" role="menuitem"><span>Export STEP (AP203)</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="screenshot" role="menuitem"><span>Screenshot PNG</span></button>
+        </div>
+      </div>
+
+      <div class="menu" data-menu="edit">
+        <button class="menu-trigger" type="button" aria-haspopup="true">Edit</button>
+        <div class="menu-dropdown" role="menu">
+          <button class="menu-item" data-action="undo" role="menuitem"><span>Undo</span><span class="menu-kbd">Ctrl&middot;Z</span></button>
+          <button class="menu-item" data-action="redo" role="menuitem"><span>Redo</span><span class="menu-kbd">Ctrl&middot;Shift&middot;Z</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="duplicate" role="menuitem"><span>Duplicate</span><span class="menu-kbd">Ctrl&middot;D</span></button>
+          <button class="menu-item" data-action="delete" role="menuitem"><span>Delete</span><span class="menu-kbd">Del</span></button>
+          <button class="menu-item" data-action="hide" role="menuitem"><span>Hide / Show</span><span class="menu-kbd">H</span></button>
+          <button class="menu-item" data-action="select-all" role="menuitem"><span>Select all</span><span class="menu-kbd">Ctrl&middot;A</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="settings-open" role="menuitem"><span>Preferences&hellip;</span></button>
+        </div>
+      </div>
+
+      <div class="menu" data-menu="view">
+        <button class="menu-trigger" type="button" aria-haspopup="true">View</button>
+        <div class="menu-dropdown" role="menu">
+          <button class="menu-item" data-action="view-front" role="menuitem"><span>Front</span><span class="menu-kbd">1</span></button>
+          <button class="menu-item" data-action="view-right" role="menuitem"><span>Right</span><span class="menu-kbd">3</span></button>
+          <button class="menu-item" data-action="view-top" role="menuitem"><span>Top</span><span class="menu-kbd">7</span></button>
+          <button class="menu-item" data-action="view-iso" role="menuitem"><span>Isometric</span><span class="menu-kbd">0</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="frame" role="menuitem"><span>Frame selection</span><span class="menu-kbd">F</span></button>
+          <button class="menu-item" data-action="toggle-projection" role="menuitem"><span>Toggle orthographic</span><span class="menu-kbd">P</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="toggle-theme" role="menuitem"><span>Toggle theme (dark / light)</span></button>
+        </div>
+      </div>
+
+      <div class="menu" data-menu="tools">
+        <button class="menu-trigger" type="button" aria-haspopup="true">Tools</button>
+        <div class="menu-dropdown" role="menu">
+          <button class="menu-item" data-action="pushpull" role="menuitem"><span>Push / Pull on any face</span></button>
+          <button class="menu-item" data-action="cut" role="menuitem"><span>Cut along an axis&hellip;</span></button>
+          <button class="menu-item" data-action="hollow" role="menuitem"><span>Hollow&hellip;</span></button>
+          <button class="menu-item" data-action="array" role="menuitem"><span>Array (linear &middot; circular)&hellip;</span></button>
+          <button class="menu-item" data-action="workplane" role="menuitem"><span>Set workplane on a face</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="align" role="menuitem"><span>Align&hellip;</span></button>
+          <button class="menu-item" data-action="mirror" role="menuitem"><span>Mirror&hellip;</span></button>
+          <button class="menu-item" data-action="drop" role="menuitem"><span>Drop to ground</span><span class="menu-kbd">D</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="ruler" role="menuitem"><span>Ruler (2-point distance)</span></button>
+        </div>
+      </div>
+
+      <div class="menu" data-menu="sketch">
+        <button class="menu-trigger" type="button" aria-haspopup="true">Sketch</button>
+        <div class="menu-dropdown" role="menu">
+          <button class="menu-item" data-action="extrude" role="menuitem"><span>Extrude polygon</span></button>
+          <button class="menu-item" data-action="scribble" role="menuitem"><span>Scribble freehand</span></button>
+          <button class="menu-item" data-action="revolve" role="menuitem"><span>Revolve lathe profile</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item" data-action="ref-plane" role="menuitem"><span>Reference plane (3 points)</span></button>
+          <button class="menu-item" data-action="ref-axis" role="menuitem"><span>Reference axis along edge</span></button>
+          <button class="menu-item" data-action="ref-midpoint" role="menuitem"><span>Midpoint marker</span></button>
+        </div>
+      </div>
+
+      <div class="menu" data-menu="help">
+        <button class="menu-trigger" type="button" aria-haspopup="true">Help</button>
+        <div class="menu-dropdown" role="menu">
+          <button class="menu-item" data-action="shortcuts" role="menuitem"><span>Keyboard shortcuts&hellip;</span><span class="menu-kbd">Ctrl&middot;K</span></button>
+          <button class="menu-item" data-action="open-tutorials" role="menuitem"><span>Watch the 85 tutorials</span></button>
+          <button class="menu-item" data-action="open-changelog" role="menuitem"><span>Changelog</span></button>
+          <button class="menu-item" data-action="open-about" role="menuitem"><span>About BlockBuilder Studio</span></button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Slim toolbar. Just the half-dozen actions you press every minute.
+         Everything else lives in the menu bar above. -->
     <div class="toolbar" id="toolbar">
-      <div class="tool-group">
-        <button data-action="group" data-tip="Group + combine with CSG: holes carve, solids merge (Ctrl+G). Reversible until Bake." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 11 L13 13"/></svg>
-          <span>Group</span>
-        </button>
-        <button data-action="intersect" data-tip="INTERSECT (Ctrl+Shift+G) — keep only the volume common to all selected solids. Result replaces the first selected shape; the rest stay as hidden children until Bake or Ungroup." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/><path d="M11 7 A6 6 0 0 0 11 17 A6 6 0 0 0 11 7" fill="currentColor" opacity="0.25"/></svg>
-          <span>Intersect</span>
-        </button>
-        <button data-action="ungroup" data-tip="Restore the original parts of an unbaked group (brings hidden children back)" class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
-          <span>Ungroup</span>
-        </button>
-        <button data-action="bake" data-tip="Finalise the group: delete child parts, keep only the combined mesh. Permanent — can't ungroup after." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6 L12 2 L20 6 L20 18 L12 22 L4 18 Z"/></svg>
-          <span>Bake</span>
-        </button>
-        <button data-action="split" data-tip="SPLIT — coming soon. The current welding algorithm produces unstable results on some CSG outputs; we're rewriting it. Disabled in this build." class="tip disabled" disabled aria-disabled="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 6 L9 10 M9 6 L5 10 M15 14 L19 18 M19 14 L15 18 M12 4 V20"/></svg>
-          <span>Split</span>
-          <span class="badge-soon">Soon</span>
-        </button>
-        <button data-action="cut" data-tip="Slice the shape along an X/Y/Z plane into two halves (Bambu-style cut)" class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12 H21 M7 6 L7 18 M17 6 L17 18 M3 12 L7 8 M21 12 L17 8"/></svg>
-          <span>Cut</span>
-        </button>
-        <button data-action="hollow" data-tip="Carve the inside, leaving a wall. Pick a thickness." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-          <span>Hollow</span>
-        </button>
-        <button data-action="array" data-tip="Duplicate N times along a line or around an axis" class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/></svg>
-          <span>Array</span>
-        </button>
-        <button data-action="ruler" data-tip="Measure distance between two points (ESC to exit)" class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18 L18 3 L21 6 L6 21 Z M7 17 L9 15 M9 15 L11 17 M11 13 L13 15 M13 11 L15 13 M15 9 L17 11"/></svg>
-          <span>Ruler</span>
-        </button>
-        <button data-action="workplane" data-tip="Click a face to make it the active workplane for new shapes" class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z M12 12 L12 21 M3 7 L12 12 L21 7"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
-          <span>Workplane</span>
-        </button>
-        <button data-action="pushpull" data-tip="PUSH / PULL — click any face (including slanted ones), then drag to extrude a prism outward along that face's normal. Drop a tab on a 30 deg slope in one gesture. Esc cancels." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14 L4 20 L14 20 L14 14 Z M9 14 L9 9 M9 9 L6 9 M9 9 L12 9 M9 9 L9 5 M9 5 L7 7 M9 5 L11 7"/></svg>
-          <span>Push/Pull</span>
-        </button>
-      </div>
-      <div class="tool-group">
-        <button data-action="ref-plane" data-tip="REFERENCE PLANE — click 3 points on any shape(s) to spawn a translucent reference plane through them. Construction geometry, not printable. Esc cancels." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 L12 21 L21 17 L21 7 L12 3 L3 7 Z" stroke-dasharray="3 2"/><circle cx="6" cy="9" r="1.4" fill="currentColor"/><circle cx="18" cy="9" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></svg>
-          <span>Ref Plane</span>
-        </button>
-        <button data-action="ref-axis" data-tip="REFERENCE AXIS — click any edge of a shape to spawn a dashed axis line along it. Useful for aligning array directions and rotations. Esc cancels." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21 L21 3" stroke-dasharray="2 2"/><circle cx="7" cy="17" r="1.4" fill="currentColor"/><circle cx="17" cy="7" r="1.4" fill="currentColor"/></svg>
-          <span>Ref Axis</span>
-        </button>
-        <button data-action="ref-midpoint" data-tip="MIDPOINT MARKER — click any edge of a shape to drop a small marker at its midpoint. Useful for centring shapes against a feature. Esc cancels." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12 L20 12"/><circle cx="4" cy="12" r="1.4" fill="currentColor"/><circle cx="20" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/></svg>
-          <span>Midpoint</span>
-        </button>
-      </div>
-      <div class="tool-group">
-        <button data-action="extrude" data-tip="EXTRUDE SKETCH — click on the workplane to drop polygon corners, double-click or Enter to extrude into a 3D prism. Backspace undoes the last point; Esc cancels. Result is editable like any imported mesh." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18 L9 14 L14 19 L19 14 M5 18 L5 6 L9 2 L14 7 L19 2 L19 14"/></svg>
-          <span>Extrude</span>
-        </button>
-        <button data-action="scribble" data-tip="SCRIBBLE — hold left-click and drag to free-hand draw an outline on the workplane. Release to auto-close and extrude. Esc cancels." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 C 5 11, 9 9, 12 14 C 15 19, 19 11, 21 7"/></svg>
-          <span>Scribble</span>
-        </button>
-        <button data-action="revolve" data-tip="REVOLVE SKETCH — click points to draw a profile (X = radius from axis, Y = height). Enter to spin it around the Z axis into a lathe-style solid (vase, bottle, knob, etc). Esc cancels." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V21 M8 6 C 5 8, 5 16, 8 18 M16 6 C 19 8, 19 16, 16 18"/></svg>
-          <span>Revolve</span>
-        </button>
-      </div>
-      <div class="tool-group">
-        <button data-action="align" data-tip="ALIGN — opens a popup with 9 anchors (min / centre / max on each axis). Pick one and the selected shapes' edges or centres snap to that anchor on that axis. Needs at least 2 shapes selected." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V21 M5 8 H19 M7 16 H17"/></svg>
-          <span>Align</span>
-        </button>
-        <button data-action="mirror" data-tip="MIRROR — opens a popup with X / Y / Z buttons. Click one to flip the selected shape across that axis through the combined bbox centre. Combines with Group to make symmetric pieces." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 V22 M6 6 L2 12 L6 18 M18 6 L22 12 L18 18"/></svg>
-          <span>Mirror</span>
-        </button>
-        <button data-action="drop" data-tip="DROP — push the selected shape down so its bottom face sits on the workplane (Z = 0). Useful after rotating something off the ground. Shortcut: D." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 V14 M7 9 L12 14 L17 9 M4 19 H20"/></svg>
-          <span>Drop</span>
-        </button>
-        <button data-action="hide" data-tip="HIDE — toggle visibility of the selected shape. Keeps it in the scene + selectable from the outliner, just invisible in the viewport. Shortcut: H." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12 S6 5 12 5 S22 12 22 12 S18 19 12 19 S2 12 2 12 Z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span>Hide</span>
-        </button>
-        <button data-action="duplicate" data-tip="DUPLICATE — make an exact copy of the selected shape offset slightly so you can see it. Inherits colour, params, transform, hole status. Shortcut: Ctrl+D." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15 L5 5 L15 5"/></svg>
-          <span>Duplicate</span>
-        </button>
-        <button data-action="delete" data-tip="DELETE — remove the selected shape(s) from the scene. Undoable with Ctrl+Z. Shortcut: Del or Backspace." class="tip danger">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6 H21 M8 6 V4 H16 V6 M6 6 V20 H18 V6 M10 11 V17 M14 11 V17"/></svg>
-          <span>Delete</span>
-        </button>
-      </div>
-      <div class="tool-group">
-        <label class="snap-label tip" data-tip="SNAP STEP — moves and resizes jump in increments of this value. 0 = no snap (totally free). Hold Ctrl while dragging to temporarily bypass. Rotations have their own snap: 0.1° by default, hold Shift during the rotate drag for 15° increments. This snap step also controls how aggressively shapes stick to other shapes' corners while body-dragging.">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9 H21 M3 15 H21 M9 3 V21 M15 3 V21"/></svg>
-          <span class="snap-text">Snap</span>
-          <input type="number" id="snap-step" value="1" min="0" max="100" step="0.1" class="tip" data-tip="Set the snap step in current units. Try 1 for general work, 0.1 for precision, 5+ for rough layout." />
-          <span class="snap-suffix">mm</span>
-          <select id="snap-preset" class="tip" data-tip="Quick presets — pick a common snap value without typing">
-            <option value="">Preset…</option>
-            <option value="0">Off</option>
-            <option value="0.1">0.1</option>
-            <option value="0.5">0.5</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-          </select>
-        </label>
-      </div>
-      <div class="tool-group">
-        <button data-action="save" data-tip="SAVE PROJECT — download the whole scene as a JSON file you can reopen later. Includes all shapes, transforms, colours, and imported STL geometry (base64 inside the JSON, so files can be hefty)." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3 H17 L21 7 V21 H5 Z M8 3 V9 H15 V3 M8 21 V14 H17 V21"/></svg>
-        </button>
-        <button data-action="load" data-tip="LOAD PROJECT — open a previously-saved .json. Replaces the current scene (autosaved separately, so you don't lose anything — but undo history clears)." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 13 V19 A2 2 0 0 1 19 21 H5 A2 2 0 0 1 3 19 V13 M12 16 V4 M7 9 L12 4 L17 9"/></svg>
-        </button>
-        <button data-action="import-mesh" data-tip="IMPORT — load a 3D mesh (.stl or .obj) into the scene as an editable shape. Imported shapes behave like primitives (move / scale / rotate / colour / hole / CSG). Works fully offline." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 19 V13 M7 11 L12 16 L17 11 M12 16 V4"/></svg>
-          <span>Import</span>
-        </button>
-        <button data-action="export-stl" class="primary" data-tip="EXPORT STL — download the current scene as an .stl file (binary). Standard format for 3D printers and most slicer software. All visible solid shapes are unioned; holes are subtracted."
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 21 V13 M7 8 L12 3 L17 8 M12 3 V15"/></svg>
-          <span>STL</span>
-        </button>
-        <button data-action="export-step" data-tip="EXPORT STEP — download as ISO 10303 (.step) faceted-brep. Imports into Fusion 360 / SolidWorks / FreeCAD / Onshape as a mesh body. Note: BlockBuilder works internally with triangles, so the STEP file represents the geometry as facets rather than parametric surfaces (no editable cylinders / fillets in the importing CAD). Same precision as STL, broader CAD compatibility." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 19 V13 M12 3 V15 M7 8 L12 3 L17 8"/></svg>
-          <span>STEP</span>
-        </button>
-        <button data-action="export-obj" data-tip="EXPORT OBJ — download as Wavefront .obj (text format with optional material file). Useful when STL won't do — e.g. for tools that need named groups or vertex normals preserved." class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 21 V13 M7 8 L12 3 L17 8 M12 3 V15"/></svg>
-          <span>OBJ</span>
-        </button>
-        <input type="file" id="load-file" accept=".json,application/json" hidden />
-      </div>
+      <button data-action="group" data-tip="Group + combine with CSG: holes carve, solids merge (Ctrl+G). Reversible until Bake." class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 11 L13 13"/></svg>
+        <span>Group</span>
+      </button>
+      <button data-action="intersect" data-tip="Intersect (Ctrl+Shift+G) — keep only the volume common to all selected solids." class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/><path d="M11 7 A6 6 0 0 0 11 17 A6 6 0 0 0 11 7" fill="currentColor" opacity="0.25"/></svg>
+        <span>Intersect</span>
+      </button>
+      <button data-action="ungroup" data-tip="Restore original parts of an unbaked group" class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+        <span>Ungroup</span>
+      </button>
+      <button data-action="bake" data-tip="Finalise the group: delete child parts, keep only the combined mesh. Permanent — can't ungroup after." class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6 L12 2 L20 6 L20 18 L12 22 L4 18 Z"/></svg>
+        <span>Bake</span>
+      </button>
+      <div class="tool-sep" aria-hidden="true"></div>
+      <button data-action="pushpull" data-tip="Push / Pull on any face (including slanted)." class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14 L4 20 L14 20 L14 14 Z M9 14 L9 9 M9 9 L6 9 M9 9 L12 9 M9 9 L9 5 M9 5 L7 7 M9 5 L11 7"/></svg>
+        <span>Push/Pull</span>
+      </button>
+      <button data-action="delete" data-tip="Delete the selection (Del). Undoable with Ctrl+Z." class="tip danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6 H21 M8 6 V4 H16 V6 M6 6 V20 H18 V6 M10 11 V17 M14 11 V17"/></svg>
+        <span>Delete</span>
+      </button>
+      <div class="tool-sep" aria-hidden="true"></div>
+      <label class="snap-label tip" data-tip="Snap step. Moves + resizes jump in increments of this value. Hold Ctrl to bypass.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9 H21 M3 15 H21 M9 3 V21 M15 3 V21"/></svg>
+        <span class="snap-text">Snap</span>
+        <input type="number" id="snap-step" value="1" min="0" max="100" step="0.1" />
+        <span class="snap-suffix">mm</span>
+        <select id="snap-preset">
+          <option value="">Preset&hellip;</option>
+          <option value="0">Off</option>
+          <option value="0.1">0.1</option>
+          <option value="0.5">0.5</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+      </label>
+      <input type="file" id="load-file" accept=".json,application/json" hidden />
+      <button data-action="export-stl" class="primary tip" data-tip="Export STL — the printer-ready binary file. Same as File &middot; Export STL.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13 V19 A2 2 0 0 0 5 21 H19 A2 2 0 0 0 21 21 V13 M7 8 L12 3 L17 8 M12 3 V15"/></svg>
+        <span>STL</span>
+      </button>
     </div>
   </header>
 

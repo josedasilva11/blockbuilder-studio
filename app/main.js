@@ -59,6 +59,7 @@ function main() {
   initTooltip();
   bindPanelTabs();
   bindToolbar();
+  bindMenuBar();
   bindKeyboard();
   bindViewcube();
   bindEmptyStateAndHud();
@@ -361,6 +362,27 @@ function bindToolbar() {
       case 'export-obj': exportOBJ(); break;
       case 'export-step': downloadSTEP(); break;
       case 'import-mesh': pickAndImport(); break;
+      // Menu-bar additions (existed only as keyboard shortcuts before)
+      case 'new': newProject(); break;
+      case 'undo': undo(); break;
+      case 'redo': redo(); break;
+      case 'select-all': selectAll(); break;
+      case 'view-front': setView('front'); break;
+      case 'view-right': setView('right'); break;
+      case 'view-top':   setView('top');   break;
+      case 'view-iso':   setView('iso');   break;
+      case 'frame':      fitView();        break;
+      case 'screenshot': document.getElementById('screenshot-btn')?.click(); break;
+      case 'settings-open': document.getElementById('settings-toggle')?.click(); break;
+      case 'toggle-theme': {
+        const cur = getSetting('theme') || 'dark';
+        setSetting('theme', cur === 'dark' ? 'light' : 'dark');
+        break;
+      }
+      case 'shortcuts': openShortcutsPalette(); break;
+      case 'open-tutorials': window.open('https://blockbuilder.studio/tutorials', '_blank', 'noopener'); break;
+      case 'open-changelog': window.open('https://blockbuilder.studio/changelog.html', '_blank', 'noopener'); break;
+      case 'open-about': toast.info('BlockBuilder Studio ' + APP_VERSION, { detail: 'Made by Marjers, offline 3D editor for makers. See https://blockbuilder.studio' }); break;
     }
     if (fromMoreMenu && action !== 'more-close' && action !== 'tablet-more' && action !== 'phone-more') {
       closeMoreMenu();
@@ -652,6 +674,67 @@ function selectAll() {
   if (ids.length === 0) return;
   selectShape(ids[0]);
   for (let i = 1; i < ids.length; i++) selectShape(ids[i], { additive: true });
+}
+
+// File > New project. Confirm, wipe all shapes + refs + history, autosave the empty scene.
+function newProject() {
+  const shapeCount = state.shapes.size;
+  const refCount = (state.refGeoms || []).length;
+  if (shapeCount > 0 || refCount > 0) {
+    const ok = window.confirm(`Start a new empty project? Current scene has ${shapeCount} shape${shapeCount === 1 ? '' : 's'}${refCount ? ' + ' + refCount + ' reference' + (refCount === 1 ? '' : 's') : ''}. Save first with Ctrl+S if you want to keep it.`);
+    if (!ok) return;
+  }
+  for (const s of [...state.shapes.values()]) { s.dispose?.(); state.shapes.delete(s.id); }
+  if (Array.isArray(state.refGeoms)) {
+    for (const r of state.refGeoms) { if (r.object) state.scene.remove(r.object); }
+    state.refGeoms.length = 0;
+  }
+  if (state.transformControls) state.transformControls.detach();
+  selectShape(null);
+  clearHistory();
+  requestRender();
+  toast.ok('New project', { detail: 'Empty scene. Drop a primitive from the sidebar to start.' });
+}
+
+// Menu bar: click trigger to open dropdown, click outside or Escape to close,
+// hover another trigger while open to switch. Items are buttons with
+// data-action — bindToolbar()'s document-level listener handles dispatch.
+// We just close the open menu after any item click.
+function bindMenuBar() {
+  const menubar = document.getElementById('menubar');
+  if (!menubar) return;
+  function closeAll() {
+    menubar.querySelectorAll('.menu.is-open').forEach(m => m.classList.remove('is-open'));
+  }
+  menubar.addEventListener('click', (ev) => {
+    const trigger = ev.target.closest('.menu-trigger');
+    if (trigger) {
+      ev.stopPropagation();
+      const menu = trigger.parentElement;
+      const wasOpen = menu.classList.contains('is-open');
+      closeAll();
+      if (!wasOpen) menu.classList.add('is-open');
+      return;
+    }
+    // Menu item: bindToolbar handler fires via the document-level listener;
+    // we just close after the click.
+    if (ev.target.closest('.menu-item')) closeAll();
+  });
+  menubar.addEventListener('mouseover', (ev) => {
+    const anyOpen = menubar.querySelector('.menu.is-open');
+    if (!anyOpen) return;
+    const trigger = ev.target.closest('.menu-trigger');
+    if (trigger && trigger.parentElement !== anyOpen) {
+      closeAll();
+      trigger.parentElement.classList.add('is-open');
+    }
+  });
+  document.addEventListener('click', (ev) => {
+    if (!ev.target.closest('#menubar')) closeAll();
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') closeAll();
+  });
 }
 
 function alignSelectedCenters() {
