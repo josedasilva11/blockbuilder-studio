@@ -54,15 +54,18 @@
       <span class="brand-tag">STUDIO</span>
     </a>
     <div class="nav-links">
-      <a href="/features" class="active">Features</a>
-      <a href="/tutorials">Tutorials</a>
-      <a href="/install">Install</a><span class="nav-sep" aria-hidden="true">.</span>
-      <a href="/pricing">Pricing &amp; FAQ</a>
-      <a href="/changelog.html">Changelog</a>
+      <a href="/features" class="active"><span data-i18n="nav.features">Features</span></a>
+      <a href="/tutorials"><span data-i18n="nav.tutorials">Tutorials</span></a>
+      <a href="/install"><span data-i18n="nav.install">Install</span></a><span class="nav-sep" aria-hidden="true">.</span>
+      <a href="/pricing"><span data-i18n="nav.pricing">Pricing &amp; FAQ</span></a>
+      <a href="/changelog.html"><span data-i18n="nav.changelog">Changelog</span></a>
     </div>
-    <div class="nav-actions">
-      <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener" class="btn btn-ghost">Try in browser</a>
-      <a href="/#download" class="btn btn-primary">Download free</a>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" class="lang-chip" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="lang-chip" data-lang="pt" aria-pressed="false">PT</button>
+    </div>    <div class="nav-actions">
+      <a href="https://blockbuilder-app.pages.dev" target="_blank" rel="noopener" class="btn btn-ghost"><span data-i18n="nav.try">Try in browser</span></a>
+      <a href="/#download" class="btn btn-primary"><span data-i18n="nav.download">Download free</span></a>
     </div>
   </div>
 </nav>
@@ -282,7 +285,7 @@
 
     <div class="footer-col">
       <h4>Product</h4>
-      <a href="/features">Features</a>
+      <a href="/features"><span data-i18n="nav.features">Features</span></a>
       <a href="#workflow">Workflow</a>
       <a href="#pricing">Pricing</a>
       <a href="#download">Download</a>
@@ -449,5 +452,6 @@ if (document.body.dataset.mode === 'beta') {
   })();
 </script>
 
+<script src="/i18n.js" defer></script>
 </body>
 </html>

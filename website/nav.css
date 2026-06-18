@@ -72,8 +72,39 @@
   pointer-events: none;
 }
 
-/* Right-side action buttons */
-.nav-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+/* EN / PT language toggle. Sits on the right side of the nav before the
+   action buttons. Active chip is filled lime, inactive is ghost. */
+.lang-toggle {
+  display: inline-flex;
+  margin-left: auto;
+  padding: 2px;
+  background: var(--bg-elev, #11141b);
+  border: 1px solid var(--border, #232838);
+  border-radius: 7px;
+}
+.lang-chip {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-mid);
+  background: transparent;
+  border: 0;
+  padding: 4px 9px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 0.12s var(--ease), background 0.12s var(--ease);
+}
+.lang-chip:hover { color: var(--text); }
+.lang-chip.is-active {
+  background: var(--accent);
+  color: #0a0c10;
+}
+
+/* When the language toggle is present, nav-actions can't claim margin-left:auto
+   (the toggle does). Adjust to a regular flex gap. */
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+.nav-actions.nav-actions-pushed { margin-left: auto; }
 .btn {
   display: inline-flex;
   align-items: center;
