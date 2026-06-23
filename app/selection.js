@@ -25,6 +25,48 @@ const _ndc = new THREE.Vector2();
 const _raycaster = new THREE.Raycaster();
 const _workplane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 const _hit = new THREE.Vector3();
+// Reusable mesh list for raycast picking. Refilled per pick with .length=0
+// + push so we don't allocate a fresh array on every pointermove.
+const _pickMeshes = [];
+
+// World-space AABB cache. The vanilla path (Box3.setFromObject) is reasonably
+// fast once geometry.boundingBox is computed, but it still walks 8 corners +
+// matrixWorld + union per shape per call. With dozens of shapes in the scene
+// and per-drag/per-marquee queries, this adds up. We cache by a transform
+// signature so each shape only pays the work when something actually changed.
+//
+// Key: shape.id. Value: { sig, min: Vec3, max: Vec3 }. Stale entries from
+// disposed shapes are harmless (id never reused) and tiny; not worth wiring
+// an explicit eviction path.
+const _worldBboxCache = new Map();
+const _tmpBoxOut = new THREE.Box3();
+
+function shapeXformSig(s) {
+  const p = s.mesh.position, r = s.mesh.rotation, sc = s.mesh.scale;
+  const geomId = s.mesh.geometry && s.mesh.geometry.uuid;
+  return `${p.x},${p.y},${p.z}|${r.x},${r.y},${r.z}|${sc.x},${sc.y},${sc.z}|${geomId}`;
+}
+
+function getWorldBbox(s, out) {
+  out = out || _tmpBoxOut;
+  const sig = shapeXformSig(s);
+  const cached = _worldBboxCache.get(s.id);
+  if (cached && cached.sig === sig) {
+    out.min.copy(cached.min);
+    out.max.copy(cached.max);
+    return out;
+  }
+  s.mesh.updateMatrixWorld(true);
+  const geom = s.mesh.geometry;
+  if (geom && geom.boundingBox === null) geom.computeBoundingBox();
+  if (geom && geom.boundingBox) {
+    out.copy(geom.boundingBox).applyMatrix4(s.mesh.matrixWorld);
+  } else {
+    out.setFromObject(s.mesh);
+  }
+  _worldBboxCache.set(s.id, { sig, min: out.min.clone(), max: out.max.clone() });
+  return out;
+}
 
 // Body-drag state
 let _bodyDrag = null; // { shape, offsetXY: Vector2, origZ, dragged: bool }
@@ -142,6 +184,10 @@ function clearEmissive(shape) {
   if (!shape) return;
   const mat = shape.mesh.material;
   if (!mat || !('emissive' in mat)) return;
+  // Early-out: applyEmissives() in the loop clears every shape every time the
+  // hover or selection changes. Most shapes are already cleared, no point
+  // rewriting the same zero again.
+  if (mat.emissiveIntensity === 0 && mat.emissive.getHex() === 0) return;
   mat.emissive.setHex(0x000000);
   mat.emissiveIntensity = 0;
 }
@@ -157,14 +203,15 @@ function setNdc(canvas, ev) {
 function pickShape(canvas, ev) {
   setNdc(canvas, ev);
   _raycaster.setFromCamera(_ndc, state.camera);
-  const meshes = [];
+  // Reuse the module-level array to avoid per-pointermove allocation.
+  _pickMeshes.length = 0;
   // Locked shapes are skipped so the cursor / marquee never selects them.
   // They stay visible and rendered; lock just makes them non-interactive.
   for (const s of state.shapes.values()) {
     if (s.locked) continue;
-    if (s.mesh.parent && s.mesh.visible) meshes.push(s.mesh);
+    if (s.mesh.parent && s.mesh.visible) _pickMeshes.push(s.mesh);
   }
-  return _raycaster.intersectObjects(meshes, false);
+  return _raycaster.intersectObjects(_pickMeshes, false);
 }
 
 function projectToWorkplane(canvas, ev) {
@@ -211,10 +258,13 @@ export function installPickHandler(canvas) {
       // Pre-compute once at drag start so each pointermove is a flat array scan.
       const selectedIds = new Set(groupShapes.map(s => s.id));
       const snapTargets = [];
+      const _bbScratch = new THREE.Box3();
       for (const s of state.shapes.values()) {
         if (selectedIds.has(s.id) || !s.mesh.visible) continue;
-        s.mesh.updateMatrixWorld(true);
-        const bb = new THREE.Box3().setFromObject(s.mesh);
+        // Use the cached world AABB instead of Box3.setFromObject. First call
+        // per shape computes + caches local bounding box on the geometry;
+        // subsequent calls with the same transform return in O(1).
+        const bb = getWorldBbox(s, _bbScratch);
         if (bb.isEmpty()) continue;
         const mx = (bb.min.x + bb.max.x) / 2;
         const my = (bb.min.y + bb.max.y) / 2;
@@ -347,16 +397,38 @@ export function installPickHandler(canvas) {
       return;
     }
 
-    // Hover when not dragging
+    // Hover when not dragging. RAF-throttled so high-Hz mice/trackpads (120Hz+)
+    // don't fire raycasts faster than the screen can paint. We stash the
+    // latest event and process one per animation frame.
     if (state.transformControls?.dragging) return;
-    const hits = pickShape(canvas, ev);
-    const newHovered = hits.length > 0 ? hits[0].object.userData.tinkerShape.id : null;
-    if (newHovered !== _hoveredId) {
-      _hoveredId = newHovered;
-      canvas.style.cursor = _hoveredId ? 'grab' : '';
-      applyEmissives();
-    }
+    scheduleHoverPick(ev, canvas);
   });
+
+  let _hoverPendingEv = null;
+  let _hoverScheduled = false;
+  function scheduleHoverPick(ev, canvas) {
+    _hoverPendingEv = ev;
+    if (_hoverScheduled) return;
+    _hoverScheduled = true;
+    requestAnimationFrame(() => {
+      _hoverScheduled = false;
+      const e = _hoverPendingEv;
+      _hoverPendingEv = null;
+      if (!e) return;
+      // Recheck conditions: state may have flipped between schedule and fire
+      // (drag started, marquee began, tool became active, etc.).
+      if (modalToolActive()) return;
+      if (_marquee || _bodyDrag) return;
+      if (state.transformControls && state.transformControls.dragging) return;
+      const hits = pickShape(canvas, e);
+      const newHovered = hits.length > 0 ? hits[0].object.userData.tinkerShape.id : null;
+      if (newHovered !== _hoveredId) {
+        _hoveredId = newHovered;
+        canvas.style.cursor = _hoveredId ? 'grab' : '';
+        applyEmissives();
+      }
+    });
+  }
 
   function endDrag() {
     if (_bodyDrag) {
@@ -418,12 +490,13 @@ function finishMarquee() {
   const cam = state.camera;
   const rect = state.renderer.domElement.getBoundingClientRect();
   const picked = [];
+  const _bbScratch = new THREE.Box3();
+  const _centreScratch = new THREE.Vector3();
   for (const s of state.shapes.values()) {
     if (!s.mesh.visible) continue;
-    s.mesh.updateMatrixWorld(true);
-    const bb = new THREE.Box3().setFromObject(s.mesh);
+    const bb = getWorldBbox(s, _bbScratch);
     if (bb.isEmpty()) continue;
-    const centre = bb.getCenter(new THREE.Vector3()).project(cam);
+    const centre = bb.getCenter(_centreScratch).project(cam);
     const sx = (centre.x + 1) / 2 * rect.width + rect.left;
     const sy = -(centre.y - 1) / 2 * rect.height + rect.top;
     if (sx >= x0 && sx <= x1 && sy >= y0 && sy <= y1) {
