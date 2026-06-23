@@ -89,16 +89,29 @@ const stats = {
   lastEvent: '-',
   lastTapPos: '-',
 };
+// Build the HUD skeleton once at boot, cache the four <span class="hud-v">
+// nodes that actually change. paintHud() now writes only textContent so we
+// avoid the per-event innerHTML reparse + layout thrash.
+hud.innerHTML = `
+  <div><span class="hud-k">pointers</span><span class="hud-v" data-k="pointers">0</span></div>
+  <div><span class="hud-k">types</span><span class="hud-v" data-k="types">-</span></div>
+  <div><span class="hud-k">last</span><span class="hud-v" data-k="last">-</span></div>
+  <div><span class="hud-k">tap</span><span class="hud-v" data-k="tap">-</span></div>
+  <div class="hud-help">
+    1 finger orbit &middot; 2 fingers pinch+pan &middot; tap select &middot; long-press menu
+  </div>
+`;
+const _hudV = {
+  pointers: hud.querySelector('.hud-v[data-k="pointers"]'),
+  types:    hud.querySelector('.hud-v[data-k="types"]'),
+  last:     hud.querySelector('.hud-v[data-k="last"]'),
+  tap:      hud.querySelector('.hud-v[data-k="tap"]'),
+};
 function paintHud() {
-  hud.innerHTML = `
-    <div><span class="hud-k">pointers</span><span class="hud-v">${stats.pointers}</span></div>
-    <div><span class="hud-k">types</span><span class="hud-v">${[...stats.pointerTypes].join(',') || '-'}</span></div>
-    <div><span class="hud-k">last</span><span class="hud-v">${stats.lastEvent}</span></div>
-    <div><span class="hud-k">tap</span><span class="hud-v">${stats.lastTapPos}</span></div>
-    <div class="hud-help">
-      1 finger orbit · 2 fingers pinch+pan · tap select · long-press menu
-    </div>
-  `;
+  if (_hudV.pointers) _hudV.pointers.textContent = String(stats.pointers);
+  if (_hudV.types) _hudV.types.textContent = [...stats.pointerTypes].join(',') || '-';
+  if (_hudV.last)  _hudV.last.textContent  = stats.lastEvent;
+  if (_hudV.tap)   _hudV.tap.textContent   = stats.lastTapPos;
 }
 
 // Track pointers for HUD purposes (independent of the controller's map)

@@ -115,8 +115,20 @@ async function performHollow() {
 
   let outerBrush, innerBrush;
   try {
-    outerBrush = makeBrush(mesh);
-    innerBrush = makeInnerBrush(mesh, centre, sx, sy, sz);
+    // Build the prep geometry once (clone + strip + applyMatrix4 +
+    // mergeVertices + computeVertexNormals), then share between outer + inner
+    // brushes. The previous code ran mergeVertices twice (once per brush),
+    // which on heavy STL imports doubled the pre-CSG freeze.
+    const prep = prepGeometry(mesh);
+    outerBrush = new Brush(prep);
+    outerBrush.updateMatrixWorld();
+    const innerGeo = prep.clone();
+    innerGeo.translate(-centre.x, -centre.y, -centre.z);
+    innerGeo.scale(sx, sy, sz);
+    innerGeo.translate(centre.x, centre.y, centre.z);
+    innerGeo.computeVertexNormals();
+    innerBrush = new Brush(innerGeo);
+    innerBrush.updateMatrixWorld();
   } catch (err) {
     hideStatus();
     toast.error('Hollow preparation failed', { detail: err.message });
@@ -147,7 +159,10 @@ async function performHollow() {
   close();
 }
 
-function makeBrush(mesh) {
+// Build the world-space, welded, attribute-stripped prep geometry. Shared
+// between the outer brush (used as-is) and the inner brush (translated +
+// scaled per-axis around the bbox centre).
+function prepGeometry(mesh) {
   mesh.updateMatrixWorld(true);
   let geom = mesh.geometry.clone();
   geom.applyMatrix4(mesh.matrixWorld);
@@ -156,24 +171,5 @@ function makeBrush(mesh) {
   }
   try { geom = mergeVertices(geom, geom.index ? 1e-5 : 1e-4); } catch {}
   geom.computeVertexNormals();
-  const b = new Brush(geom);
-  b.updateMatrixWorld();
-  return b;
-}
-
-function makeInnerBrush(mesh, centre, sx, sy, sz) {
-  let geom = mesh.geometry.clone();
-  geom.applyMatrix4(mesh.matrixWorld);
-  for (const attr of Object.keys(geom.attributes)) {
-    if (attr !== 'position' && attr !== 'normal') geom.deleteAttribute(attr);
-  }
-  try { geom = mergeVertices(geom, geom.index ? 1e-5 : 1e-4); } catch {}
-  // Scale per-axis around the world bbox centre.
-  geom.translate(-centre.x, -centre.y, -centre.z);
-  geom.scale(sx, sy, sz);
-  geom.translate(centre.x, centre.y, centre.z);
-  geom.computeVertexNormals();
-  const b = new Brush(geom);
-  b.updateMatrixWorld();
-  return b;
+  return geom;
 }

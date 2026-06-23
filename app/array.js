@@ -153,6 +153,10 @@ function performArray() {
 
   const src = _source;
   const srcData = src.serialize();
+  // Hoist the JSON.stringify out of the per-instance loop. With N instances
+  // we used to re-stringify the same source object N times; now we stringify
+  // once and JSON.parse per copy.
+  const srcJson = JSON.stringify(srcData);
 
   const axisVec = new THREE.Vector3(
     _axis === 'X' ? 1 : 0,
@@ -197,7 +201,7 @@ function performArray() {
     // Skip this instance if its 1-based index is in the skip list. We start
     // i=1 because i=0 is the source itself (never duplicated, never skipped).
     if (skip.has(i)) { skippedCount++; continue; }
-    const data = JSON.parse(JSON.stringify(srcData));
+    const data = JSON.parse(srcJson);
     delete data.id;
     const copy = TinkerShape.deserialize(data);
     state.scene.add(copy.mesh);

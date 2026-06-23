@@ -70,7 +70,7 @@ function onMove(ev) {
   if (Math.hypot(ev.clientX - _startX, ev.clientY - _startY) > SLOP_PX) cancelTimer();
 }
 
-function cancel() { cancelTimer(); }
+function cancel() { cancelTimer(); _startedOnShapeId = null; }
 function cancelTimer() {
   if (_timer) { clearTimeout(_timer); _timer = null; }
 }
@@ -90,7 +90,14 @@ function pickShapeId(ev) {
 }
 
 function fire(ev) {
-  if (!_startedOnShapeId) return;
+  // Guard against a shape that was deleted (via Outliner, undo, etc.) during
+  // the 500ms long-press window. Without this we'd selectShape on an id
+  // that's no longer in state.shapes and the long-press menu would open with
+  // no actual selection.
+  if (!_startedOnShapeId || !state.shapes.has(_startedOnShapeId)) {
+    _startedOnShapeId = null;
+    return;
+  }
   selectShape(_startedOnShapeId);
   showMenu(_startX, _startY);
   // Haptic tick if available (web vibration API).
