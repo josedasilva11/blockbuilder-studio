@@ -87,7 +87,8 @@ body {
   padding: 10px 16px;
   background: linear-gradient(180deg, rgba(28, 32, 42, 0.95) 0%, rgba(20, 23, 31, 0.95) 100%);
   border-bottom: 1px solid var(--border-soft);
-  backdrop-filter: blur(10px);
+  /* No backdrop-filter: topbar sits above the layout in flex column, nothing
+     renders behind it, so the blur would just burn a compositor layer. */
   z-index: 10;
   flex-wrap: wrap;
 }
@@ -668,11 +669,12 @@ body {
 .viewcube-actions {
   display: flex;
   gap: 4px;
-  background: rgba(22, 26, 35, 0.85);
+  /* Higher alpha (was 0.85 + blur) so text is still legible over the canvas
+     without the per-frame GPU readback that backdrop-filter forces. */
+  background: rgba(22, 26, 35, 0.93);
   padding: 4px;
   border-radius: var(--radius);
   border: 1px solid var(--border-soft);
-  backdrop-filter: blur(12px);
 }
 .viewcube-actions button {
   width: 32px;
@@ -700,13 +702,16 @@ body {
   left: 14px;
   font-size: 11px;
   color: var(--text-mid);
-  background: rgba(22, 26, 35, 0.7);
+  /* Was rgba(...,0.7) + backdrop-filter blur. The blur was the heaviest of
+     the three on the desktop renderer because the HUD covers a wide strip
+     across the workplane. Raised alpha to 0.88 to keep contrast against the
+     dark canvas. */
+  background: rgba(22, 26, 35, 0.88);
   padding: 6px 12px;
   border-radius: var(--radius);
   border: 1px solid var(--border-soft);
   pointer-events: none;
   min-height: 24px;
-  backdrop-filter: blur(14px);
   font-variant-numeric: tabular-nums;
 }
 .hud .hud-key { color: var(--text-dim); margin-right: 4px; }

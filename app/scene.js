@@ -25,18 +25,19 @@ export function initScene(canvas) {
   camera.position.set(120, -180, 130);
   camera.lookAt(0, 0, 20);
 
-  // preserveDrawingBuffer lets us read the canvas (toDataURL / toBlob) after
-  // a render without losing the framebuffer. Small perf cost; matters for the
-  // screenshot feature which would otherwise capture a blank canvas.
-  //
   // logarithmicDepthBuffer dramatically increases depth-buffer precision
   // across the camera's near/far range. Without it, two opaque faces at the
   // same Z (e.g. two boxes of the same height stacked on the workplane)
-  // z-fight visibly — bands of pixels flicker between the two faces as the
+  // z-fight visibly: bands of pixels flicker between the two faces as the
   // camera moves. With log-depth, even sub-millimetre depth differences
   // resolve reliably. Cost: ~10 % fragment-shader overhead via gl_FragDepth
   // (disables early-Z on some GPUs), negligible at our scene scale.
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
+  //
+  // preserveDrawingBuffer is OFF: the screenshot handler calls renderer.render
+  // synchronously before toDataURL (main.js bindScreenshot), so the canvas
+  // contents are still valid when read. Keeping this true otherwise forces
+  // an extra buffer copy on every present, expensive on integrated GPUs.
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: false, logarithmicDepthBuffer: true });
   // Default to 1.5 — invisible quality loss vs 2.0 on most displays, but only
   // ~56 % of the fragment shader work. The Quality setting in the UI bumps
   // this up or down at runtime via setRendererPixelRatio().
@@ -133,8 +134,24 @@ export function initScene(canvas) {
   // means we render this frame.
   let _dirty = true;
   let _interacting = false;
-  controls.addEventListener('start', () => { _interacting = true; _dirty = true; });
-  controls.addEventListener('end',   () => { _interacting = false; _dirty = true; });
+  // Shadow pass is by far the heaviest per-frame cost with a big imported STL
+  // (renders the whole scene a second time into the shadow map). The user
+  // never inspects shadows mid-orbit anyway, so we drop the pass for the
+  // duration of the interaction and restore on release. Quality unchanged on
+  // still frames.
+  controls.addEventListener('start', () => {
+    _interacting = true;
+    _dirty = true;
+    if (key) key.castShadow = false;
+    renderer.shadowMap.autoUpdate = false;
+  });
+  controls.addEventListener('end', () => {
+    _interacting = false;
+    _dirty = true;
+    if (key) key.castShadow = true;
+    renderer.shadowMap.autoUpdate = true;
+    renderer.shadowMap.needsUpdate = true;
+  });
   controls.addEventListener('change', () => { _dirty = true; });
   state.requestRender = () => { _dirty = true; };
   state.renderDirty = () => _dirty;
@@ -145,7 +162,11 @@ export function initScene(canvas) {
   const resize = () => {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
-    if (canvas.width !== w * window.devicePixelRatio || canvas.height !== h * window.devicePixelRatio) {
+    // Use the renderer's effective pixel ratio (already capped by dprCap) so
+    // the canvas-size compare doesn't false-positive on HiDPI screens where
+    // window.devicePixelRatio is 2-3x but we're rendering at 1.25-1.5x.
+    const epr = renderer.getPixelRatio();
+    if (canvas.width !== Math.floor(w * epr) || canvas.height !== Math.floor(h * epr)) {
       renderer.setSize(w, h, false);
       const cam = state.camera;
       if (cam.isPerspectiveCamera) {
@@ -156,6 +177,7 @@ export function initScene(canvas) {
         cam.left = -halfW; cam.right = halfW;
       }
       cam.updateProjectionMatrix();
+      _dirty = true;
     }
   };
   window.addEventListener('resize', resize);
@@ -170,7 +192,7 @@ export function initScene(canvas) {
     const damped = controls.update();
     if (_dirty || _interacting || damped || _settleFrames > 0) {
       renderer.render(scene, state.camera);
-      if (damped || _interacting) _settleFrames = 4;
+      if (damped || _interacting) _settleFrames = 1;
       else _settleFrames = Math.max(0, _settleFrames - 1);
       _dirty = false;
       // Update screen-space overlays AFTER the WebGL render so projection
