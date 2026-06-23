@@ -36,6 +36,11 @@ export function initOutliner() {
 
 function refresh() {
   if (!_body) return;
+  // Skip when the outliner panel isn't visible in the layout tree (collapsed
+  // into the mobile More menu, hidden tab, etc). offsetParent === null is a
+  // cheap proxy for "this element renders zero pixels". Saves the signature
+  // build + DOM diff at 2.5Hz on tablet/phone whenever the panel is off-screen.
+  if (_body.offsetParent === null) return;
   if (_body.querySelector('.ol-name.editing')) return;
   if (_body.querySelector('.ol-layer-name.editing')) return;
   const selectedSet = new Set(getMultiSelection());
