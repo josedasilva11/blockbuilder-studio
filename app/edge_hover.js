@@ -25,8 +25,13 @@ import { isRefGeomActive } from './ref_geom.js';
 
 const EDGE_THRESHOLD_DEG = 1;       // angle below which an edge is "internal"
 const SCREEN_PIXEL_THRESHOLD = 24;  // max distance from cursor to edge midpoint
+// Skip the feature for meshes above this triangle count. Organic STL imports
+// (figurines, scans) blow well past it, and walking ~200k edges on every
+// pointermove tanks the framerate, especially during orbit. Primitives top out
+// well under 5k tris even at max segments.
+const MAX_TRIS_FOR_EDGE_HOVER = 5000;
 
-const _edgeCache = new WeakMap();   // BufferGeometry -> EdgeData
+const _edgeCache = new WeakMap();   // BufferGeometry -> EdgeData (or null = skipped)
 let _labelEl = null;
 const _ndc = new THREE.Vector2();
 const _raycaster = new THREE.Raycaster();
@@ -52,11 +57,17 @@ function buildEdges(geometry) {
 function getEdgesFor(mesh) {
   const geom = mesh.geometry;
   if (!geom || !geom.attributes || !geom.attributes.position) return null;
-  let cached = _edgeCache.get(geom);
-  if (!cached) {
-    try { cached = buildEdges(geom); } catch { return null; }
-    _edgeCache.set(geom, cached);
+  if (_edgeCache.has(geom)) return _edgeCache.get(geom); // may be null = skipped
+  // Tri-count gate. Heavy imports get a permanent skip so we never even build
+  // the EdgesGeometry (which is also expensive on big meshes).
+  const triCount = geom.index ? geom.index.count / 3 : geom.attributes.position.count / 3;
+  if (triCount > MAX_TRIS_FOR_EDGE_HOVER) {
+    _edgeCache.set(geom, null);
+    return null;
   }
+  let cached;
+  try { cached = buildEdges(geom); } catch { _edgeCache.set(geom, null); return null; }
+  _edgeCache.set(geom, cached);
   return cached;
 }
 
@@ -119,7 +130,23 @@ function shouldSkipFrame() {
 
 export function installEdgeHover(canvas) {
   ensureLabel();
-  canvas.addEventListener('pointermove', (ev) => onPointerMove(ev, canvas));
+  // RAF-throttled pointermove: queue at most one move per animation frame.
+  // pointermove can fire at 120Hz+ on high-refresh mice, way faster than
+  // the screen refresh, so without this we waste CPU recomputing the same
+  // result multiple times per frame.
+  let queued = null;
+  let scheduled = false;
+  canvas.addEventListener('pointermove', (ev) => {
+    queued = ev;
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      const e = queued;
+      queued = null;
+      if (e) onPointerMove(e, canvas);
+    });
+  });
   canvas.addEventListener('pointerleave', hideLabel);
 }
 

@@ -36,7 +36,13 @@ export class TinkerShape {
       }
       const mat = this._makeMaterial();
       this.mesh = new THREE.Mesh(geom, mat);
-      this.mesh.castShadow = true;
+      // Heavy meshes (organic STL imports, figurines, scans) tank the shadow
+      // map pass because the renderer redraws them every shadow frame. Cap
+      // shadow casting at 20k tris; above that the visual gain is invisible
+      // anyway because the mesh's own self-shadow noise dominates.
+      const triCount = geom.index ? geom.index.count / 3 : geom.attributes.position.count / 3;
+      const heavyImport = triCount > 20000;
+      this.mesh.castShadow = !heavyImport;
       this.mesh.receiveShadow = true;
       this.mesh.userData.tinkerShape = this;
       this.mesh.name = this.id;
