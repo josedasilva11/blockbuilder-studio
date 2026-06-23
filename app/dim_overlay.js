@@ -67,18 +67,54 @@ function fmt(n) {
 
 function hideAll() {
   if (!_labels) return;
-  for (const l of Object.values(_labels)) l.style.display = 'none';
+  for (const l of Object.values(_labels)) {
+    if (l._lastDisplay !== 'none') { l.style.display = 'none'; l._lastDisplay = 'none'; }
+  }
 }
 
 // Project a world position to screen pixel coords, returning {x, y, behind}.
 function project(worldPos, camera, canvas) {
-  const v = worldPos.clone().project(camera);
+  _tmpProj.copy(worldPos).project(camera);
   const rect = canvas.getBoundingClientRect();
   return {
-    x: (v.x * 0.5 + 0.5) * rect.width + rect.left,
-    y: (-v.y * 0.5 + 0.5) * rect.height + rect.top,
-    behind: v.z >= 1,
+    x: (_tmpProj.x * 0.5 + 0.5) * rect.width + rect.left,
+    y: (-_tmpProj.y * 0.5 + 0.5) * rect.height + rect.top,
+    behind: _tmpProj.z >= 1,
   };
+}
+
+// Module-level scratches reused per frame. project() is called 3x per frame
+// (one per axis label) and updateDimOverlay itself runs after every render
+// while a shape is selected. Allocating fresh Box3 + 5 Vector3s here was
+// pure GC pressure during damping settle.
+const _box = new THREE.Box3();
+const _size = new THREE.Vector3();
+const _xMid = new THREE.Vector3();
+const _yMid = new THREE.Vector3();
+const _zMid = new THREE.Vector3();
+const _tmpProj = new THREE.Vector3();
+// Precompute border colour strings; appending '60' per label per frame was
+// 3 string allocs per render.
+const COLORS = {
+  x: { fg: '#ff7a7a', border: '#ff7a7a60' },
+  y: { fg: '#7aff9a', border: '#7aff9a60' },
+  z: { fg: '#7aaeff', border: '#7aaeff60' },
+};
+
+function writeLabel(el, text, x, y, color) {
+  // Diff-guard: only touch the DOM if a value actually changed. During orbit
+  // damping the label positions move every frame but colour/text/display
+  // are typically stable.
+  if (el._lastDisplay !== 'block') { el.style.display = 'block'; el._lastDisplay = 'block'; }
+  if (el._lastText !== text) { el.textContent = text; el._lastText = text; }
+  if (el._lastX !== x) { el.style.left = x + 'px'; el._lastX = x; }
+  if (el._lastY !== y) { el.style.top = y + 'px'; el._lastY = y; }
+  if (el._lastFg !== color.fg) { el.style.color = color.fg; el._lastFg = color.fg; }
+  if (el._lastBorder !== color.border) { el.style.borderColor = color.border; el._lastBorder = color.border; }
+}
+
+function hideLabel(el) {
+  if (el._lastDisplay !== 'none') { el.style.display = 'none'; el._lastDisplay = 'none'; }
 }
 
 export function updateDimOverlay() {
@@ -97,43 +133,32 @@ export function updateDimOverlay() {
 
   if (shapes.length === 0) { hideAll(); return; }
 
-  // Combined world-space AABB.
-  const box = new THREE.Box3();
+  // Combined world-space AABB, reusing _box.
+  _box.makeEmpty();
   for (const s of shapes) {
     // Ensure world matrix is up to date for the bounding box calc.
     s.mesh.updateWorldMatrix(true, true);
-    box.expandByObject(s.mesh);
+    _box.expandByObject(s.mesh);
   }
-  if (box.isEmpty()) { hideAll(); return; }
+  if (_box.isEmpty()) { hideAll(); return; }
 
-  const size = new THREE.Vector3();
-  box.getSize(size);
+  _box.getSize(_size);
 
   // Pick one edge per axis. The "front-bottom" edges read best in our default
   // iso view (camera roughly +X, -Y, +Z).
-  const xMid = new THREE.Vector3((box.min.x + box.max.x) / 2, box.min.y, box.min.z);
-  const yMid = new THREE.Vector3(box.max.x, (box.min.y + box.max.y) / 2, box.min.z);
-  const zMid = new THREE.Vector3(box.max.x, box.min.y, (box.min.z + box.max.z) / 2);
+  _xMid.set((_box.min.x + _box.max.x) / 2, _box.min.y, _box.min.z);
+  _yMid.set(_box.max.x, (_box.min.y + _box.max.y) / 2, _box.min.z);
+  _zMid.set(_box.max.x, _box.min.y, (_box.min.z + _box.max.z) / 2);
 
   const canvas = state.renderer.domElement;
   const camera = state.camera;
 
-  const labelData = [
-    { el: _labels.x, pos: xMid, text: fmt(size.x), color: '#ff7a7a' },
-    { el: _labels.y, pos: yMid, text: fmt(size.y), color: '#7aff9a' },
-    { el: _labels.z, pos: zMid, text: fmt(size.z), color: '#7aaeff' },
-  ];
-
-  for (const { el, pos, text, color } of labelData) {
-    const p = project(pos, camera, canvas);
-    if (p.behind) { el.style.display = 'none'; continue; }
-    el.textContent = text;
-    el.style.left = p.x + 'px';
-    el.style.top = p.y + 'px';
-    el.style.color = color;
-    el.style.borderColor = color + '60';
-    el.style.display = 'block';
-  }
+  const px = project(_xMid, camera, canvas);
+  if (px.behind) hideLabel(_labels.x); else writeLabel(_labels.x, fmt(_size.x), px.x, px.y, COLORS.x);
+  const py = project(_yMid, camera, canvas);
+  if (py.behind) hideLabel(_labels.y); else writeLabel(_labels.y, fmt(_size.y), py.x, py.y, COLORS.y);
+  const pz = project(_zMid, camera, canvas);
+  if (pz.behind) hideLabel(_labels.z); else writeLabel(_labels.z, fmt(_size.z), pz.x, pz.y, COLORS.z);
 }
 
 export function setDimOverlayEnabled(on) {

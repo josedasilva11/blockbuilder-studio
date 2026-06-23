@@ -27,7 +27,10 @@ export function initGizmos() {
     state.controls.enabled = !ev.value;
   });
   // Any TransformControls visual / value change → paint next frame.
-  t.addEventListener('change', requestRender);
+  // 'change' fires on internal hover state too, even when the gizmo is
+  // detached (no t.object). Skip those to avoid burning full-scene repaints
+  // on stray mouse moves over where the gizmo would have been.
+  t.addEventListener('change', () => { if (t.object) requestRender(); });
   t.addEventListener('objectChange', requestRender);
 
   state.scene.add(typeof t.getHelper === 'function' ? t.getHelper() : t);

@@ -58,11 +58,16 @@ export function initAxisWidget() {
   // without burning a 60fps loop for a static graphic.
   let _dirty = true;
   state.controls?.addEventListener('change', () => { _dirty = true; });
+  // Module-scope scratches reused per damping frame. Previous .clone() chain
+  // allocated 4 Vector3s per painted frame: one for the camera direction and
+  // one per X/Y/Z label projection.
+  const _tmpDir = new THREE.Vector3();
+  const _tmpProj = new THREE.Vector3();
   const tick = () => {
     if (_dirty) {
       if (state.controls) {
-        const dir = state.camera.position.clone().sub(state.controls.target).normalize();
-        _camera.position.copy(dir.multiplyScalar(4));
+        _tmpDir.copy(state.camera.position).sub(state.controls.target).normalize();
+        _camera.position.copy(_tmpDir).multiplyScalar(4);
         _camera.up.copy(state.camera.up);
         _camera.lookAt(0, 0, 0);
         // project() reads matrixWorldInverse — lookAt only refreshed the
@@ -76,9 +81,9 @@ export function initAxisWidget() {
         const el = _labels[k]?.el;
         const pos = _labels[k]?.pos;
         if (!el || !pos) continue;
-        const v = pos.clone().project(_camera);
-        el.style.left = `${(v.x * 0.5 + 0.5) * SIZE}px`;
-        el.style.top = `${(-v.y * 0.5 + 0.5) * SIZE}px`;
+        _tmpProj.copy(pos).project(_camera);
+        el.style.left = `${(_tmpProj.x * 0.5 + 0.5) * SIZE}px`;
+        el.style.top = `${(-_tmpProj.y * 0.5 + 0.5) * SIZE}px`;
       }
       _renderer.render(_scene, _camera);
       _dirty = false;

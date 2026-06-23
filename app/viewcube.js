@@ -81,11 +81,16 @@ export function initViewcube(parentEl) {
   _canvas.addEventListener('pointerleave', onPointerLeave);
 
   // Render-on-demand. The cube only changes when the main camera changes or
-  // the user hovers a face. Both fire events that flip _dirty.
+  // the user hovers a different face. The bare pointermove dirty was firing
+  // on every pixel of cursor motion, even when the hovered face didn't
+  // change. Now we flip _dirty only when pickFace returns a different face
+  // (see onPointerMove below) and on the existing controls / pointerleave
+  // events.
   let _dirty = true;
   state.controls?.addEventListener('change', () => { _dirty = true; });
-  _canvas.addEventListener('pointermove', () => { _dirty = true; });
   _canvas.addEventListener('pointerleave', () => { _dirty = true; });
+  // Expose so onPointerMove can flip the flag when hover face changes.
+  _markDirty = () => { _dirty = true; };
   const tick = () => {
     if (_dirty) {
       syncToMainCamera();
@@ -97,11 +102,16 @@ export function initViewcube(parentEl) {
   requestAnimationFrame(tick);
 }
 
+// Module-level scratch vector reused by syncToMainCamera so the camera-sync
+// path (called on every damping frame) doesn't allocate.
+const _scratchDir = new THREE.Vector3();
+let _markDirty = () => {};
+
 function syncToMainCamera() {
   if (!state.controls) return;
   // Same direction as main camera, from origin so the cube shows the same faces.
-  const dir = state.camera.position.clone().sub(state.controls.target).normalize();
-  _camera.position.copy(dir.multiplyScalar(4));
+  _scratchDir.copy(state.camera.position).sub(state.controls.target).normalize();
+  _camera.position.copy(_scratchDir).multiplyScalar(4);
   _camera.up.copy(state.camera.up);
   _camera.lookAt(0, 0, 0);
 }
@@ -148,6 +158,7 @@ function onPointerMove(ev) {
     if (face) setFaceBg(face, HOVER_BG);
     _hovered = face;
     _canvas.style.cursor = face ? 'pointer' : 'grab';
+    _markDirty(); // only repaint when the hovered face actually changed
   }
 }
 

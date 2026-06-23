@@ -13,6 +13,12 @@ import { state } from './state.js';
 import { selectShape } from './selection.js';
 import { showStatus, hideStatus } from './status.js';
 import { TinkerShape } from './shape.js';
+
+// Reused scratch matrix for the local-from-world transform applied after each
+// CSG bake. The previous code allocated a fresh Matrix4 per Group / Intersect
+// via .clone().invert(), which is 16 floats per call; hoisting it costs
+// nothing and tidies the GC profile.
+const _tmpInvMat = new THREE.Matrix4();
 import { toast } from './toast.js';
 
 function attachBVH(geom) {
@@ -148,7 +154,8 @@ export async function groupShapes(ids) {
 
   const newGeo = resultBrush.geometry.clone();
   newGeo.computeVertexNormals();
-  newGeo.applyMatrix4(host.mesh.matrixWorld.clone().invert());
+  _tmpInvMat.copy(host.mesh.matrixWorld).invert();
+  newGeo.applyMatrix4(_tmpInvMat);
   // NOTE: do NOT call mergeVertices / cleanPartGeometry here. The bvh-csg
   // kernel emits exactly the topology we want — welding sharp edges flips
   // adjacent triangle normals and produces corrupted shading + visible
@@ -208,7 +215,8 @@ export async function intersectShapes(ids) {
 
   const newGeo = resultBrush.geometry.clone();
   newGeo.computeVertexNormals();
-  newGeo.applyMatrix4(host.mesh.matrixWorld.clone().invert());
+  _tmpInvMat.copy(host.mesh.matrixWorld).invert();
+  newGeo.applyMatrix4(_tmpInvMat);
   attachBVH(newGeo);
   host.mesh.geometry.dispose();
   host.mesh.geometry = newGeo;
