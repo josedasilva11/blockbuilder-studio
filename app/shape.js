@@ -138,7 +138,14 @@ export class TinkerShape {
   }
 
   dispose() {
-    if (this.mesh.geometry) this.mesh.geometry.dispose();
+    if (this.mesh.geometry) {
+      // three-mesh-bvh attaches boundsTree with internal typed-array buffers.
+      // Geometry.dispose alone won't release them; null the reference first
+      // so the BVH can be collected with the geometry. Without this we leak
+      // megabytes per heavy STL import across delete/undo/CSG/repair cycles.
+      this.mesh.geometry.boundsTree = null;
+      this.mesh.geometry.dispose();
+    }
     if (this.mesh.material) this.mesh.material.dispose();
     if (this.mesh.parent) this.mesh.parent.remove(this.mesh);
   }

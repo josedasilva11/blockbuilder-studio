@@ -34,6 +34,12 @@ function applySnapshot(snap) {
   });
   for (const m of orphans) {
     if (m.parent) m.parent.remove(m);
+    // Null the BVH BEFORE disposing the geometry — three-mesh-bvh attaches a
+    // boundsTree property that holds typed-array buffers we want released.
+    // Without this they stick around until the geometry itself is GCed (which
+    // can be much later), and across a few undo cycles on heavy STL imports
+    // the heap quietly grows by tens of MB.
+    try { if (m.geometry) m.geometry.boundsTree = null; } catch {}
     try { m.geometry?.dispose?.(); } catch {}
     try { m.material?.dispose?.(); } catch {}
   }
