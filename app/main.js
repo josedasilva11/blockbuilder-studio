@@ -9,8 +9,9 @@ import { installPickHandler, selectShape, getMultiSelection, onSelectionChange }
 import { state } from './state.js';
 import { groupShapes, ungroupShapes, bakeGroup, intersectShapes } from './csg.js';
 import { exportSTL, exportOBJ, saveProject, loadProject } from './io.js';
-import { downloadSTEP } from './step_exporter.js';
-import { pickAndImport } from './io_import.js';
+// Eager BVH raycast patch: needed for autosave-restored IMPORT shapes to keep
+// fast picking even before io_import.js (lazy) loads.
+import './bvh_raycast_patch.js';
 import { TinkerShape } from './shape.js';
 import { initTooltip } from './tooltip.js';
 import { installAutoSaveLoop } from './autosave.js';
@@ -227,10 +228,9 @@ function installTabletPropsCardSync() {
   };
   // Initial state.
   update();
-  // Patch into the existing selection-change pipeline.
-  import('./selection.js').then(({ onSelectionChange }) => {
-    onSelectionChange(update);
-  });
+  // Patch into the existing selection-change pipeline. onSelectionChange is
+  // already imported eagerly at the top of this file, no need for a Promise.
+  onSelectionChange(update);
   // Close button on the floating card hides it. On tablet that means clearing
   // data-shape-selected (auto-show); on phone it means clearing data-phone-sheet
   // (explicit open). Clear both so it works in either layout.
@@ -360,8 +360,15 @@ function bindToolbar() {
       case 'load': document.getElementById('load-file').click(); break;
       case 'export-stl': exportSTL(); break;
       case 'export-obj': exportOBJ(); break;
-      case 'export-step': downloadSTEP(); break;
-      case 'import-mesh': pickAndImport(); break;
+      case 'export-step':
+        // Lazy: STEP exporter is ~10 KB and only needed when the user clicks.
+        import('./step_exporter.js').then((m) => m.downloadSTEP());
+        break;
+      case 'import-mesh':
+        // Lazy: STLLoader + OBJLoader weigh ~31 KB of parse work that's only
+        // needed on first import. BVH raycast patch is already eager-loaded.
+        import('./io_import.js').then((m) => m.pickAndImport());
+        break;
       // Menu-bar additions (existed only as keyboard shortcuts before)
       case 'new': newProject(); break;
       case 'undo': undo(); break;

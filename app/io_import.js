@@ -6,20 +6,16 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
+import { MeshBVH } from 'three-mesh-bvh';
 import { state } from './state.js';
 import { TinkerShape } from './shape.js';
 import { selectShape } from './selection.js';
 import { pushHistory } from './history.js';
 import { toast } from './toast.js';
-
-// Patch Mesh.raycast once so any geometry with a `boundsTree` uses it instead
-// of the default O(n) per-triangle scan. Speeds up picking + hover on big
-// imports by orders of magnitude. Patch is idempotent.
-if (!THREE.Mesh.prototype.__bvhPatched) {
-  THREE.Mesh.prototype.raycast = acceleratedRaycast;
-  THREE.Mesh.prototype.__bvhPatched = true;
-}
+// BVH raycast patch lives in its own eager module (loaded by main.js) so
+// autosave-restored imports keep fast picking even though this whole module
+// is now lazy-loaded.
+import './bvh_raycast_patch.js';
 
 const stl = new STLLoader();
 const obj = new OBJLoader();
