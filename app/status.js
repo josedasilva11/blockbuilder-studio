@@ -3,6 +3,7 @@
 // user knows the program is busy rather than frozen.
 
 let _el = null;
+let _textEl = null;
 let _hideTimer = null;
 
 export function initStatus() {
@@ -11,12 +12,14 @@ export function initStatus() {
   _el.hidden = true;
   _el.innerHTML = `<span class="status-spinner"></span><span class="status-text"></span>`;
   document.body.appendChild(_el);
+  // Cache the text node so showStatus avoids a querySelector on every call.
+  _textEl = _el.querySelector('.status-text');
 }
 
 export function showStatus(text) {
   if (!_el) initStatus();
   clearTimeout(_hideTimer);
-  _el.querySelector('.status-text').textContent = text;
+  if (_textEl) _textEl.textContent = text;
   _el.hidden = false;
   // Trigger the CSS transition one frame later so the .toast-style fade-in
   // applies (browsers skip transitions on first paint of a freshly-shown el).

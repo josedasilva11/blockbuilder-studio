@@ -101,6 +101,7 @@ let _body = null;
 let _currentShape = null;
 let _inputs = {};   // map of key → element so we can refresh values
 let _posInputs = null;
+let _metricsEls = null; // cached refs to the three metrics <b> nodes
 
 export function initProperties() {
   _body = document.getElementById('props-body');
@@ -175,6 +176,7 @@ function render(shape) {
   _body.innerHTML = '';
   _inputs = {};
   _posInputs = null;
+  _metricsEls = null; // refreshed when the metrics row is rebuilt below
   // Collapse the About card to a single-line strip whenever a shape is being
   // edited, so the property rows actually have vertical room. Expanded form
   // returns when nothing is selected (the panel has nothing else to show).
@@ -428,6 +430,13 @@ function render(shape) {
     </div>
   `;
   _body.appendChild(metricsRow);
+  // Cache the metric <b> elements so the 4Hz updateMetrics loop doesn't
+  // re-query the DOM by id three times per tick.
+  _metricsEls = {
+    vol: metricsRow.querySelector('#m-vol'),
+    area: metricsRow.querySelector('#m-area'),
+    tri: metricsRow.querySelector('#m-tri'),
+  };
   updateMetrics(shape);
 
   // Quick actions, Lock + Reset transform + Delete in one row of compact
@@ -467,16 +476,20 @@ function render(shape) {
 
 function updateMetrics(shape) {
   if (!shape || !shape.mesh) return;
+  if (!_metricsEls) return; // metrics row hasn't been rendered yet
   const vol = meshVolume(shape.mesh);
   const area = meshSurfaceArea(shape.mesh);
   const tri = triangleCount(shape.mesh);
   const u = state.unit || 'mm';
-  const volEl  = document.getElementById('m-vol');
-  const areaEl = document.getElementById('m-area');
-  const triEl  = document.getElementById('m-tri');
-  if (volEl)  volEl.textContent  = `${formatBig(vol)} ${u}³`;
-  if (areaEl) areaEl.textContent = `${formatBig(area)} ${u}²`;
-  if (triEl)  triEl.textContent  = formatBig(tri, 0);
+  const volTxt = `${formatBig(vol)} ${u}³`;
+  const areaTxt = `${formatBig(area)} ${u}²`;
+  const triTxt = formatBig(tri, 0);
+  // Diff before write. With a shape selected and idle, this runs every 250ms
+  // forever, and the three textContent assignments were dirtying the DOM
+  // even when the strings matched.
+  if (_metricsEls.vol && _metricsEls.vol.textContent !== volTxt) _metricsEls.vol.textContent = volTxt;
+  if (_metricsEls.area && _metricsEls.area.textContent !== areaTxt) _metricsEls.area.textContent = areaTxt;
+  if (_metricsEls.tri && _metricsEls.tri.textContent !== triTxt) _metricsEls.tri.textContent = triTxt;
 }
 
 function formatBig(n, digits = 2) {
