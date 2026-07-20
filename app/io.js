@@ -91,7 +91,63 @@ function buildExportGroup() {
   return group;
 }
 
-function triggerDownload(blob, filename) {
+function isCapacitorNative() {
+  try {
+    return !!(window.Capacitor
+      && typeof window.Capacitor.isNativePlatform === 'function'
+      && window.Capacitor.isNativePlatform());
+  } catch { return false; }
+}
+
+// Native iOS / Android path: write the file to the app's cache directory via
+// Filesystem, then open the OS share sheet on that file URI. This gives the
+// user a real "Save to Files", "AirDrop", "Send to Bambu Studio", etc.
+// The plain <a download> pattern silently fails on iOS Safari and only lands
+// in an app-scoped Downloads folder on Android with restricted access.
+async function nativeShareFile(blob, filename, mime) {
+  try {
+    const [fsMod, shareMod] = await Promise.all([
+      import('@capacitor/filesystem'),
+      import('@capacitor/share'),
+    ]);
+    const { Filesystem, Directory, Encoding } = fsMod;
+    const { Share } = shareMod;
+    // Convert Blob to base64. FileReader is the most compatible way across
+    // Capacitor's webview quirks.
+    const b64 = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => {
+        const s = String(r.result || '');
+        const idx = s.indexOf('base64,');
+        resolve(idx >= 0 ? s.slice(idx + 7) : s);
+      };
+      r.onerror = reject;
+      r.readAsDataURL(blob);
+    });
+    const write = await Filesystem.writeFile({
+      path: filename,
+      data: b64,
+      directory: Directory.Cache,
+    });
+    await Share.share({
+      title: filename,
+      text: 'Exported from BlockBuilder Studio',
+      url: write.uri,
+      dialogTitle: 'Share ' + filename,
+    });
+    return true;
+  } catch (err) {
+    console.warn('nativeShareFile failed, falling back to blob download:', err);
+    return false;
+  }
+}
+
+export async function triggerDownload(blob, filename) {
+  if (isCapacitorNative()) {
+    const ok = await nativeShareFile(blob, filename, blob.type);
+    if (ok) return;
+    // fall through to blob-URL fallback on native failure
+  }
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -112,7 +168,7 @@ export async function exportSTL() {
   }
   const stl = stlExporter.parse(group, { binary: true });
   patchStlHeader(stl, stlHeader());
-  triggerDownload(new Blob([stl], { type: 'application/octet-stream' }), 'blockbuilder.stl');
+  await triggerDownload(new Blob([stl], { type: 'application/octet-stream' }), 'blockbuilder.stl');
   toast.ok('STL exported', { detail: `blockbuilder.stl · ${group.children.length} shape${group.children.length === 1 ? '' : 's'}` });
 }
 
@@ -125,7 +181,7 @@ export async function exportOBJ() {
     return;
   }
   const obj = objHeader() + objExporter.parse(group);
-  triggerDownload(new Blob([obj], { type: 'text/plain' }), 'blockbuilder.obj');
+  await triggerDownload(new Blob([obj], { type: 'text/plain' }), 'blockbuilder.obj');
   toast.ok('OBJ exported', { detail: 'blockbuilder.obj' });
 }
 
@@ -150,14 +206,10 @@ export function saveProject() {
   };
   const name = `blockbuilder-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-')}.json`;
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = name;
-  a.click();
-  URL.revokeObjectURL(url);
-  import('./welcome.js').then(m => m.addRecent(name, data));
-  toast.ok('Project saved', { detail: `${name} · ${data.shapes.length} shape${data.shapes.length === 1 ? '' : 's'}` });
+  triggerDownload(blob, name).then(() => {
+    import('./welcome.js').then(m => m.addRecent(name, data));
+    toast.ok('Project saved', { detail: `${name} · ${data.shapes.length} shape${data.shapes.length === 1 ? '' : 's'}` });
+  });
 }
 
 export function loadProject(file) {

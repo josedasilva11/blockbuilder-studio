@@ -3563,7 +3563,7 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   .layout > .sidebar:not(.tablet-insert-anchored) { display: none; }
   .layout > .properties { display: none; }
   .tool-rail { display: flex !important; flex-direction: column; gap: 6px;
-    position: fixed; top: 64px; left: 12px; width: 56px; padding: 8px 6px;
+    position: fixed; top: 64px; left: calc(12px + env(safe-area-inset-left, 0px)); width: 56px; padding: 8px 6px;
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35;
     /* Cap height + scroll so the 10-button rail still fits on landscape
@@ -3576,7 +3576,7 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   }
   .tool-rail::-webkit-scrollbar { display: none; }
   body[data-shape-selected="1"] .props-card { display: flex !important;
-    flex-direction: column; position: fixed; top: 64px; right: 12px; width: 240px;
+    flex-direction: column; position: fixed; top: 64px; right: calc(12px + env(safe-area-inset-right, 0px)); width: 240px;
     max-height: calc(100vh - 88px); max-height: calc(100dvh - 88px);
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 35; overflow: hidden; }
@@ -3585,7 +3585,7 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   body[data-more-menu="open"] .more-menu {
     position: fixed;
     top: 64px;
-    left: 80px;
+    left: calc(80px + env(safe-area-inset-left, 0px));
     width: 320px;
     max-height: calc(100dvh - 88px);
   }
@@ -3624,9 +3624,9 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
     display: flex !important;
     flex-direction: column;
     position: fixed;
-    left: 6px;
-    right: 6px;
-    bottom: 76px;
+    left: calc(6px + env(safe-area-inset-left, 0px));
+    right: calc(6px + env(safe-area-inset-right, 0px));
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
     width: auto;
     max-height: 52dvh;
     max-height: 52vh;
@@ -3641,9 +3641,9 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   /* More menu as bottom-sheet on phone, above the dock. */
   body[data-more-menu="open"] .more-menu {
     position: fixed;
-    left: 6px;
-    right: 6px;
-    bottom: 76px;
+    left: calc(6px + env(safe-area-inset-left, 0px));
+    right: calc(6px + env(safe-area-inset-right, 0px));
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
     max-height: 60dvh;
     max-height: 60vh;
   }
@@ -3653,9 +3653,9 @@ body[data-tablet-insert="open"] .sidebar.tablet-insert-anchored {
   body[data-phone-sheet="insert"] .sidebar.phone-sheet-anchored {
     display: block;
     position: fixed;
-    left: 6px;
-    right: 6px;
-    bottom: 76px;
+    left: calc(6px + env(safe-area-inset-left, 0px));
+    right: calc(6px + env(safe-area-inset-right, 0px));
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
     width: auto;
     max-height: 60dvh;
     max-height: 60vh;

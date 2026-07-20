@@ -203,17 +203,15 @@ function f(v) {
   return s.includes('.') ? s : s + '.0';
 }
 
-export function downloadSTEP() {
+export async function downloadSTEP() {
   const text = exportSTEP();
   if (!text) return;
   // No comment block before the `ISO-10303-21;` magic — strict STEP parsers
   // reject anything before it. Branding lives inside FILE_DESCRIPTION instead.
   const blob = new Blob([text], { type: 'application/step' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'blockbuilder.step';
-  a.click();
-  URL.revokeObjectURL(url);
+  // Shared exporter path handles Capacitor native share sheet on iOS/Android
+  // and falls back to blob URL + <a download> on web / Electron.
+  const { triggerDownload } = await import('./io.js');
+  await triggerDownload(blob, 'blockbuilder.step');
   toast.ok('STEP exported', { detail: 'blockbuilder.step — faceted-brep, opens as mesh body in Fusion / SolidWorks / FreeCAD.' });
 }
