@@ -41,6 +41,7 @@ import { initSettings, getSetting, setSetting, onSettingChange } from './setting
 import { bumpLaunchCount, shouldShowNag, showNag, isLicensed, getLicenseName, openLicenseDialog, revalidateLicense, BETA_MODE, BETA_MAILTO } from './support_nag.js';
 import { toast } from './toast.js';
 import { APP_VERSION } from './version.js';
+import { initNativeShell } from './native_shell.js';
 import * as THREE from 'three';
 
 function main() {
@@ -80,6 +81,10 @@ function main() {
   initRefGeom(canvas);
   installLongPressMenu(canvas);
   initSketch(canvas);
+
+  // Wire up iOS + Android native behaviour (back button, status bar, resume
+  // render). No-op on desktop Electron / web PWA.
+  initNativeShell();
 
   const cubeWrap = document.getElementById('viewcube-wrap');
   if (cubeWrap) {
