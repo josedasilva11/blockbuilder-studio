@@ -123,6 +123,7 @@
     }
   },
   "dependencies": {
+    "@capacitor/haptics": "^8.0.2",
     "@capacitor/status-bar": "^8.0.3"
   }
 }

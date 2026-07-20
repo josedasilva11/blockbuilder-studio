@@ -100,8 +100,18 @@ function fire(ev) {
   }
   selectShape(_startedOnShapeId);
   showMenu(_startX, _startY);
-  // Haptic tick if available (web vibration API).
-  try { navigator.vibrate?.(20); } catch {}
+  // Haptic tick. Prefer Capacitor Haptics on native (iOS Safari ignores
+  // navigator.vibrate entirely, so the whole point of Capacitor here is
+  // just to reach the iOS TapticEngine).
+  try {
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+      import('@capacitor/haptics').then((m) => {
+        m.Haptics.impact({ style: m.ImpactStyle.Medium }).catch(() => {});
+      }).catch(() => {});
+    } else {
+      navigator.vibrate?.(20);
+    }
+  } catch {}
 }
 
 function showMenu(x, y) {
